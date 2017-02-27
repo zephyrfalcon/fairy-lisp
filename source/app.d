@@ -4,3 +4,4 @@ void main()
 {
     writeln("Hello, cruel world!");
 }
+
