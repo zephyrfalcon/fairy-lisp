@@ -1,0 +1,9 @@
+{
+	"name": "void-lisp",
+	"authors": [
+		"Hans Nowak"
+	],
+	"description": "A Lisp dialect",
+	"copyright": "Copyright © 2017, Hans",
+	"license": "BSD"
+}
