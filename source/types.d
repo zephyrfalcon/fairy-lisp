@@ -9,18 +9,25 @@ abstract class LispObject {
 class LispSymbol : LispObject {
     dstring value;
     override dstring Repr() { return value; }
+    this(dstring s) { this.value = s; }
 }
 
 abstract class LispList : LispObject {
 }
 
 class LispEmptyList : LispList {
-    override dstring Repr() { return ""; }
+    override dstring Repr() { return "()"; }
 }
 
 class LispPair : LispList {
     LispObject head;
     LispObject tail;
+
+    this(LispObject head, LispObject tail) {
+        this.head = head;
+        this.tail = tail;
+    }
+
     override dstring Repr() {
         //return "(" ~ head.Repr() ~ " . " ~ tail.Repr() ~ ")";
         LispPair p = this;
