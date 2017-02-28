@@ -22,17 +22,14 @@ dstring[] tokenize(dstring text) {
             tokens ~= "(";
         } else if (token == ')') {
             add_token_if_any();
-            tokens ~= "(";
+            tokens ~= ")";
         } else {
             current_token ~= token;
         }
     }
 
     // if there's a token currently being built, then add it
-    if (current_token.length > 0) {
-        tokens ~= current_token;
-        current_token = "";
-    }
+    add_token_if_any();
 
     return tokens;
 }
