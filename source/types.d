@@ -13,10 +13,12 @@ class LispSymbol : LispObject {
 }
 
 abstract class LispList : LispObject {
+    LispList Reverse() { throw new Exception("abstract method"); };
 }
 
 class LispEmptyList : LispList {
     override dstring Repr() { return "()"; }
+    override LispList Reverse() { return cast(LispEmptyList) EMPTY_LIST; }
 }
 
 class LispPair : LispList {
@@ -48,5 +50,24 @@ class LispPair : LispList {
             }
         }
     }
+
+    override LispList Reverse() {
+        LispList acc = cast(LispEmptyList) EMPTY_LIST;
+        LispObject p = this;
+        while (true) {
+            if (auto p2 = cast(LispPair) p) {
+                acc = new LispPair(p2.head, acc);
+                p = p2.tail;
+            } else if (auto e = cast(LispEmptyList) p) {
+                break;  // all done
+            } else {
+                throw new Exception("cannot reverse improper list");
+            }
+        }
+        return acc;
+    }
 }
 
+/* "constants" */
+
+const LispEmptyList EMPTY_LIST = new LispEmptyList();
