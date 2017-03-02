@@ -10,7 +10,7 @@ struct ParserResult {
 ParserResult parse(dstring[] tokens) {
     assert(tokens.length > 0);
     if (tokens[0] == "(") {
-        LispList list = cast(LispEmptyList) EMPTY_LIST;
+        LispList list = NIL();
         tokens = tokens[1..$];
         while (true) {
             if (tokens.length == 0) 

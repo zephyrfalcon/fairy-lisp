@@ -18,7 +18,7 @@ abstract class LispList : LispObject {
 
 class LispEmptyList : LispList {
     override dstring Repr() { return "()"; }
-    override LispList Reverse() { return cast(LispEmptyList) EMPTY_LIST; }
+    override LispList Reverse() { return NIL(); }
 }
 
 class LispPair : LispList {
@@ -52,7 +52,7 @@ class LispPair : LispList {
     }
 
     override LispList Reverse() {
-        LispList acc = cast(LispEmptyList) EMPTY_LIST;
+        LispList acc = NIL(); //cast(LispEmptyList) EMPTY_LIST;
         LispObject p = this;
         while (true) {
             if (auto p2 = cast(LispPair) p) {
@@ -70,4 +70,18 @@ class LispPair : LispList {
 
 /* "constants" */
 
-const LispEmptyList EMPTY_LIST = new LispEmptyList();
+/*
+const LispEmptyList _EMPTY_LIST = new LispEmptyList();
+
+LispEmptyList NIL() { return cast(LispEmptyList) _EMPTY_LIST; }
+*/
+
+// this is one way to make sure we always use the same object... through a
+// function. 
+
+// ken dit??
+LispEmptyList NIL() {
+    static LispEmptyList e = null;
+    if (e is null) e = new LispEmptyList();
+    return e;
+}
