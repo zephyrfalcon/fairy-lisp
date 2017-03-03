@@ -52,7 +52,7 @@ class LispPair : LispList {
     }
 
     override LispList Reverse() {
-        LispList acc = NIL(); //cast(LispEmptyList) EMPTY_LIST;
+        LispList acc = NIL(); 
         LispObject p = this;
         while (true) {
             if (auto p2 = cast(LispPair) p) {
@@ -79,9 +79,8 @@ LispEmptyList NIL() { return cast(LispEmptyList) _EMPTY_LIST; }
 // this is one way to make sure we always use the same object... through a
 // function. 
 
-// ken dit??
 LispEmptyList NIL() {
-    static LispEmptyList e = null;
-    if (e is null) e = new LispEmptyList();
+    static LispEmptyList e;
+    if (!e) e = new LispEmptyList();
     return e;
 }

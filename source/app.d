@@ -1,7 +1,9 @@
 import std.stdio;
+import interpreter;
 
 void main()
 {
-    writeln("Hello, cruel world!");
+    auto intp = new Interpreter();
+    intp.MainLoop();
 }
 
