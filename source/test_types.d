@@ -37,3 +37,20 @@ unittest {
 
 }
 
+/* test Reverse() */
+unittest {
+    LispList l1 = new LispPair(new LispSymbol("a"),
+                  new LispPair(new LispSymbol("b"),
+                  new LispPair(new LispSymbol("c"), NIL())));
+    auto l2 = l1.Reverse();
+    AssertEquals(l2.Repr(), "(c b a)");
+
+    LispList l3 = new LispPair(new LispSymbol("k"),
+                  new LispPair(l1,
+                  new LispPair(new LispSymbol("m"), NIL())));
+    AssertEquals(l3.Repr(), "(k (a b c) m)");
+    AssertEquals(l3.Reverse().Repr(), "(m (a b c) k)");
+
+    AssertEquals(NIL().Repr(), "()");
+}
+
