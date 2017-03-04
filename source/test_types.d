@@ -20,7 +20,8 @@ void AssertEquals(LispObject[] actual, LispObject[] expected) {
     formattedWrite(writer, "Actual result: %s\nExpected: %s\n", actual, expected);
     if (actual != expected)
         stderr.writefln(writer.data());
-    assert(equal(actual, expected));
+    //assert(equal(actual, expected));
+    assert(actual == expected);
 }
 
 /* test Repr() */
@@ -84,3 +85,17 @@ unittest {
 
     AssertEquals(NIL().ToArray(), []);
 }
+
+/* test FromArray() */
+unittest {
+    auto SA = new LispSymbol("a"),
+         SB = new LispSymbol("b"),
+         SC = new LispSymbol("c");
+    LispList l1 = new LispPair(SA,
+                  new LispPair(SB,
+                  new LispPair(SC, NIL())));
+
+    LispObject[] stuff = [SA, SB, SC];
+    // TODO: use FromArray() and compare lists!
+}
+
