@@ -4,21 +4,32 @@ import std.array;
 
 abstract class LispObject {
     dstring Repr() { return "<undefined>"; }
+    override bool opEquals(Object o) { 
+        return false; 
+        // FIXME: add comparison rules for objects of different types?
+    }
 }
 
 class LispSymbol : LispObject {
     dstring value;
-    override dstring Repr() { return value; }
     this(dstring s) { this.value = s; }
+    override dstring Repr() { return value; }
+    override bool opEquals(Object o) {
+        if (auto other = cast(LispSymbol) o) {
+            return this.value == other.value;
+        } else return super.opEquals(o);
+    }
 }
 
 abstract class LispList : LispObject {
     LispList Reverse() { throw new Exception("abstract method"); };
+    LispObject[] ToArray() { throw new Exception("abstract method"); }
 }
 
 class LispEmptyList : LispList {
     override dstring Repr() { return "()"; }
     override LispList Reverse() { return NIL(); }
+    override LispObject[] ToArray() { LispObject[] elems = []; return elems; }
 }
 
 class LispPair : LispList {
@@ -65,6 +76,22 @@ class LispPair : LispList {
             }
         }
         return acc;
+    }
+
+    override LispObject[] ToArray() {
+        LispObject[] elems = [];
+        LispPair p = this;
+        while (true) {
+            elems ~= p.head;
+            if (auto next_pair = cast(LispPair) p.tail) {
+                p = next_pair;
+            } else if (auto empty = cast(LispEmptyList) p.tail) {
+                // end of list reached
+                return elems;
+            } else {
+                throw new Exception("cannot convert improper list to array");
+            }
+        }
     }
 }
 

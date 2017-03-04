@@ -1,16 +1,26 @@
 // test_types.d
 
+import std.algorithm.comparison: equal;
 import std.array : appender;
 import std.format : formattedWrite;
 import std.stdio;
 import types;
 
+// XXX these need to be moved to an auxilary module
 void AssertEquals(dstring actual, dstring expected) {
     auto writer = appender!dstring();
     formattedWrite(writer, "Actual result: %s\nExpected: %s\n", actual, expected);
     if (actual != expected)
         stderr.writefln(writer.data());
     assert(actual == expected);
+}
+
+void AssertEquals(LispObject[] actual, LispObject[] expected) {
+    auto writer = appender!dstring();
+    formattedWrite(writer, "Actual result: %s\nExpected: %s\n", actual, expected);
+    if (actual != expected)
+        stderr.writefln(writer.data());
+    assert(equal(actual, expected));
 }
 
 /* test Repr() */
@@ -54,3 +64,23 @@ unittest {
     AssertEquals(NIL().Repr(), "()");
 }
 
+/* test ToArray() */
+unittest {
+    // assumption: LispSymbols can be compared
+    assert(new LispSymbol("a") == new LispSymbol("a"), "bwoi");
+
+    auto SA = new LispSymbol("a"),
+         SB = new LispSymbol("b"),
+         SC = new LispSymbol("c");
+    LispList l1 = new LispPair(SA,
+                  new LispPair(SB,
+                  new LispPair(SC, NIL())));
+    auto a1 = l1.ToArray();
+    assert (a1.length == 3);
+    AssertEquals(a1, [SA, SB, SC]);
+
+    // TODO: add more tests, but not until the '==' operator works on all
+    // LispObjects!
+
+    AssertEquals(NIL().ToArray(), []);
+}
