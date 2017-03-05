@@ -1,5 +1,8 @@
 // errors.d
 
+import std.exception;
+
+/*
 template GenException(string name, string parent="Exception") {
     const char[] GenException =
     `class ` ~ name ~ ` : ` ~ parent ~ `
@@ -9,8 +12,15 @@ template GenException(string name, string parent="Exception") {
         }
     }`;
 }
+*/
 
-mixin(GenException!("ParserException"));
-mixin(GenException!("NoInputException", "ParserException"));
-mixin(GenException!("UnbalancedParenException", "ParserException"));
-mixin(GenException!("IncompleteExpressionException", "ParserException"));
+//mixin(GenException!("ParserException"));
+//mixin(GenException!("NoInputException", "ParserException"));
+//mixin(GenException!("UnbalancedParenException", "ParserException"));
+//mixin(GenException!("IncompleteExpressionException", "ParserException"));
+
+class ParserException: Exception { mixin basicExceptionCtors; }
+class NoInputException: ParserException { mixin basicExceptionCtors; }
+class UnbalancedParenException: ParserException { mixin basicExceptionCtors; }
+class IncompleteExpressionException: ParserException { mixin basicExceptionCtors; }
+

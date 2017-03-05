@@ -10,7 +10,7 @@ struct ParserResult {
 
 ParserResult parse(dstring[] tokens) {
     if (tokens.length == 0)
-        throw new NoInputException();
+        throw new NoInputException("no input");
     if (tokens[0] == "(") {
         LispList list = NIL();
         tokens = tokens[1..$];
