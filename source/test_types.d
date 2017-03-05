@@ -4,7 +4,9 @@ import std.algorithm.comparison: equal;
 import std.array : appender;
 import std.format : formattedWrite;
 import std.stdio;
+//
 import types;
+import tools;
 
 // XXX these need to be moved to an auxilary module
 void AssertEquals(dstring actual, dstring expected) {
@@ -18,6 +20,16 @@ void AssertEquals(dstring actual, dstring expected) {
 void AssertEquals(LispObject[] actual, LispObject[] expected) {
     auto writer = appender!dstring();
     formattedWrite(writer, "Actual result: %s\nExpected: %s\n", actual, expected);
+    if (actual != expected)
+        stderr.writefln(writer.data());
+    //assert(equal(actual, expected));
+    assert(actual == expected);
+}
+
+void AssertEquals(LispObject actual, LispObject expected) {
+    auto writer = appender!dstring();
+    formattedWrite(writer, "Actual result: %s\nExpected: %s\n", actual.Repr(),
+                   expected.Repr());
     if (actual != expected)
         stderr.writefln(writer.data());
     //assert(equal(actual, expected));
@@ -80,13 +92,13 @@ unittest {
     assert (a1.length == 3);
     AssertEquals(a1, [SA, SB, SC]);
 
-    // TODO: add more tests, but not until the '==' operator works on all
-    // LispObjects!
+    AssertEquals(l1, l1);
+    AssertEquals(a1, l1.ToArray());
 
     AssertEquals(NIL().ToArray(), []);
 }
 
-/* test FromArray() */
+/* test tools.FromArray() */
 unittest {
     auto SA = new LispSymbol("a"),
          SB = new LispSymbol("b"),
@@ -96,6 +108,8 @@ unittest {
                   new LispPair(SC, NIL())));
 
     LispObject[] stuff = [SA, SB, SC];
-    // TODO: use FromArray() and compare lists!
+    AssertEquals(FromArray(stuff), l1);
+
+    AssertEquals(FromArray([]), NIL());
 }
 

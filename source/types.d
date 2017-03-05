@@ -30,6 +30,11 @@ class LispEmptyList : LispList {
     override dstring Repr() { return "()"; }
     override LispList Reverse() { return NIL(); }
     override LispObject[] ToArray() { LispObject[] elems = []; return elems; }
+    override bool opEquals(Object o) {
+        if (auto other = cast(LispEmptyList) o) {
+            return true;
+        } else return super.opEquals(o);
+    }
 }
 
 class LispPair : LispList {
@@ -39,6 +44,13 @@ class LispPair : LispList {
     this(LispObject head, LispObject tail) {
         this.head = head;
         this.tail = tail;
+    }
+
+    override bool opEquals(Object o) {
+        if (auto other = cast(LispPair) o) {
+            if (this.head != other.head) return false;
+            return this.tail == other.tail;
+        } else return super.opEquals(o);
     }
 
     override dstring Repr() {
