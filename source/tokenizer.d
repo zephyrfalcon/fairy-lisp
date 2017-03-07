@@ -23,6 +23,9 @@ dstring[] tokenize(dstring text) {
         } else if (token == ')') {
             add_token_if_any();
             tokens ~= ")";
+        } else if (token == '\'') {
+            add_token_if_any();
+            tokens ~= "'";
         } else {
             current_token ~= token;
         }

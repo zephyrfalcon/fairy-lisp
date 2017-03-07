@@ -24,5 +24,24 @@ unittest {
     x = tokenize_and_parse("x y");
     AssertEquals(x.result, new LispSymbol("x"));
     AssertEquals(x.rest_tokens, ["y"]);
+
+    x = tokenize_and_parse("(a b c)");
+    AssertEquals(x.result, new LispPair(new LispSymbol("a"), new LispPair(new
+                    LispSymbol("b"), new LispPair(new LispSymbol("c"), NIL()))));
+    AssertEquals(x.rest_tokens, []);
+
+    x = tokenize_and_parse("((a (b) c () (d (e (f g))))) bogus");
+    AssertEquals(x.result.Repr(), "((a (b) c () (d (e (f g)))))");
+    AssertEquals(x.rest_tokens, ["bogus"]);
 }
 
+/* test QUOTE */
+unittest {
+    ParserResult x = tokenize_and_parse(" 'p ");
+    AssertEquals(x.result, new LispPair(new LispSymbol("quote"), new
+                LispPair(new LispSymbol("p"), NIL())));
+    AssertEquals(x.rest_tokens, []);
+
+    x = tokenize_and_parse("'(hello kitty)");
+    AssertEquals(x.result.Repr(), "(quote (hello kitty))");
+}

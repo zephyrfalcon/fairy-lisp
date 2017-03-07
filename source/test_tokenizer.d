@@ -18,5 +18,6 @@ unittest {
     AssertTokensEqual(tokenize("a b c"), ["a", "b", "c"]);
     AssertTokensEqual(tokenize("  лиса 1 "), ["лиса", "1"]);
     AssertTokensEqual(tokenize("(a b)"), ["(", "a", "b", ")"]);
+    AssertTokensEqual(tokenize("'x"), ["'", "x"]);
 }
 
