@@ -30,7 +30,7 @@ unittest {
 
 // test FileReader
 unittest {
-    string path = buildPath(WhereAmI(), "tests", "etc", "1.sl");
+    string path = buildPath(WhereAmI(), "source", "tests", "etc", "1.sl");
     LispObject[] exprs = [];
     auto fr = new FileReader(path);
     while (true) {
@@ -41,8 +41,8 @@ unittest {
             break;
         }
     }
-    writeln(exprs);
-    AssertEquals(exprs.length, 4);
-    AssertEquals(exprs[3].Repr(), "33");
-    AssertEquals(exprs[2].Repr(), "(baz (quux 4))");
+    // TODO: before this works, we need comments, integers, ...
+    //AssertEquals(exprs.length, 4);
+    //AssertEquals(exprs[3].Repr(), "33");
+    //AssertEquals(exprs[2].Repr(), "(baz (quux 4))");
 }

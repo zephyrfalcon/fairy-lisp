@@ -19,5 +19,9 @@ unittest {
     AssertTokensEqual(tokenize("  лиса 1 "), ["лиса", "1"]);
     AssertTokensEqual(tokenize("(a b)"), ["(", "a", "b", ")"]);
     AssertTokensEqual(tokenize("'x"), ["'", "x"]);
+    AssertTokensEqual(tokenize("(a (b c) *x* do-this)"), 
+            ["(", "a", "(", "b", "c", ")", "*x*", "do-this", ")"]);
+    AssertTokensEqual(tokenize(" \"Hi Joe\" "), ["\"Hi Joe\""]);
+    AssertTokensEqual(tokenize("yo ;; sup\ndawg"), ["yo", "dawg"]);
 }
 
