@@ -1,5 +1,7 @@
 // parser.d
 
+import std.conv;
+import std.regex;
 import errors;
 import types;
 
@@ -41,7 +43,14 @@ ParserResult parse(dstring[] tokens) {
     }
 }
 
-LispObject CreateFromToken(dstring s) {
-    return new LispSymbol(s); // default
+//const auto re_integer = regex(`^-?\d+$`d);
+
+LispObject CreateFromToken(dstring token) {
+    auto re_integer = regex(`^-?\d+$`d);
+    auto m = matchFirst(token, re_integer);
+    if (!m.empty) {
+        return new LispInteger(to!int(token));
+    }
+    return new LispSymbol(token); // default
 }
 

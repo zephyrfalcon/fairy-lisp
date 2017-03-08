@@ -45,3 +45,13 @@ unittest {
     x = tokenize_and_parse("'(hello kitty)");
     AssertEquals(x.result.Repr(), "(quote (hello kitty))");
 }
+
+// test CreateFromToken()
+unittest {
+    LispObject o1 = CreateFromToken("42");
+    if (auto i1 = cast(LispInteger) o1) {
+        AssertEquals(i1.value, 42);
+    } else {
+        Fail("could not convert token to LispInteger");
+    }
+}

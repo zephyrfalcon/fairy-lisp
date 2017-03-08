@@ -1,6 +1,7 @@
 // types.d
 
 import std.array;
+import std.conv;
 
 abstract class LispObject {
     dstring Repr() { return "<undefined>"; }
@@ -16,6 +17,17 @@ class LispSymbol : LispObject {
     override dstring Repr() { return value; }
     override bool opEquals(Object o) {
         if (auto other = cast(LispSymbol) o) {
+            return this.value == other.value;
+        } else return super.opEquals(o);
+    }
+}
+
+class LispInteger : LispObject {
+    int value;
+    this(int x) { this.value = x; }
+    override dstring Repr() { return to!dstring(this.value); }
+    override bool opEquals(Object o) {
+        if (auto other = cast(LispInteger) o) {
             return this.value == other.value;
         } else return super.opEquals(o);
     }

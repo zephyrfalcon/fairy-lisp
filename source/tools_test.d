@@ -9,6 +9,11 @@ import types;
 // TODO: you notice they all look the same... maybe we can make this more
 // generic with templates?
 
+void Fail(string msg) {
+    stderr.writeln(msg);
+    assert(false, msg);
+}
+
 void AssertEquals(dstring actual, dstring expected) {
     auto writer = appender!dstring();
     formattedWrite(writer, "Actual result: %s\nExpected: %s\n", actual, expected);
