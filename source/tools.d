@@ -1,5 +1,7 @@
 // tools.d
 
+import std.file;
+import std.path;
 import types;
 
 LispList FromArray(LispObject[] things) {
@@ -13,3 +15,7 @@ LispList FromArray(LispObject[] things) {
     return head;
 }
 
+// return the path of the executable.
+string WhereAmI() {
+    return dirName(absolutePath(thisExePath()));
+}

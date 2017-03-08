@@ -34,6 +34,15 @@ void AssertEquals(LispObject[] actual, LispObject[] expected) {
     assert(actual == expected);
 }
 
+void AssertEquals(ulong actual, ulong expected) {
+    auto writer = appender!dstring();
+    formattedWrite(writer, "Actual result: %s\nExpected: %s\n", actual, expected);
+    if (actual != expected)
+        stderr.writefln(writer.data());
+    //assert(equal(actual, expected));
+    assert(actual == expected);
+}
+
 void AssertEquals(LispObject actual, LispObject expected) {
     auto writer = appender!dstring();
     formattedWrite(writer, "Actual result: %s\nExpected: %s\n", actual.Repr(),
