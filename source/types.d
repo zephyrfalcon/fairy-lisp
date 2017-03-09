@@ -33,6 +33,39 @@ class LispInteger : LispObject {
     }
 }
 
+class LispString : LispObject {
+    dstring value;
+    this(dstring s) { this.value = s; }
+    override dstring Repr() { return this.value; } // FIXME: must be quoted
+    override bool opEquals(Object o) {
+        if (auto other = cast(LispString) o) {
+            return this.value == other.value;
+        } else return super.opEquals(o);
+    }
+}
+
+class LispCharacter : LispObject {
+    dchar value;
+    this(dchar c) { this.value = c; }
+    override dstring Repr() { return "#\\"d ~ this.value; }
+    override bool opEquals(Object o) {
+        if (auto other = cast(LispCharacter) o) {
+            return this.value == other.value;
+        } else return super.opEquals(o);
+    }
+}
+
+class LispKeyword : LispObject {
+    dstring value;
+    this(dstring s) { this.value = s; }  // XXX what of leading ":"?
+    override dstring Repr() { return ":"d ~ this.value; }
+    override bool opEquals(Object o) {
+        if (auto other = cast(LispKeyword) o) {
+            return this.value == other.value;
+        } else return super.opEquals(o);
+    }
+}
+
 abstract class LispList : LispObject {
     LispList Reverse() { throw new Exception("abstract method"); };
     LispObject[] ToArray() { throw new Exception("abstract method"); }

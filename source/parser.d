@@ -2,6 +2,7 @@
 
 import std.conv;
 import std.regex;
+import std.stdio;
 import errors;
 import types;
 
@@ -43,13 +44,19 @@ ParserResult parse(dstring[] tokens) {
     }
 }
 
-//const auto re_integer = regex(`^-?\d+$`d);
-
 LispObject CreateFromToken(dstring token) {
-    auto re_integer = regex(`^-?\d+$`d);
-    auto m = matchFirst(token, re_integer);
+    auto m = matchFirst(token, `^-?\d+$`d);
     if (!m.empty) {
         return new LispInteger(to!int(token));
+    }
+    if (!(matchFirst(token, `^".*"$`d).empty)) {
+        return new LispString(token);  // FIXME: unescape string
+    }
+    if (!(matchFirst(token, `^#\\.+$`d).empty)) {
+        return new LispCharacter(token[2]);  // *must* be a dchar
+    }
+    if (!(matchFirst(token, `^:.+$`d).empty)) {
+        return new LispKeyword(token[1..$]);
     }
     return new LispSymbol(token); // default
 }

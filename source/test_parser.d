@@ -54,4 +54,26 @@ unittest {
     } else {
         Fail("could not convert token to LispInteger");
     }
+
+    LispObject o2 = CreateFromToken(`"hello world"`);
+    if (auto s1 = cast(LispString) o2) {
+        AssertEquals(s1.value, `"hello world"`);
+        // FIXME: string needs to be unescaped
+    } else {
+        Fail("could not convert token to LispString");
+    }
+
+    LispObject o3 = CreateFromToken(":foo");
+    if (auto s2 = cast(LispKeyword) o3) {
+        AssertEquals(s2.value, "foo");
+    } else {
+        Fail("could not convert token to LispSymbol");
+    }
+
+    LispObject o4 = CreateFromToken("#\\x");
+    if (auto c1 = cast(LispCharacter) o4) {
+        AssertEquals(c1.Repr(), "#\\x");
+    } else {
+        Fail("could not convert token to LispCharacter");
+    }
 }

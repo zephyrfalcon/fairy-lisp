@@ -1,7 +1,10 @@
 // tools.d
 
+import std.array;
 import std.file;
+import std.format;
 import std.path;
+import std.stdio;
 import types;
 
 LispList FromArray(LispObject[] things) {
@@ -19,3 +22,15 @@ LispList FromArray(LispObject[] things) {
 string WhereAmI() {
     return dirName(absolutePath(thisExePath()));
 }
+
+string EscapeString(string s) {
+    auto writer = appender!string;
+    formattedWrite(writer, "%(%s%)", [s]);
+    return writer.data;
+}
+dstring EscapeString(dstring s) {
+    auto writer = appender!dstring;
+    formattedWrite(writer, "%(%s%)", [s]);
+    return writer.data;
+}
+
