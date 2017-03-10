@@ -41,8 +41,34 @@ unittest {
             break;
         }
     }
-    // TODO: before this works, we need comments, integers, ...
-    //AssertEquals(exprs.length, 4);
-    //AssertEquals(exprs[3].Repr(), "33");
-    //AssertEquals(exprs[2].Repr(), "(baz (quux 4))");
+
+    AssertEquals(exprs.length, 4);
+    AssertEquals(exprs[3].Repr(), "33");
+    AssertEquals(exprs[2].Repr(), "(baz (quux 4))");
+
+    // --- incomplete expressions
+
+    bool detected = false;  // did we detect the unbalanced paren?
+    path = buildPath(WhereAmI(), "source", "tests", "etc", "2.sl");
+    exprs = [];
+    fr = new FileReader(path);
+    while (true) {
+        try {
+            LispObject expr = fr.Read();
+        } catch (NoInputException e) {
+            break;
+        } catch (IncompleteExpressionException e) {
+            detected = true; break;
+        }
+    }
+    AssertEquals(detected, true);
+
+    // --- quoting
+
+    path = buildPath(WhereAmI(), "source", "tests", "etc", "3.sl");
+    exprs = [];
+    fr = new FileReader(path);
+    LispObject expr = fr.Read();
+    AssertEquals(expr.Repr(), "(quote (1 2))");
 }
+
