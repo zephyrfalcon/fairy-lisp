@@ -24,3 +24,5 @@ class NoInputException: ParserException { mixin basicExceptionCtors; }
 class UnbalancedParenException: ParserException { mixin basicExceptionCtors; }
 class IncompleteExpressionException: ParserException { mixin basicExceptionCtors; }
 
+class EnvironmentKeyException: Exception { mixin basicExceptionCtors; }
+

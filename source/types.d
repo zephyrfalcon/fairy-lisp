@@ -2,6 +2,9 @@
 
 import std.array;
 import std.conv;
+import std.stdio;
+import std.string;
+import errors;
 
 abstract class LispObject {
     dstring Repr() { return "<undefined>"; }
@@ -150,6 +153,74 @@ class LispPair : LispList {
             }
         }
     }
+}
+
+struct EnvFindResult {
+    LispEnvironment env;
+    LispObject value;
+}
+
+class LispEnvironment : LispObject {
+    LispEnvironment parent;
+    LispObject[string] names;  // NOTE: initializes to null
+
+    this() { }
+    this(LispEnvironment parent) {
+        this.parent = parent;
+    }
+
+    void Set(string name, LispObject value) {
+        this.names[name] = value;
+    }
+
+    // look for the given name in this environment; if not found, look
+    // recursively in its parent. if still not found anywhere, raise an
+    // exception; otherwise return an EnvFindResult containing the environment
+    // where it was found, and the associated value.
+    EnvFindResult Find(string name) {
+        auto value = (name in this.names);
+        if (value is null) {
+            if (this.parent is null) {
+                throw new EnvironmentKeyException(format("key not found: %s",
+                                                  name));
+            } else {
+                return this.parent.Find(name);
+            }
+        } else {
+            return EnvFindResult(this, *value);
+        }
+    }
+
+    LispObject Get(string name) {
+        auto efr = this.Find(name);
+        return efr.value;
+    }
+    
+    LispObject GetLocal(string name) {
+        auto value = (name in this.names);
+        if (value is null) {
+            throw new EnvironmentKeyException(format("key not found: %s", name));
+        } else {
+            return *value;
+        }
+    }
+
+    // update a value associated with the given name, i.e. find it in the
+    // environment *or a parent*, then update the value in *that environment*.
+    // raises an error if the name was not found.
+    void Update(string name, LispObject value) {
+        auto efr = this.Find(name);  // will raise error if not found
+        efr.env.Set(name, value);
+    }
+
+    void DeleteLocal(string name) {
+        // ...
+    }
+
+    void Delete(string name) {
+        // ...
+    }
+
 }
 
 /* "constants" */
