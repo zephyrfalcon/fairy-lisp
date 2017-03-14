@@ -48,6 +48,15 @@ void AssertEquals(ulong actual, ulong expected) {
     assert(actual == expected);
 }
 
+void AssertNull(Object o) {
+    auto writer = appender!dstring();
+    formattedWrite(writer, "Object is not null: %s", o);
+    if (o !is null)
+        stderr.writefln(writer.data());
+    //assert(equal(actual, expected));
+    assert(o is null);
+}
+
 void AssertEquals(LispObject actual, LispObject expected) {
     auto writer = appender!dstring();
     formattedWrite(writer, "Actual result: %s\nExpected: %s\n", actual.Repr(),

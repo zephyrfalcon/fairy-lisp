@@ -214,11 +214,16 @@ class LispEnvironment : LispObject {
     }
 
     void DeleteLocal(string name) {
-        // ...
+        this.names.remove(name);
     }
 
     void Delete(string name) {
-        // ...
+        try {
+            auto efr = this.Find(name);
+            efr.env.DeleteLocal(name);
+        } catch (EnvironmentKeyException e) {
+            // key does not exist; don't do anything
+        }
     }
 
 }
