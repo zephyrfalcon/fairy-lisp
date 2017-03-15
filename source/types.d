@@ -226,6 +226,10 @@ class LispEnvironment : LispObject {
         }
     }
 
+    string[] GetNames() {
+        return this.names.keys;  // in no particular order
+    }
+
 }
 
 /* "constants" */

@@ -1,5 +1,6 @@
 // test_environment.d
 
+import std.algorithm.sorting;
 import std.exception;
 import errors;
 import tools_test;
@@ -29,4 +30,34 @@ unittest {
 
     assertThrown!EnvironmentKeyException(e1.Find("xyzzy"));
     assertThrown!EnvironmentKeyException(e1.Get("xyzzy"));
+
+    e1.Update("foo", new LispInteger(43));
+    AssertEquals(e1.Get("foo"), new LispInteger(43));
+    assertThrown!EnvironmentKeyException(e1.Update("xyzzy", NIL()));
+
+    // create a new environment with e1 as parent
+    LispEnvironment e2 = new LispEnvironment(e1);
+    e2.Set("foo", new LispInteger(100)); // we have our own foo
+
+    AssertEquals(e2.Get("foo"), new LispInteger(100));
+    AssertEquals(e2.parent.Get("foo"), new LispInteger(43));
+    AssertEquals(e1.Get("foo"), new LispInteger(43));
+    AssertEquals(e2.Get("bar"), new LispSymbol("bar"));
+
+    e2.Update("bar", new LispSymbol("quux"));
+    AssertEquals(e2.Get("bar"), new LispSymbol("quux"));
+    AssertEquals(e1.Get("bar"), new LispSymbol("quux"));
+    assertThrown!EnvironmentKeyException(e2.GetLocal("bar"));
+
+    efr = e2.Find("bar");
+    AssertEquals(efr.env, e1);
+
+    string[] e1_names = e1.GetNames();
+    string[] e2_names = e2.GetNames();
+    e1_names.sort();
+    e2_names.sort();
+    AssertEquals(e1_names, ["bar", "foo"]);
+    AssertEquals(e2_names, ["foo"]);
 }
+
+

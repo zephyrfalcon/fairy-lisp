@@ -30,6 +30,14 @@ void AssertEquals(dstring[] actual, dstring[] expected) {
     assert(actual == expected);
 }
 
+void AssertEquals(string[] actual, string[] expected) {
+    auto writer = appender!string();
+    formattedWrite(writer, "Actual result: %s\nExpected: %s\n", actual, expected);
+    if (actual != expected)
+        stderr.writefln(writer.data());
+    assert(actual == expected);
+}
+
 void AssertEquals(LispObject[] actual, LispObject[] expected) {
     auto writer = appender!dstring();
     formattedWrite(writer, "Actual result: %s\nExpected: %s\n", actual, expected);
