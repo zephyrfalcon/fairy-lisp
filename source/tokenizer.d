@@ -1,6 +1,12 @@
 // tokenizer.d
 
+import std.format;
 import std.uni;
+import errors;
+
+// NOTE: The tokenizer needs to process the input text as an array of dchars;
+// treating it as an array of bytes would not play well with character
+// literals, among other things.
 
 dstring[] tokenize(dstring text) {
     dstring[] tokens = [];
@@ -45,10 +51,21 @@ dstring[] tokenize(dstring text) {
         } else if (token == '"') {
             in_string = true;
             current_token ~= token;  // is this correct? :-/
+        } else if (current_token == "" && token == '#') {
+            // #-codes
+            if (text[i+1] == '\\') {
+                // character literal
+                dstring char_token = text[i..i+3];
+                tokens ~= char_token;
+                i += 2;  // skip past character literal
+                // XXX can we have more than one character? e.g. CL and Scheme
+                // allow constructs like #\space, etc. 
+            } else {
+                throw new UnknownCodeError(format("Unknown #-code: %s", tokens[i..i+10]));
+            }
         } else {
             current_token ~= token;
         }
-        // TODO: #-codes
     }
 
     // if there's a token currently being built, then add it

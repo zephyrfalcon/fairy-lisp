@@ -26,3 +26,5 @@ class IncompleteExpressionException: ParserException { mixin basicExceptionCtors
 
 class EnvironmentKeyException: Exception { mixin basicExceptionCtors; }
 
+class UnknownCodeError: Exception { mixin basicExceptionCtors; }
+

@@ -23,5 +23,6 @@ unittest {
             ["(", "a", "(", "b", "c", ")", "*x*", "do-this", ")"]);
     AssertTokensEqual(tokenize(" \"Hi Joe\" "), ["\"Hi Joe\""]);
     AssertTokensEqual(tokenize("yo ;; sup\ndawg"), ["yo", "dawg"]);
+    AssertTokensEqual(tokenize(`#\x #\∂`), [`#\x`, `#\∂`]);
 }
 
