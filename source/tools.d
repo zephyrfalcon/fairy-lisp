@@ -34,3 +34,10 @@ dstring EscapeString(dstring s) {
     return writer.data;
 }
 
+dstring[] LispTypeListAsReprs(LispObject[] values) {
+    dstring[] reprs = [];
+    foreach (value; values) {
+        reprs ~= value.Repr();
+    }
+    return reprs;
+}
