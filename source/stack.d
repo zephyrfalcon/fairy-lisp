@@ -16,8 +16,8 @@ class Stack(T) {
         }
     }
     Cell tos = null;
-    size_t length = 0;
-    size_t max_size = MAX_STACK_SIZE;
+    int length = 0;
+    int max_size = MAX_STACK_SIZE;
 
     void Push(T item) {
         if (this.length >= this.max_size)
@@ -51,6 +51,18 @@ class Stack(T) {
             this.tos = this.tos.next;
         }
         this.length = 0;
+    }
+
+    // walk over all elements on the stack, top first. we do this by passing
+    // in a function that takes an index and a value of type T.
+    void Walk(void delegate(int idx, T value) f) {
+        int idx = 0;
+        Cell curr = this.tos;
+        while (curr !is null) {
+            f(idx, curr.value);
+            curr = curr.next;
+            idx++;
+        }
     }
 }
 

@@ -51,6 +51,9 @@ class CallStack {
     }
 
     void Print() {
-        // TODO: walk over the frames and print their contents
+        int len = this.stack.length;
+        this.stack.Walk(delegate(int idx, StackFrame sf) {
+            sf.Print(len-idx-1);
+        });
     }
 }
