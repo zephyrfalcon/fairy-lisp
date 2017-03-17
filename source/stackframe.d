@@ -4,6 +4,10 @@ import std.stdio;
 import tools;
 import types;
 
+// FIXME
+abstract class StackFrameHelper {
+}
+
 class StackFrame {
     LispObject original_expr;       // the original Lisp expression
     LispObject[] to_be_evaluated;   // yet to be evaluated
@@ -11,7 +15,8 @@ class StackFrame {
     bool is_atomic;                 // is the original expression atomic
     LispEnvironment env;            // environment that the expression will be
                                     // evaluated in
-    // TODO: helper
+    // FIXME: helper
+    StackFrameHelper aux_data = null;
 
     this(LispObject expr, LispEnvironment env) {
         this.original_expr = expr;

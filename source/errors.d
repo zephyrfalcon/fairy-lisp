@@ -28,3 +28,7 @@ class EnvironmentKeyException: Exception { mixin basicExceptionCtors; }
 
 class UnknownCodeError: Exception { mixin basicExceptionCtors; }
 
+class StackError: Exception { mixin basicExceptionCtors; }
+class StackOverflowError: StackError { mixin basicExceptionCtors; }
+class StackUnderflowError: StackError { mixin basicExceptionCtors; }
+
