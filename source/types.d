@@ -69,6 +69,17 @@ class LispKeyword : LispObject {
     }
 }
 
+class LispBoolean : LispObject {
+    bool value;
+    this(bool value) { this.value = value; }
+    override dstring Repr() { return this.value ? "true" : "false"; }
+    override bool opEquals(Object o) {
+        if (auto other = cast(LispBoolean) o) {
+            return this.value == other.value;
+        } else return super.opEquals(o);
+    }
+}
+
 abstract class LispList : LispObject {
     LispList Reverse() { throw new Exception("abstract method"); };
     LispObject[] ToArray() { throw new Exception("abstract method"); }
@@ -232,19 +243,25 @@ class LispEnvironment : LispObject {
 
 }
 
-/* "constants" */
-
-/*
-const LispEmptyList _EMPTY_LIST = new LispEmptyList();
-
-LispEmptyList NIL() { return cast(LispEmptyList) _EMPTY_LIST; }
-*/
+/* "singletons", sort of kind of */
 
 // this is one way to make sure we always use the same object... through a
-// function. 
+// function. NOTE: never create these objects directly.
 
 LispEmptyList NIL() {
     static LispEmptyList e;
     if (!e) e = new LispEmptyList();
     return e;
 }
+
+LispBoolean TRUE() {
+    static LispBoolean _true;
+    if (!_true) _true = new LispBoolean(true);
+    return _true;
+}
+LispBoolean FALSE() {
+    static LispBoolean _false;
+    if (!_false) _false = new LispBoolean(false);
+    return _false;
+}
+
