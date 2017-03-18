@@ -153,6 +153,16 @@ class LispBuiltinFunction : LispFunction {
         this.f = f;
         this.arity = arity;
     }
+
+    override dstring Repr() {
+        return format("#<%s>"d, this.name);
+    }
+    override bool opEquals(Object o) {
+        if (auto other = cast(LispBuiltinFunction) o) {
+            return this.name == other.name && this.f == other.f 
+                && this.arity == other.arity;
+        } else return super.opEquals(o);
+    }
 }
 
 class LispUserDefinedFunction : LispFunction {
@@ -167,6 +177,17 @@ class LispUserDefinedFunction : LispFunction {
         this.env = env;
         this.name = name;
         this.arity = cast(int) argnames.length;
+    }
+
+    override dstring Repr() {
+        return format("#<%s>"d, this.name == "" ? "user-defined function" : this.name);
+    }
+    override bool opEquals(Object o) {
+        if (auto other = cast(LispUserDefinedFunction) o) {
+            return this.name == other.name 
+                && this.arity == other.arity && this.fbody == other.fbody
+                && this.argnames == other.argnames && this.env == other.env;
+        } else return super.opEquals(o);
     }
 }
 
