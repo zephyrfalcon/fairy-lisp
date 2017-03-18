@@ -126,6 +126,13 @@ struct FunctionArgs {
         }
         return fa;
     }
+
+    // get all "regular" (non-keyword) args 
+    LispObject[] GetAllArgs() {
+        LispObject[] all_args = this.args;  // seems to be a shallow copy
+        all_args ~= this.rest_args;  // does not affect this.args
+        return all_args;
+    }
 }
 
 alias BuiltinFunctionSig = 

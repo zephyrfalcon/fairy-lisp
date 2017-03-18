@@ -5,6 +5,7 @@ import std.conv;
 import std.format;
 import std.stdio;
 
+import builtins;
 import callstack;
 import errors;
 import reader;
@@ -30,7 +31,14 @@ class Interpreter {
         this.builtin_env.Set("true", TRUE());
         this.builtin_env.Set("false", FALSE());
         // TODO: load types
-        // TODO: load builtin functions
+
+        // load builtin functions
+        FI[dstring] builtins = GetBuiltins();
+        foreach (name; builtins.keys) {
+            FI fi = builtins[name];
+            auto bf = new LispBuiltinFunction(name, fi.f, fi.arity);
+            this.builtin_env.Set(name, bf);
+        }
     }
 
     LispObject EvalAtomic(LispObject expr, LispEnvironment env) {

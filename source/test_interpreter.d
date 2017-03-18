@@ -17,7 +17,17 @@ unittest {
 // test if builtins exist
 unittest {
     auto intp = new Interpreter();
+
+    // check if the built-in symbol 'true' exists
     auto results = intp.EvalString("true");
     AssertEquals(results.length, 1);
     AssertEquals(results[0], TRUE());
+
+    // check if the built-in function '+' exists
+    results = intp.EvalString("+");
+    AssertEquals(results.length, 1);
+    if (auto bf = cast(LispBuiltinFunction) results[0]) {
+        AssertEquals(bf.name, "+");
+    } else Fail("not a built-in function");
 }
+
