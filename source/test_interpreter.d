@@ -14,3 +14,10 @@ unittest {
     // TODO: multiple expressions in string
 }
 
+// test if builtins exist
+unittest {
+    auto intp = new Interpreter();
+    auto results = intp.EvalString("true");
+    AssertEquals(results.length, 1);
+    AssertEquals(results[0], TRUE());
+}

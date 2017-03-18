@@ -22,14 +22,22 @@ class Interpreter {
         this.callstack = new CallStack();
         this.builtin_env = new LispEnvironment();
         this.global_env = new LispEnvironment(this.builtin_env);
-        // TODO: load builtins
+        this.LoadBuiltins();
         // TODO: autoload code
+    }
+
+    void LoadBuiltins() {
+        this.builtin_env.Set("true", TRUE());
+        this.builtin_env.Set("false", FALSE());
+        // TODO: load types
+        // TODO: load builtin functions
     }
 
     LispObject EvalAtomic(LispObject expr, LispEnvironment env) {
         // symbols are looked up
         if (auto sym = cast(LispSymbol) expr) {
-            throw new NotImplementedError("symbol evaluation");
+            LispObject value = env.Get(sym.value);
+            return value;
         } else {
             // everything else evaluates to itself
             return expr;

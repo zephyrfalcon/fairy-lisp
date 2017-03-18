@@ -173,14 +173,14 @@ struct EnvFindResult {
 
 class LispEnvironment : LispObject {
     LispEnvironment parent;
-    LispObject[string] names;  // NOTE: initializes to null
+    LispObject[dstring] names;  // NOTE: initializes to null
 
     this() { }
     this(LispEnvironment parent) {
         this.parent = parent;
     }
 
-    void Set(string name, LispObject value) {
+    void Set(dstring name, LispObject value) {
         this.names[name] = value;
     }
 
@@ -188,7 +188,7 @@ class LispEnvironment : LispObject {
     // recursively in its parent. if still not found anywhere, raise an
     // exception; otherwise return an EnvFindResult containing the environment
     // where it was found, and the associated value.
-    EnvFindResult Find(string name) {
+    EnvFindResult Find(dstring name) {
         auto value = (name in this.names);
         if (value is null) {
             if (this.parent is null) {
@@ -202,12 +202,12 @@ class LispEnvironment : LispObject {
         }
     }
 
-    LispObject Get(string name) {
+    LispObject Get(dstring name) {
         auto efr = this.Find(name);
         return efr.value;
     }
     
-    LispObject GetLocal(string name) {
+    LispObject GetLocal(dstring name) {
         auto value = (name in this.names);
         if (value is null) {
             throw new EnvironmentKeyException(format("key not found: %s", name));
@@ -219,16 +219,16 @@ class LispEnvironment : LispObject {
     // update a value associated with the given name, i.e. find it in the
     // environment *or a parent*, then update the value in *that environment*.
     // raises an error if the name was not found.
-    void Update(string name, LispObject value) {
+    void Update(dstring name, LispObject value) {
         auto efr = this.Find(name);  // will raise error if not found
         efr.env.Set(name, value);
     }
 
-    void DeleteLocal(string name) {
+    void DeleteLocal(dstring name) {
         this.names.remove(name);
     }
 
-    void Delete(string name) {
+    void Delete(dstring name) {
         try {
             auto efr = this.Find(name);
             efr.env.DeleteLocal(name);
@@ -237,7 +237,7 @@ class LispEnvironment : LispObject {
         }
     }
 
-    string[] GetNames() {
+    dstring[] GetNames() {
         return this.names.keys;  // in no particular order
     }
 
