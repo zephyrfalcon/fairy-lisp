@@ -84,7 +84,16 @@ class Interpreter {
             }
         } else {
             // it's a compound expression
-            throw new NotImplementedError("compound expressions");
+
+            // TODO: is it a special form?
+
+            // evaluate the next element of the compound form by putting it on
+            // the call stack
+            auto elem = top.to_be_evaluated[0];
+            top.to_be_evaluated = top.to_be_evaluated[1..$];
+            auto sf = new StackFrame(elem, top.env);
+            this.callstack.Push(sf);
+
         }
     }
 
