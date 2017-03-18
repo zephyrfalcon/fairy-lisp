@@ -54,7 +54,14 @@ class Interpreter {
             } else {
                 // if we're done evaluating all the parts, we can call the
                 // function.
-                throw new NotImplementedError("function calls");
+                if (auto f = cast(LispFunction) top.evaluated[0]) {
+                    auto args = top.evaluated[1..$]; // may be empty
+                    auto fargs = FunctionArgs.Parse(f.arity, args);
+                    auto result = this.CallFunction(top.env, f, fargs);
+                    // TODO: Go code allows null result here for special
+                    // cases; do something similar
+                    this.callstack.Collapse(result);
+                } else throw new Exception("first element of function call must be callable");
             }
             return;
         } 
@@ -107,6 +114,17 @@ class Interpreter {
             }
         }
         return results;
+    }
+
+    LispObject CallFunction(LispEnvironment caller_env, LispFunction callable,
+                            FunctionArgs fargs) {
+        if (auto bf = cast(LispBuiltinFunction) callable) {
+            LispObject result = bf.f(this, caller_env, fargs);
+            // XXX can this return null?
+            return result;
+        } else if (auto uf = cast(LispUserDefinedFunction) callable) {
+            throw new NotImplementedError("calling user-defined functions");
+        } else throw new Exception("not a callable");  // should not happen
     }
 
     void MainLoop() {

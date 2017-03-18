@@ -5,6 +5,7 @@ import std.conv;
 import std.stdio;
 import std.string;
 import errors;
+import interpreter;
 
 abstract class LispObject {
     dstring Repr() { return "<undefined>"; }
@@ -93,6 +94,72 @@ class LispEmptyList : LispList {
         if (auto other = cast(LispEmptyList) o) {
             return true;
         } else return super.opEquals(o);
+    }
+}
+
+struct FunctionArgs {
+    LispObject[] args;
+    LispObject[] rest_args;
+    LispObject[dstring] keyword_args;
+
+    static FunctionArgs Parse(int arity, LispObject[] args) {
+        FunctionArgs fa = FunctionArgs();
+        for (int i=0; i < args.length; i++) {
+            if (auto kw = cast(LispKeyword) args[i]) {
+                // a keyword always must be followed by value, so it cannot be the
+                // last argument in the list
+                if (i == args.length+1)
+                    throw new KeywordError("keyword must have a value");
+                // keyword should not exist already
+                LispObject *p = (kw.value in fa.keyword_args);
+                if (p is null) {
+                    fa.keyword_args[kw.value] = args[i+1];
+                    i++;
+                } else
+                    throw new KeywordError(format("keyword already exists: %s", 
+                                           kw.Repr()));
+            } else if (fa.args.length >= arity) {
+                fa.rest_args ~= args[i];
+            } else {
+                fa.args ~= args[i];
+            }
+        }
+        return fa;
+    }
+}
+
+alias BuiltinFunctionSig = 
+  LispObject function(Interpreter, LispEnvironment, FunctionArgs);
+alias SpecialFormSig =
+  LispObject function(Interpreter, LispEnvironment, LispObject[]);
+
+abstract class LispFunction : LispObject {
+    dstring name;
+    int arity;
+}
+
+class LispBuiltinFunction : LispFunction {
+    BuiltinFunctionSig f;
+
+    this(dstring name, BuiltinFunctionSig f, int arity) {
+        this.name = name;
+        this.f = f;
+        this.arity = arity;
+    }
+}
+
+class LispUserDefinedFunction : LispFunction {
+    dstring[] argnames;
+    LispObject[] fbody;  // a list of expressions
+    LispEnvironment env;  // environment it was created in
+
+    this(dstring[] argnames, LispObject[] fbody, LispEnvironment env, 
+         dstring name="") {
+        this.argnames = argnames;
+        this.fbody = fbody;
+        this.env = env;
+        this.name = name;
+        this.arity = cast(int) argnames.length;
     }
 }
 
