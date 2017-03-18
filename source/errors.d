@@ -32,3 +32,4 @@ class StackError: Exception { mixin basicExceptionCtors; }
 class StackOverflowError: StackError { mixin basicExceptionCtors; }
 class StackUnderflowError: StackError { mixin basicExceptionCtors; }
 
+class NotImplementedError: Exception { mixin basicExceptionCtors; }

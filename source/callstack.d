@@ -8,6 +8,10 @@ import types;
 class CallStack {
     Stack!StackFrame stack;
 
+    this() {
+        this.stack = new Stack!StackFrame();
+    }
+
     void Push(StackFrame sf) {
         this.stack.Push(sf);
     }

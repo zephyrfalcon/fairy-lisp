@@ -19,6 +19,12 @@ class Stack(T) {
     int length = 0;
     int max_size = MAX_STACK_SIZE;
 
+    this() {
+        this.tos = null;
+        this.length = 0;
+        this.max_size = MAX_STACK_SIZE;
+    }
+
     void Push(T item) {
         if (this.length >= this.max_size)
             throw new StackOverflowError("stack overflow");
