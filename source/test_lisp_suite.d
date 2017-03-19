@@ -1,5 +1,6 @@
 // test_lisp_suite.d
 
+import std.conv;
 import std.file;
 import std.path;
 import std.stdio;
@@ -31,8 +32,50 @@ string[] FindTestFiles() {
     return filenames;
 }
 
+LispTestCase[] CollectTestsInFile(string filename) {
+    LispTestCase[] testcases = [];
+    dstring[] current_code = [];
+    File file = File(filename, "r");
+    int lineno = 0;
+    while (!file.eof()) {
+        string sline = file.readln();
+        dstring line = to!dstring(sline);
+        lineno++;
+        if (startsWith(line, "=>")) {
+            dstring expected_result = strip(line[2..$]);
+            auto testcase = LispTestCase(filename, current_code, expected_result, 
+                                         lineno);
+            testcases ~= testcase;
+            current_code = [];
+        } else {
+            current_code ~= line;
+        }
+    }
+    return testcases;
+}
+
+void RunLispTestCase(LispTestCase testcase) {
+    auto intp = new Interpreter();
+    auto code = join(testcase.code, "");
+    auto results = intp.EvalString(code);
+    AssertEquals(results[$-1].Repr(), testcase.expected_result);
+    // TODO: pass code somehow, so we can display it
+}
+
 unittest {
+    LispTestCase[] all_testcases = [];
     string[] testfiles = FindTestFiles();
-    writeln(testfiles);
+    //writeln(testfiles);
+    foreach(filename; testfiles) {
+        auto testcases = CollectTestsInFile(filename);
+        writefln("yay, found %d testcases in %s", testcases.length, filename);
+        all_testcases ~= testcases;
+    }
+    writefln("Total number of tests: %d", all_testcases.length);
+    foreach(i, testcase; all_testcases) {
+        RunLispTestCase(testcase);
+        write(i+1, " ");
+    }
+    writeln("tested");
 }
 
