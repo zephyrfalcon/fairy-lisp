@@ -27,9 +27,25 @@ LispObject sf_define(Interpreter intp, LispEnvironment env, LispObject[] args) {
         throw new TypeError("DEFINE: name must be a symbol");
 }
 
+LispObject sf_lambda(Interpreter intp, LispEnvironment env, LispObject[] args) {
+    dstring[] argnames = [];
+    if (auto list = cast(LispList) args[1]) {
+        LispObject[] names = list.ToArray();
+        foreach(x; names) {
+            if (auto sym = cast(LispSymbol) x) {
+                argnames ~= sym.value;
+            } else throw new TypeError("LAMBDA: argument names must be symbols");
+        }
+    } else throw new TypeError("LAMBDA: first argument must be a list");
+    LispObject[] fbody = args[2..$];
+    auto uf = new LispUserDefinedFunction(argnames, fbody, env);
+    return uf;
+}
+
 SpecialFormSig[dstring] GetSpecialForms() {
     SpecialFormSig[dstring] forms = [
         "define": &sf_define,
+        "lambda": &sf_lambda,
         "quote": &sf_quote,
     ];
     return forms;
