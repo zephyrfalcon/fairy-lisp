@@ -1,5 +1,7 @@
 ;; test builtins and special forms
 
+;; --- quote ---
+
 'x
 => x
 '3
@@ -8,4 +10,10 @@
 => ()
 '(x y z)
 => (x y z)
+
+;; --- define ---
+
+(define x 42)
+x
+=> 42
 
