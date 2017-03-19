@@ -1,0 +1,11 @@
+;; general language-related tests
+
+;; --- case insensitivity ---
+
+(define x 1)
+X
+=> 1
+(define X 1)
+x
+=> 1
+

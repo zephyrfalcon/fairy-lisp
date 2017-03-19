@@ -17,7 +17,7 @@ abstract class LispObject {
 
 class LispSymbol : LispObject {
     dstring value;
-    this(dstring s) { this.value = s; }
+    this(dstring s) { this.value = toLower(s); }
     override dstring Repr() { return value; }
     override bool opEquals(Object o) {
         if (auto other = cast(LispSymbol) o) {
