@@ -41,3 +41,11 @@ dstring[] LispTypeListAsReprs(LispObject[] values) {
     }
     return reprs;
 }
+
+LispObject WrapExprsInDo(LispObject[] exprs) {
+    if (exprs.length > 1) {
+        auto exprs_as_list = LispList.FromArray(exprs);
+        auto p = new LispPair(new LispSymbol("do"), exprs_as_list);
+        return p;
+    } else return exprs[0];
+}

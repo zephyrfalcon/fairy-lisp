@@ -84,6 +84,14 @@ class LispBoolean : LispObject {
 abstract class LispList : LispObject {
     LispList Reverse() { throw new Exception("abstract method"); };
     LispObject[] ToArray() { throw new Exception("abstract method"); }
+
+    static LispList FromArray(LispObject[] objs) {
+        LispList current = NIL();
+        foreach(obj; objs) {
+            current = new LispPair(obj, current);
+        }
+        return current.Reverse();
+    }
 }
 
 class LispEmptyList : LispList {
@@ -94,6 +102,76 @@ class LispEmptyList : LispList {
         if (auto other = cast(LispEmptyList) o) {
             return true;
         } else return super.opEquals(o);
+    }
+}
+
+class LispPair : LispList {
+    LispObject head;
+    LispObject tail;
+
+    this(LispObject head, LispObject tail) {
+        this.head = head;
+        this.tail = tail;
+    }
+
+    override bool opEquals(Object o) {
+        if (auto other = cast(LispPair) o) {
+            if (this.head != other.head) return false;
+            return this.tail == other.tail;
+        } else return super.opEquals(o);
+    }
+
+    override dstring Repr() {
+        //return "(" ~ head.Repr() ~ " . " ~ tail.Repr() ~ ")";
+        LispPair p = this;
+        dstring[] elems = [];
+        while (1) {
+            elems ~= p.head.Repr();
+            if (auto p2 = cast(LispPair)(p.tail)) {
+                // tail is also a pair; continue
+                p = p2;
+            } else if (cast(LispEmptyList)(p.tail)) {
+                // end of proper list has been reached; return repr
+                return "(" ~ join(elems, " ") ~ ")";
+            } else {
+                // improper list
+                dstring s = join(elems, " ");
+                s = s ~ " . " ~ p.tail.Repr();
+                return "(" ~ s ~ ")";
+            }
+        }
+    }
+
+    override LispList Reverse() {
+        LispList acc = NIL(); 
+        LispObject p = this;
+        while (true) {
+            if (auto p2 = cast(LispPair) p) {
+                acc = new LispPair(p2.head, acc);
+                p = p2.tail;
+            } else if (auto e = cast(LispEmptyList) p) {
+                break;  // all done
+            } else {
+                throw new Exception("cannot reverse improper list");
+            }
+        }
+        return acc;
+    }
+
+    override LispObject[] ToArray() {
+        LispObject[] elems = [];
+        LispPair p = this;
+        while (true) {
+            elems ~= p.head;
+            if (auto next_pair = cast(LispPair) p.tail) {
+                p = next_pair;
+            } else if (auto empty = cast(LispEmptyList) p.tail) {
+                // end of list reached
+                return elems;
+            } else {
+                throw new Exception("cannot convert improper list to array");
+            }
+        }
     }
 }
 
@@ -188,76 +266,6 @@ class LispUserDefinedFunction : LispFunction {
                 && this.arity == other.arity && this.fbody == other.fbody
                 && this.argnames == other.argnames && this.env == other.env;
         } else return super.opEquals(o);
-    }
-}
-
-class LispPair : LispList {
-    LispObject head;
-    LispObject tail;
-
-    this(LispObject head, LispObject tail) {
-        this.head = head;
-        this.tail = tail;
-    }
-
-    override bool opEquals(Object o) {
-        if (auto other = cast(LispPair) o) {
-            if (this.head != other.head) return false;
-            return this.tail == other.tail;
-        } else return super.opEquals(o);
-    }
-
-    override dstring Repr() {
-        //return "(" ~ head.Repr() ~ " . " ~ tail.Repr() ~ ")";
-        LispPair p = this;
-        dstring[] elems = [];
-        while (1) {
-            elems ~= p.head.Repr();
-            if (auto p2 = cast(LispPair)(p.tail)) {
-                // tail is also a pair; continue
-                p = p2;
-            } else if (cast(LispEmptyList)(p.tail)) {
-                // end of proper list has been reached; return repr
-                return "(" ~ join(elems, " ") ~ ")";
-            } else {
-                // improper list
-                dstring s = join(elems, " ");
-                s = s ~ " . " ~ p.tail.Repr();
-                return "(" ~ s ~ ")";
-            }
-        }
-    }
-
-    override LispList Reverse() {
-        LispList acc = NIL(); 
-        LispObject p = this;
-        while (true) {
-            if (auto p2 = cast(LispPair) p) {
-                acc = new LispPair(p2.head, acc);
-                p = p2.tail;
-            } else if (auto e = cast(LispEmptyList) p) {
-                break;  // all done
-            } else {
-                throw new Exception("cannot reverse improper list");
-            }
-        }
-        return acc;
-    }
-
-    override LispObject[] ToArray() {
-        LispObject[] elems = [];
-        LispPair p = this;
-        while (true) {
-            elems ~= p.head;
-            if (auto next_pair = cast(LispPair) p.tail) {
-                p = next_pair;
-            } else if (auto empty = cast(LispEmptyList) p.tail) {
-                // end of list reached
-                return elems;
-            } else {
-                throw new Exception("cannot convert improper list to array");
-            }
-        }
     }
 }
 

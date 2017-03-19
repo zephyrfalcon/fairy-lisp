@@ -11,6 +11,7 @@ import errors;
 import reader;
 import special;
 import stackframe;
+import tools;
 import types;
 
 class Interpreter {
@@ -155,7 +156,25 @@ class Interpreter {
             // XXX can this return null?
             return result;
         } else if (auto uf = cast(LispUserDefinedFunction) callable) {
-            throw new NotImplementedError("calling user-defined functions");
+            // make sure the number of arguments matches
+            if (fargs.args.length != uf.argnames.length)
+                throw new Exception(
+                        format("incorrect number of arguments; expected %d, got %d", 
+                            uf.argnames.length, fargs.args.length));
+            // create new environment based on the lambda's environment
+            auto newenv = new LispEnvironment(uf.env);
+            // add new values to it
+            foreach(i, name; uf.argnames) {
+                newenv.Set(name, fargs.args[i]);
+            }
+            // create %rest, %keywords variables in new env
+            newenv.Set("%rest", LispList.FromArray(fargs.rest_args));
+            // TODO: newenv.Set("keywords", new LispDictionary(fargs.keyword_args));
+            LispObject fbody = WrapExprsInDo(uf.fbody);
+            auto sf = new StackFrame(fbody, newenv);
+            this.callstack.Pop();  // pop frame containing function call (TCO)
+            this.callstack.Push(sf);
+            return null;  // evaluate via stack as usual
         } else throw new Exception("not a callable");  // should not happen
     }
 
