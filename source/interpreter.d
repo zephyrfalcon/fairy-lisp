@@ -9,6 +9,7 @@ import builtins;
 import callstack;
 import errors;
 import reader;
+import special;
 import stackframe;
 import types;
 
@@ -18,6 +19,8 @@ class Interpreter {
     LispEnvironment builtin_env;
     LispEnvironment global_env;
     // TODO: debug options
+
+    SpecialFormSig[dstring] special_forms;
 
     this() {
         this.callstack = new CallStack();
@@ -31,6 +34,9 @@ class Interpreter {
         this.builtin_env.Set("true", TRUE());
         this.builtin_env.Set("false", FALSE());
         // TODO: load types
+
+        // load special forms
+        this.special_forms = GetSpecialForms();
 
         // load builtin functions
         FI[dstring] builtins = GetBuiltins();
@@ -85,7 +91,16 @@ class Interpreter {
         } else {
             // it's a compound expression
 
-            // TODO: is it a special form?
+            // is it a special form?
+            if (auto sym = cast(LispSymbol) top.to_be_evaluated[0]) {
+                SpecialFormSig *p = (sym.value in this.special_forms);
+                if (p !is null) {
+                    LispObject result = (*p)(this, top.env, top.to_be_evaluated);
+                    if (result !is null)
+                        this.callstack.Collapse(result);
+                    return;
+                }                 
+            }
 
             // evaluate the next element of the compound form by putting it on
             // the call stack
