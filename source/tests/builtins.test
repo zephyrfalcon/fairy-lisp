@@ -25,3 +25,13 @@ x
 => 34
 
 ;; TODO: lambda with multiple expressions in body
+
+;; --- do ---
+
+(do 1 2 3)
+=> 3
+(do (+ 1 2) (+ 3 4))
+=> 7
+
+;; TODO: DO with side effects
+

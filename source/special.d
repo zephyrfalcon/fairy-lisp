@@ -41,10 +41,30 @@ LispObject sf_lambda(Interpreter intp, LispEnvironment env, LispObject[] args) {
     auto uf = new LispUserDefinedFunction(argnames, fbody, env);
     return uf;
 }
+ 
+LispObject sf_do(Interpreter intp, LispEnvironment env, LispObject[] args) {
+    if (args.length <= 1)
+        throw new Exception("DO: empty body is not allowed");
+    StackFrame top = intp.callstack.Top();
+    // we store the results of the evaluated expressions in
+    // StackFrame.evaluated, so we know how many have been evaluated so far.
+    // last one gets special treatment (TCO)
+    if (top.evaluated.length == args.length-2) {
+        intp.callstack.Pop();
+        auto sf = new StackFrame(args[$-1], top.env);
+        intp.callstack.Push(sf);
+    } else {
+        size_t idx = top.evaluated.length + 1;  // index of next expr to evaluate
+        auto sf = new StackFrame(args[idx], top.env);
+        intp.callstack.Push(sf);
+    }
+    return null;
+}
 
 SpecialFormSig[dstring] GetSpecialForms() {
     SpecialFormSig[dstring] forms = [
         "define": &sf_define,
+        "do": &sf_do,
         "lambda": &sf_lambda,
         "quote": &sf_quote,
     ];
