@@ -17,3 +17,11 @@
 x
 => 42
 
+;; --- lambda ---
+
+(define inc 
+  (lambda (x) (+ x 1)))
+(inc 33)
+=> 34
+
+;; TODO: lambda with multiple expressions in body

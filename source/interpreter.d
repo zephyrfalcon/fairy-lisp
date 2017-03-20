@@ -73,9 +73,8 @@ class Interpreter {
                     auto args = top.evaluated[1..$]; // may be empty
                     auto fargs = FunctionArgs.Parse(f.arity, args);
                     auto result = this.CallFunction(top.env, f, fargs);
-                    // TODO: Go code allows null result here for special
-                    // cases; do something similar
-                    this.callstack.Collapse(result);
+                    if (result !is null)
+                        this.callstack.Collapse(result);
                 } else throw new Exception("first element of function call must be callable");
             }
             return;
@@ -153,7 +152,6 @@ class Interpreter {
                             FunctionArgs fargs) {
         if (auto bf = cast(LispBuiltinFunction) callable) {
             LispObject result = bf.f(this, caller_env, fargs);
-            // XXX can this return null?
             return result;
         } else if (auto uf = cast(LispUserDefinedFunction) callable) {
             // make sure the number of arguments matches
