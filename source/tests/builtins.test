@@ -24,7 +24,12 @@ x
 (inc 33)
 => 34
 
-;; TODO: lambda with multiple expressions in body
+;; lambda with multiple expressions in body
+(define foo
+  (lambda (x y)
+    x y))
+(foo 9 10)
+=> 10
 
 ;; --- do ---
 
