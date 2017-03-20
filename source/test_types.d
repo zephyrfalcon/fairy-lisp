@@ -78,8 +78,8 @@ unittest {
                   new LispPair(SC, NIL())));
 
     LispObject[] stuff = [SA, SB, SC];
-    AssertEquals(FromArray(stuff), l1);
+    AssertEquals(LispList.FromArray(stuff), l1);
 
-    AssertEquals(FromArray([]), NIL());
+    AssertEquals(LispList.FromArray([]), NIL());
 }
 

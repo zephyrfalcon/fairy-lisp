@@ -7,3 +7,7 @@ unittest {
     AssertEquals(EscapeString("hello"d), `"hello"`d);
     AssertEquals(EscapeString("a\nb"d), `"a\nb"`d);
 }
+
+// test WrapExprsInDo()
+unittest {
+}
