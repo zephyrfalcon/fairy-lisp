@@ -55,6 +55,8 @@ LispTestCase[] CollectTestsInFile(string filename) {
 }
 
 void RunLispTestCase(LispTestCase testcase) {
+    //writeln("Running:");
+    //writeln(join(testcase.code, ""));
     auto intp = new Interpreter();
     auto code = join(testcase.code, "");
     auto results = intp.EvalString(code);

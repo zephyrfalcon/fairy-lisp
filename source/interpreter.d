@@ -75,7 +75,8 @@ class Interpreter {
                     auto result = this.CallFunction(top.env, f, fargs);
                     if (result !is null)
                         this.callstack.Collapse(result);
-                } else throw new Exception("first element of function call must be callable");
+                } else 
+                    throw new Exception("first element of function call must be callable");
             }
             return;
         } 
@@ -85,6 +86,7 @@ class Interpreter {
             LispObject result = this.EvalAtomic(top.original_expr, top.env);
             if (top.aux_data !is null) {
                 // top.aux_data.Receive(result);
+                throw new NotImplementedError("auxiliary data");
             } else {
                 top.evaluated ~= result;
             }
@@ -173,7 +175,8 @@ class Interpreter {
             this.callstack.Pop();  // pop frame containing function call (TCO)
             this.callstack.Push(sf);
             return null;  // evaluate via stack as usual
-        } else throw new Exception("not a callable");  // should not happen
+        } else 
+            throw new Exception("not a callable");  // should not happen
     }
 
     void MainLoop() {

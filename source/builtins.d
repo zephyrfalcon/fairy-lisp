@@ -18,6 +18,10 @@ LispObject b_plus(Interpreter intp, LispEnvironment env, FunctionArgs fargs) {
     return new LispInteger(result);
 }
 
+LispObject b_cons(Interpreter intp, LispEnvironment env, FunctionArgs fargs) {
+    return new LispPair(fargs.args[0], fargs.args[1]);
+}
+
 struct FI {
     BuiltinFunctionSig f;
     int arity;
@@ -25,6 +29,7 @@ struct FI {
 FI[dstring] GetBuiltins() {
     FI[dstring] builtins = [
         "+": FI(&b_plus, 0),
+        "cons": FI(&b_cons, 2),
     ];
     return builtins;
 }

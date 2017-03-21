@@ -1,6 +1,7 @@
 // stackframe.d
 
 import std.stdio;
+import errors;
 import tools;
 import types;
 
@@ -23,7 +24,12 @@ class StackFrame {
         this.env = env;
         this.evaluated = [];
         if (auto p = cast(LispPair) expr) {
-            this.to_be_evaluated = p.ToArray();
+            try {
+                this.to_be_evaluated = p.ToArray();
+            } catch (ImproperListError e) {
+                // do nothing, improper lists cannot be put in to_be_evaluated
+                this.to_be_evaluated = [];
+            }
             this.is_atomic = false;
         } else {
             this.to_be_evaluated = [];
@@ -46,7 +52,8 @@ class StackFrame {
 
     void Print(int number) {
         writefln("---frame %d---", number);
-        writefln("  %s -- %s", this.is_atomic ? "atomic" : "compound");
+        writefln("  %s -- %s", this.is_atomic ? "atomic" : "compound",
+                               this.IsDone() ? "done" : "not done");
         writefln("  expression: %s", this.original_expr.Repr());
         writefln("  evaluated: %s", LispTypeListAsReprs(this.evaluated));
         writefln("  to be evaluated: %s", LispTypeListAsReprs(this.to_be_evaluated));

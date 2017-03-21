@@ -85,13 +85,6 @@ abstract class LispList : LispObject {
     LispList Reverse() { throw new Exception("abstract method"); };
     LispObject[] ToArray() { throw new Exception("abstract method"); }
 
-    //static LispList FromArray(LispObject[] objs) {
-    //    LispList current = NIL();
-    //    foreach(obj; objs) {
-    //        current = new LispPair(obj, current);
-    //    }
-    //    return current.Reverse();
-    //}
     static LispList FromArray(LispObject[] things) {
         LispList head = NIL();
         size_t len = things.length;
@@ -132,7 +125,6 @@ class LispPair : LispList {
     }
 
     override dstring Repr() {
-        //return "(" ~ head.Repr() ~ " . " ~ tail.Repr() ~ ")";
         LispPair p = this;
         dstring[] elems = [];
         while (1) {
@@ -162,7 +154,7 @@ class LispPair : LispList {
             } else if (auto e = cast(LispEmptyList) p) {
                 break;  // all done
             } else {
-                throw new Exception("cannot reverse improper list");
+                throw new ImproperListError("cannot reverse improper list");
             }
         }
         return acc;
@@ -179,7 +171,7 @@ class LispPair : LispList {
                 // end of list reached
                 return elems;
             } else {
-                throw new Exception("cannot convert improper list to array");
+                throw new ImproperListError("cannot convert improper list to array");
             }
         }
     }
