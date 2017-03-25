@@ -2,7 +2,9 @@
 
 import std.array;
 import std.conv;
+import std.file;
 import std.format;
+import std.path;
 import std.stdio;
 
 import builtins;
@@ -29,6 +31,7 @@ class Interpreter {
         this.global_env = new LispEnvironment(this.builtin_env);
         this.LoadBuiltins();
         // TODO: autoload code
+        this.AutoLoadCode();
     }
 
     void LoadBuiltins() {
@@ -46,6 +49,17 @@ class Interpreter {
             auto bf = new LispBuiltinFunction(name, fi.f, fi.arity);
             this.builtin_env.Set(name, bf);
         }
+    }
+
+    void AutoLoadCode() {
+        auto path = buildPath(WhereAmI(), "source", "load", "autoload.fl");
+        //File file = File(path, "r");
+        //char[] stuff = file.read();
+        //void[] stuff = read(path);
+        //dstring all = to!dstring(stuff);
+        string stuff = readText(path);
+        dstring all = to!dstring(stuff);
+        this.EvalString(all);
     }
 
     LispObject EvalAtomic(LispObject expr, LispEnvironment env) {
