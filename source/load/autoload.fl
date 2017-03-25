@@ -3,3 +3,6 @@
 (define cadr
   (lambda (x) (car (cdr x))))
 
+(define list
+  (lambda () %rest))
+
