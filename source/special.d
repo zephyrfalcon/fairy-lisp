@@ -1,6 +1,7 @@
 // special.d
 // Implementations of special forms.
 
+import std.stdio;
 import errors;
 import interpreter;
 import stackframe;
@@ -61,10 +62,28 @@ LispObject sf_do(Interpreter intp, LispEnvironment env, LispObject[] args) {
     return null;
 }
 
+LispObject sf_if(Interpreter intp, LispEnvironment env, LispObject[] args) {
+    StackFrame top = intp.callstack.Top();
+    if (top.evaluated.length == 0) {
+        auto cond = args[1];
+        auto newsf = new StackFrame(cond, env);
+        intp.callstack.Push(newsf);
+        return null;
+    } else {
+        auto result = top.evaluated[0];
+        auto expr = result.IsTrue() ? args[2] : args[3];
+        auto newsf = new StackFrame(expr, env);
+        intp.callstack.Pop();  // remove current stack frame (TCO)
+        intp.callstack.Push(newsf);
+        return null;
+    }
+}
+
 SpecialFormSig[dstring] GetSpecialForms() {
     SpecialFormSig[dstring] forms = [
         "define": &sf_define,
         "do": &sf_do,
+        "if": &sf_if,
         "lambda": &sf_lambda,
         "quote": &sf_quote,
     ];

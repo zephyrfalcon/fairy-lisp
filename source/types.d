@@ -13,6 +13,7 @@ abstract class LispObject {
         return false; 
         // FIXME: add comparison rules for objects of different types?
     }
+    bool IsTrue() { return true; }
 }
 
 class LispSymbol : LispObject {
@@ -79,6 +80,7 @@ class LispBoolean : LispObject {
             return this.value == other.value;
         } else return super.opEquals(o);
     }
+    override bool IsTrue() { return this.value; }
 }
 
 abstract class LispList : LispObject {

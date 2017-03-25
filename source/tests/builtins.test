@@ -40,3 +40,14 @@ x
 
 ;; TODO: DO with side effects
 
+;; --- simple IF constructs --
+
+(if true 1 2)
+=> 1
+(if false 1 2)
+=> 2
+(if true (+ 1 1) (+ 2 2))
+=> 2
+(if false (+ 1 1) (+ 2 2))
+=> 4
+
