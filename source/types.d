@@ -348,6 +348,16 @@ class LispEnvironment : LispObject {
 
 }
 
+class LispDictionary : LispObject {
+    LispObject[LispObject] values;
+    override dstring Repr() { return "#<dict>"; } // FIXME
+    override bool opEquals(Object o) {
+        if (auto other = cast(LispDictionary) o) {
+            return this.values == other.values;
+        } else return super.opEquals(o);
+    }
+}
+
 /* "singletons", sort of kind of */
 
 // this is one way to make sure we always use the same object... through a
