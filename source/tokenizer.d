@@ -26,7 +26,15 @@ dstring[] tokenize(dstring text) {
             if (token == '\n')  // newline ends comment
                 in_comment = false;
         } else if (in_string) {
+            if (token == '\\') {
+                // a backslash should always be followed by at least one
+                // character
+                current_token ~= text[i..i+2];
+                i++;
+                continue;
+            }
             if (token == '"') {
+                // end of string reached
                 current_token ~= token;
                 tokens ~= current_token;
                 current_token = "";
