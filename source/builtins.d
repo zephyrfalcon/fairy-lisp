@@ -36,6 +36,17 @@ LispObject b_cdr(Interpreter intp, LispEnvironment env, FunctionArgs fargs) {
         throw new TypeError("CDR: argument must be a list");
 }
 
+LispObject b_eq(Interpreter intp, LispEnvironment env, FunctionArgs fargs) {
+    auto p1 = cast(void *) fargs.args[0];
+    auto p2 = cast(void *) fargs.args[1];
+    return (p1 == p2) ? TRUE() : FALSE();
+}
+
+LispObject b_addr(Interpreter intp, LispEnvironment env, FunctionArgs fargs) {
+    auto p = cast(void *) fargs.args[0];
+    return new LispInteger(cast(int) p);
+}
+
 
 struct FI {
     BuiltinFunctionSig f;
@@ -44,9 +55,11 @@ struct FI {
 FI[dstring] GetBuiltins() {
     FI[dstring] builtins = [
         "+": FI(&b_plus, 0),
+        "addr": FI(&b_addr, 1),
         "car": FI(&b_car, 1),
         "cdr": FI(&b_cdr, 1),
         "cons": FI(&b_cons, 2),
+        "eq?": FI(&b_eq, 2),
     ];
     return builtins;
 }

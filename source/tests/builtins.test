@@ -51,3 +51,14 @@ x
 (if false (+ 1 1) (+ 2 2))
 => 4
 
+;; --- eq? ---
+
+(eq? 1 1)
+=> false
+(eq? true true)
+=> true
+(eq? () ())
+=> true
+(eq? '(1 2 3) '(1 2 3))
+=> false
+
