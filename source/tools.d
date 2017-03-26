@@ -33,10 +33,16 @@ dstring UnescapeString(dstring s) {
                 // there are more; see: 
                 // https://dlang.org/spec/lex.html#StringLiteral
                 case 'b': contents ~= "\b"; i++; break;
+                case 'f': contents ~= "\f"; i++; break;
                 case 'n': contents ~= "\n"; i++; break;
                 case 'r': contents ~= "\r"; i++; break;
                 case 't': contents ~= "\t"; i++; break;
+                case 'v': contents ~= "\v"; i++; break;
                 case '\'': contents ~= "\'"; i++; break;
+                case '"': contents ~= "\""; i++; break;
+                case '\\': contents ~= "\\"; i++; break;
+                case '?': contents ~= "?"; i++; break;
+                case '0': contents ~= "\0"; i++; break;
                 case 'u': {
                     assert (sinside.length >= i+6, "incomplete escape code");
                     // try next 4 characters (exactly 4)
@@ -67,10 +73,18 @@ dstring UnescapeString(dstring s) {
                     break;
                 }
                 case 'x': {
-                    dstring hexcode = sinside[i+1..i+3];
-                    // figure out what character that is
-                    // add to contents
-                    i += 2;
+                    // same as 'u', but 2 characters
+                    assert (sinside.length >= i+4, "incomplete escape code");
+                    // try next 2 characters (exactly 2)
+                    dstring next2 = to!dstring(sinside[i+2..i+4]);
+                    // all of them must be hex digits
+                    if (matchFirst(next2, `^[0-9a-fA-F]{2}$`d).empty) 
+                        throw new Exception("incomplete escape code");
+                    // convert to the appropriate Unicode character
+                    auto spec = singleSpec("%X");
+                    dchar dc = unformatValue!dchar(next2, spec);
+                    contents ~= dc;
+                    i += 3;
                     break;
                 }
                 default: throw new Exception("unknown escape code");

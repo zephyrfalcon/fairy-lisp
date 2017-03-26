@@ -18,6 +18,7 @@ unittest {
     AssertEquals(UnescapeString(`"!\u042F!"`), "!Я!");
     AssertEquals(UnescapeString(`"!Я!"`), "!Я!");
     AssertEquals(UnescapeString(`"!\U0001F603!"`), "!😃!");
+    AssertEquals(UnescapeString(`"a\x62c"`), "abc");
 }
 
 // test WrapExprsInDo()
