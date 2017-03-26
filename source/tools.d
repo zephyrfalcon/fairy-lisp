@@ -26,6 +26,22 @@ dstring UnescapeString(dstring s) {
     assert (s[0] == '"' && s[$-1] == '"' && s.length >= 2, 
             "string must be surrounded by quotes");
     dstring sinside = s[1..$-1];
+
+    // parse exactly <numchars> hex characters from `sinside`, and convert them to a
+    // dchar.
+    dchar ParseHex(ulong pos, ulong numchars) {
+        assert (sinside.length >= pos+2+numchars, "incomplete escape code");
+        // try next <numchars> characters
+        dstring next = to!dstring(sinside[pos+2..pos+2+numchars]);
+        // all of them must be hex digits
+        if (matchFirst(next, `^[0-9a-fA-F]+$`d).empty) 
+            throw new Exception("incomplete escape code");
+        // convert to the appropriate Unicode character
+        auto spec = singleSpec("%X");
+        dchar dc = unformatValue!dchar(next, spec);
+        return dc;
+    }
+
     foreach (ref i, c; sinside) {
         if (c == '\\') {
             assert (sinside.length >= i+2, "incomplete escape code");
@@ -44,45 +60,19 @@ dstring UnescapeString(dstring s) {
                 case '?': contents ~= "?"; i++; break;
                 case '0': contents ~= "\0"; i++; break;
                 case 'u': {
-                    assert (sinside.length >= i+6, "incomplete escape code");
-                    // try next 4 characters (exactly 4)
-                    dstring next4 = to!dstring(sinside[i+2..i+6]);
-                    // all of them must be hex digits
-                    if (matchFirst(next4, `^[0-9a-fA-F]{4}$`d).empty) 
-                        throw new Exception("incomplete escape code");
-                    // convert to the appropriate Unicode character
-                    auto spec = singleSpec("%X");
-                    dchar dc = unformatValue!dchar(next4, spec);
+                    dchar dc = ParseHex(i, 4);
                     contents ~= dc;
                     i += 5;
                     break;
                 }
                 case 'U': {
-                    // same as 'u', but 8 characters
-                    assert (sinside.length >= i+10, "incomplete escape code");
-                    // try next 4 characters (exactly 4)
-                    dstring next8 = to!dstring(sinside[i+2..i+10]);
-                    // all of them must be hex digits
-                    if (matchFirst(next8, `^[0-9a-fA-F]{8}$`d).empty) 
-                        throw new Exception("incomplete escape code");
-                    // convert to the appropriate Unicode character
-                    auto spec = singleSpec("%X");
-                    dchar dc = unformatValue!dchar(next8, spec);
+                    dchar dc = ParseHex(i, 8);
                     contents ~= dc;
                     i += 9;
                     break;
                 }
                 case 'x': {
-                    // same as 'u', but 2 characters
-                    assert (sinside.length >= i+4, "incomplete escape code");
-                    // try next 2 characters (exactly 2)
-                    dstring next2 = to!dstring(sinside[i+2..i+4]);
-                    // all of them must be hex digits
-                    if (matchFirst(next2, `^[0-9a-fA-F]{2}$`d).empty) 
-                        throw new Exception("incomplete escape code");
-                    // convert to the appropriate Unicode character
-                    auto spec = singleSpec("%X");
-                    dchar dc = unformatValue!dchar(next2, spec);
+                    dchar dc = ParseHex(i, 2);
                     contents ~= dc;
                     i += 3;
                     break;
