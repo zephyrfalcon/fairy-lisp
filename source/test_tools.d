@@ -10,6 +10,16 @@ unittest {
     AssertEquals(EscapeString("a\nb"d), `"a\nb"`d);
 }
 
+// test UnescapeString()
+unittest {
+    AssertEquals(UnescapeString(`"abc"`), "abc");
+    AssertEquals(UnescapeString(`"foo\nbar"`), "foo\nbar");
+    AssertEquals(UnescapeString(`"!\u0062!"`), "!b!");
+    AssertEquals(UnescapeString(`"!\u042F!"`), "!Я!");
+    AssertEquals(UnescapeString(`"!Я!"`), "!Я!");
+    AssertEquals(UnescapeString(`"!\U0001F603!"`), "!😃!");
+}
+
 // test WrapExprsInDo()
 unittest {
     auto intp = new Interpreter();

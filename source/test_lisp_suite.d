@@ -25,7 +25,7 @@ string[] FindTestFiles() {
     auto files = dirEntries(path, SpanMode.shallow);
     foreach (direntry; files) {
         // note: direntry.name is an absolute path
-        writeln("- ", direntry.name);
+        //writeln("- ", direntry.name);
         if (endsWith(direntry.name, ".test"))
             filenames ~= direntry.name;
     }
