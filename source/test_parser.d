@@ -57,8 +57,7 @@ unittest {
 
     LispObject o2 = CreateFromToken(`"hello world"`);
     if (auto s1 = cast(LispString) o2) {
-        AssertEquals(s1.value, `"hello world"`);
-        // FIXME: string needs to be unescaped
+        AssertEquals(s1.value, `hello world`);
     } else {
         Fail("could not convert token to LispString");
     }

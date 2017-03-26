@@ -4,6 +4,7 @@ import std.conv;
 import std.regex;
 import std.stdio;
 import errors;
+import tools;
 import types;
 
 struct ParserResult {
@@ -50,7 +51,7 @@ LispObject CreateFromToken(dstring token) {
         return new LispInteger(to!int(token));
     }
     if (!(matchFirst(token, `^".*"$`d).empty)) {
-        return new LispString(token);  // FIXME: unescape string
+        return new LispString(UnescapeString(token));
     }
     if (!(matchFirst(token, `^#\\.+$`d).empty)) {
         return new LispCharacter(token[2]);  // *must* be a dchar

@@ -9,3 +9,12 @@ X
 x
 => 1
 
+;; --- strings ---
+
+"xyz"
+=> "xyz"
+"abc\ndef"
+=> "abc\ndef"
+"♪~~"
+=> "♪~~"
+

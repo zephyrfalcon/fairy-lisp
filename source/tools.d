@@ -15,6 +15,8 @@ string WhereAmI() {
     return dirName(absolutePath(thisExePath()));
 }
 
+// escape a string. this currently piggybacks D's string escaping, and
+// whatever rules (if any) it uses for escaping Unicode characters, etc.
 dstring EscapeString(dstring s) {
     auto writer = appender!dstring;
     formattedWrite(writer, "%(%s%)", [s]);

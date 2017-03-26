@@ -6,6 +6,7 @@ import std.stdio;
 import std.string;
 import errors;
 import interpreter;
+import tools;
 
 abstract class LispObject {
     dstring Repr() { return "<undefined>"; }
@@ -41,7 +42,7 @@ class LispInteger : LispObject {
 class LispString : LispObject {
     dstring value;
     this(dstring s) { this.value = s; }
-    override dstring Repr() { return this.value; } // FIXME: must be quoted
+    override dstring Repr() { return EscapeString(this.value); } 
     override bool opEquals(Object o) {
         if (auto other = cast(LispString) o) {
             return this.value == other.value;
