@@ -1,5 +1,6 @@
 // test_lisp_suite.d
 
+import std.array;
 import std.conv;
 import std.file;
 import std.path;
@@ -60,8 +61,20 @@ void RunLispTestCase(LispTestCase testcase) {
     auto intp = new Interpreter();
     auto code = join(testcase.code, "");
     auto results = intp.EvalString(code);
-    AssertEquals(results[$-1].Repr(), testcase.expected_result);
-    // TODO: pass code somehow, so we can display it
+    bool succeeds = results[$-1].Repr() == testcase.expected_result;
+    if (!succeeds) {
+        writeln("\n*** TEST FAILED");
+        // XXX put stuff here that shows code etc.
+        writefln("File %s, line %d", testcase.filename, testcase.lineno);
+        writeln("Code:");
+        writeln(join(testcase.code, ""));
+        writeln("Actual result: ", results[$-1].Repr());
+        writeln("Expected result: ", testcase.expected_result);
+    } 
+    // if we don't run AssertEquals here, we will try all Lisp tests
+    // regardless whether they fail or not. using AssertEquals, we stop after
+    // the first failure.
+    //AssertEquals(results[$-1].Repr(), testcase.expected_result);
 }
 
 unittest {
