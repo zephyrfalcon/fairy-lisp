@@ -42,6 +42,9 @@ class Interpreter {
         // load special forms
         this.special_forms = GetSpecialForms();
 
+        // load type objects
+        this.LoadTypes();
+
         // load builtin functions
         FI[dstring] builtins = GetBuiltins();
         foreach (name; builtins.keys) {
@@ -49,6 +52,43 @@ class Interpreter {
             auto bf = new LispBuiltinFunction(name, fi.f, fi.arity);
             this.builtin_env.Set(name, bf);
         }
+    }
+
+    void LoadTypes() {
+        dstring[][] typespecs = [
+            ["type"],
+            ["number", "type"],
+            ["integer", "number"],
+            ["string", "type"],
+            ["symbol", "type"],
+            ["char", "type"],
+            ["list", "type"],
+            ["nil", "list"],
+            ["pair", "list"],
+            ["function", "type"],
+            ["bfunc", "function"],
+            ["ufunc", "function"],
+            ["dict", "type"],
+            ["env", "type"],
+            ["boolean", "type"],
+            ["keyword", "type"],
+        ];
+        foreach(dstring[] spec; typespecs) {
+            if (spec.length == 1) {
+                dstring name = spec[0];
+                LispType t = new LispType(name);
+                LispObject._types[name] = t;
+                this.builtin_env.Set(format("<%s>"d, name), t);
+            } else {
+                dstring name = spec[0];
+                dstring parent_name = spec[1];
+                LispType parent = LispObject._types[parent_name];
+                LispType t = new LispType(name, parent);
+                LispObject._types[name] = t;
+                this.builtin_env.Set(format("<%s>"d, name), t);
+            }
+        }
+        // Q: Should type derive from itself?
     }
 
     void AutoLoadCode() {

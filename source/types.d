@@ -9,7 +9,7 @@ import interpreter;
 import tools;
 
 abstract class LispObject {
-    LispType[dstring] _types;
+    static LispType[dstring] _types;
     dstring Repr() { return "<undefined>"; }
     override bool opEquals(Object o) { 
         return false; 
