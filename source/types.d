@@ -9,12 +9,31 @@ import interpreter;
 import tools;
 
 abstract class LispObject {
+    LispType[dstring] _types;
     dstring Repr() { return "<undefined>"; }
     override bool opEquals(Object o) { 
         return false; 
         // FIXME: add comparison rules for objects of different types?
     }
     bool IsTrue() { return true; }
+    dstring TypeName() { throw new NotImplementedError("abstract type"); }
+    LispType GetType() {
+        return this._types[this.TypeName()];
+    }
+}
+
+class LispType : LispObject {
+    dstring name;
+    LispType parent;
+    this(dstring name) {
+        this.name = name;
+    }
+    this(dstring name, LispType parent) {
+        this.name = name;
+        this.parent = parent;
+    }
+    override dstring Repr() { return format("#<type:%s>"d, this.name); }
+    override dstring TypeName() { return "type"; }
 }
 
 class LispSymbol : LispObject {
@@ -26,6 +45,7 @@ class LispSymbol : LispObject {
             return this.value == other.value;
         } else return super.opEquals(o);
     }
+    override dstring TypeName() { return "symbol"; }
 }
 
 class LispInteger : LispObject {
@@ -37,6 +57,7 @@ class LispInteger : LispObject {
             return this.value == other.value;
         } else return super.opEquals(o);
     }
+    override dstring TypeName() { return "integer"; }
 }
 
 class LispString : LispObject {
@@ -48,6 +69,7 @@ class LispString : LispObject {
             return this.value == other.value;
         } else return super.opEquals(o);
     }
+    override dstring TypeName() { return "string"; }
 }
 
 class LispCharacter : LispObject {
@@ -59,6 +81,7 @@ class LispCharacter : LispObject {
             return this.value == other.value;
         } else return super.opEquals(o);
     }
+    override dstring TypeName() { return "char"; }
 }
 
 class LispKeyword : LispObject {
@@ -70,6 +93,7 @@ class LispKeyword : LispObject {
             return this.value == other.value;
         } else return super.opEquals(o);
     }
+    override dstring TypeName() { return "keyword"; }
 }
 
 class LispBoolean : LispObject {
@@ -82,11 +106,13 @@ class LispBoolean : LispObject {
         } else return super.opEquals(o);
     }
     override bool IsTrue() { return this.value; }
+    override dstring TypeName() { return "boolean"; }
 }
 
 abstract class LispList : LispObject {
     LispList Reverse() { throw new Exception("abstract method"); };
     LispObject[] ToArray() { throw new Exception("abstract method"); }
+    override dstring TypeName() { return "list"; }
 
     static LispList FromArray(LispObject[] things) {
         LispList head = NIL();
@@ -109,6 +135,7 @@ class LispEmptyList : LispList {
             return true;
         } else return super.opEquals(o);
     }
+    override dstring TypeName() { return "nil"; }
 }
 
 class LispPair : LispList {
@@ -178,6 +205,8 @@ class LispPair : LispList {
             }
         }
     }
+
+    override dstring TypeName() { return "pair"; }
 }
 
 struct FunctionArgs {
@@ -226,6 +255,7 @@ alias SpecialFormSig =
 abstract class LispFunction : LispObject {
     dstring name;
     int arity;
+    override dstring TypeName() { return "function"; }
 }
 
 class LispBuiltinFunction : LispFunction {
@@ -246,6 +276,7 @@ class LispBuiltinFunction : LispFunction {
                 && this.arity == other.arity;
         } else return super.opEquals(o);
     }
+    override dstring TypeName() { return "bfunc"; }
 }
 
 class LispUserDefinedFunction : LispFunction {
@@ -272,6 +303,7 @@ class LispUserDefinedFunction : LispFunction {
                 && this.argnames == other.argnames && this.env == other.env;
         } else return super.opEquals(o);
     }
+    override dstring TypeName() { return "ufunc"; }
 }
 
 struct EnvFindResult {
@@ -349,6 +381,7 @@ class LispEnvironment : LispObject {
         return this.names.keys;  // in no particular order
     }
 
+    override dstring TypeName() { return "env"; }
 }
 
 class LispDictionary : LispObject {
@@ -359,6 +392,7 @@ class LispDictionary : LispObject {
             return this.values == other.values;
         } else return super.opEquals(o);
     }
+    override dstring TypeName() { return "dict"; }
 }
 
 /* "singletons", sort of kind of */
