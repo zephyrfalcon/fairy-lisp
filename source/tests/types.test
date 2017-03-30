@@ -10,4 +10,32 @@
 => nil
 (type-name (type '(1 2 3)))
 => pair
+(type-name (type +))
+=> bfunc
+(type-name (type cadr))
+=> ufunc
+
+;; type is its own parent type
+(type-name (type (type 3)))
+=> type
+
+;; --- parent types ---
+
+(type-name (type-parent (type 3)))
+=> number
+(type-name (type-parent (type ())))
+=> list
+(type-name (type-parent (type '(1 2 3))))
+=> list
+(type-name (type-parent (type 'x)))
+=> type
+(type-name (type-parent (type +)))
+=> function
+
+;; --- predicates ---
+
+(symbol? 'x)
+=> true
+(symbol? 3)
+=> false
 

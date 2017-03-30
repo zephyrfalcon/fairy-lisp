@@ -62,3 +62,14 @@ x
 (eq? '(1 2 3) '(1 2 3))
 => false
 
+;; --- equal? ---
+
+(equal? 1 1)
+=> true
+(equal? 'x 'x)
+=> true
+(equal? 'y 'Y)
+=> true
+(equal? "hello" "hello")
+=> true
+

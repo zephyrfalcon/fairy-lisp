@@ -2,7 +2,25 @@
 
 (define cadr
   (lambda (x) (car (cdr x))))
+(define cdar
+  (lambda (x) (cdr (car x))))
+(define caar
+  (lambda (x) (car (car x))))
+(define cddr
+  (lambda (x) (cdr (cdr x))))
 
 (define list
   (lambda () %rest))
+
+;; --- type predicates ---
+
+;; NOTE: later, when we have a symbol cache, use EQ?
+
+(define pair?
+  (lambda (x)
+    (equal? (type-name (type x)) 'pair)))
+(define symbol?
+  (lambda (x)
+    (equal? (type-name (type x)) 'symbol)))
+
 

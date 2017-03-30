@@ -37,7 +37,6 @@ class Interpreter {
     void LoadBuiltins() {
         this.builtin_env.Set("true", TRUE());
         this.builtin_env.Set("false", FALSE());
-        // TODO: load types
 
         // load special forms
         this.special_forms = GetSpecialForms();
@@ -88,7 +87,9 @@ class Interpreter {
                 this.builtin_env.Set(format("<%s>"d, name), t);
             }
         }
-        // Q: Should type derive from itself?
+        // type is its own parent
+        auto type_root = LispObject._types["type"];
+        type_root.parent = type_root;
     }
 
     void AutoLoadCode() {

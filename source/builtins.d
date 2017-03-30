@@ -59,6 +59,19 @@ LispObject b_type(Interpreter intp, LispEnvironment env, FunctionArgs fargs) {
     return fargs.args[0].GetType();
 }
 
+// (TYPE-PARENT <type>)
+LispObject b_type_parent(Interpreter intp, LispEnvironment env, FunctionArgs fargs) {
+    if (auto t = cast(LispType) fargs.args[0]) {
+        return t.parent;
+    } else throw new TypeError("TYPE-NAME: type object expected");
+}
+
+// crude way to implement equality. XXX temporary solution
+LispObject b_equal(Interpreter intp, LispEnvironment env, FunctionArgs fargs) {
+    auto a = fargs.args[0];
+    auto b = fargs.args[1];
+    return a == b ? TRUE() : FALSE();
+}
 
 
 struct FI {
@@ -74,8 +87,10 @@ FI[dstring] GetBuiltins() {
         "cdr": FI(&b_cdr, 1),
         "cons": FI(&b_cons, 2),
         "eq?": FI(&b_eq, 2),
+        "equal?": FI(&b_equal, 2),
         "type": FI(&b_type, 1),
         "type-name": FI(&b_type_name, 1),
+        "type-parent": FI(&b_type_parent, 1),
 
         /* b_dict.d */
         "dict-get": FI(&b_dict_get, 2),
