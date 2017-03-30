@@ -45,6 +45,7 @@ class LispSymbol : LispObject {
             return this.value == other.value;
         } else return super.opEquals(o);
     }
+    override size_t toHash() { return value.length; } // FIXME
     override dstring TypeName() { return "symbol"; }
 }
 
@@ -69,6 +70,7 @@ class LispString : LispObject {
             return this.value == other.value;
         } else return super.opEquals(o);
     }
+    override size_t toHash() { return value.length; } // FIXME
     override dstring TypeName() { return "string"; }
 }
 
@@ -387,7 +389,9 @@ class LispEnvironment : LispObject {
 class LispDictionary : LispObject {
     LispObject[LispObject] values;
 
-    // default constructor
+    this() { }
+
+    // default constructor with hashmap
     this(LispObject[LispObject] d) {
         foreach (key; d.keys) {
             this.values[key] = d[key];
@@ -418,10 +422,11 @@ class LispDictionary : LispObject {
     override dstring TypeName() { return "dict"; }
 
     LispObject Get(LispObject key) {
-        try {
-            return this.values[key];
-        } catch (Exception e) {
+        auto p = key in this.values;
+        if (p is null) {
             throw new KeyError(format("key not found: %s", key.Repr()));
+        } else {
+            return *p;
         }
     }
 
@@ -431,6 +436,10 @@ class LispDictionary : LispObject {
         } catch (KeyError e) {
             return _default;
         }
+    }
+
+    void Set(LispObject key, LispObject value) {
+        this.values[key] = value;
     }
 }
 

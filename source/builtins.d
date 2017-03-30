@@ -64,6 +64,7 @@ FI[dstring] GetBuiltins() {
 
         /* b_dict.d */
         "dict-get": FI(&b_dict_get, 2),
+        "make-dict": FI(&b_make_dict, 0),
     ];
     return builtins;
 }

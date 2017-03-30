@@ -1,0 +1,12 @@
+;; dictionary tests
+
+(make-dict)
+=> #d()
+
+(dict-get (make-dict "a" 1 "b" 2) "a")
+=> 1
+(dict-get (make-dict) "b" 70)  ;; use default
+=> 70
+(dict-get (make-dict "a" 1) "a" 8)
+=> 1
+
