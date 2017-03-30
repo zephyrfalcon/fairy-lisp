@@ -386,13 +386,52 @@ class LispEnvironment : LispObject {
 
 class LispDictionary : LispObject {
     LispObject[LispObject] values;
-    override dstring Repr() { return "#<dict>"; } // FIXME
+
+    // default constructor
+    this(LispObject[LispObject] d) {
+        foreach (key; d.keys) {
+            this.values[key] = d[key];
+        }
+    }
+
+    // constructor with hashmap dstring->LispObject
+    this(LispObject[dstring] d) {
+        foreach (key; d.keys) {
+            LispSymbol sym = new LispSymbol(key);
+            this.values[sym] = d[key];
+        }
+    }
+
+    override dstring Repr() {
+        dstring[] stuff = [];
+        foreach (key; this.values.keys) {
+            stuff ~= [key.Repr(), this.values[key].Repr()];
+        }
+        return "#d(" ~ join(stuff, " ") ~ ")";
+    }
+
     override bool opEquals(Object o) {
         if (auto other = cast(LispDictionary) o) {
             return this.values == other.values;
         } else return super.opEquals(o);
     }
     override dstring TypeName() { return "dict"; }
+
+    LispObject Get(LispObject key) {
+        try {
+            return this.values[key];
+        } catch (Exception e) {
+            throw new KeyError(format("key not found: %s", key.Repr()));
+        }
+    }
+
+    LispObject GetDefault(LispObject key, LispObject _default) {
+        try {
+            return this.Get(key);
+        } catch (KeyError e) {
+            return _default;
+        }
+    }
 }
 
 /* "singletons", sort of kind of */

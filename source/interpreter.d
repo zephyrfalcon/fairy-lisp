@@ -223,7 +223,7 @@ class Interpreter {
             }
             // create %rest, %keywords variables in new env
             newenv.Set("%rest", LispList.FromArray(fargs.rest_args));
-            // TODO: newenv.Set("keywords", new LispDictionary(fargs.keyword_args));
+            newenv.Set("%keywords", new LispDictionary(fargs.keyword_args));
             LispObject fbody = WrapExprsInDo(uf.fbody);
             auto sf = new StackFrame(fbody, newenv);
             this.callstack.Pop();  // pop frame containing function call (TCO)

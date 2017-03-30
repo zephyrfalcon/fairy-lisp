@@ -38,4 +38,5 @@ class TypeError: Exception { mixin basicExceptionCtors; }
 class NameError: Exception { mixin basicExceptionCtors; }
 
 class ImproperListError: Exception { mixin basicExceptionCtors; }
+class KeyError: Exception { mixin basicExceptionCtors; }
 

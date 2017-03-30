@@ -53,6 +53,7 @@ struct FI {
     int arity;
 }
 FI[dstring] GetBuiltins() {
+    import b_dict;
     FI[dstring] builtins = [
         "+": FI(&b_plus, 0),
         "addr": FI(&b_addr, 1),
@@ -60,6 +61,9 @@ FI[dstring] GetBuiltins() {
         "cdr": FI(&b_cdr, 1),
         "cons": FI(&b_cons, 2),
         "eq?": FI(&b_eq, 2),
+
+        /* b_dict.d */
+        "dict-get": FI(&b_dict_get, 2),
     ];
     return builtins;
 }
