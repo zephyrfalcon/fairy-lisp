@@ -47,6 +47,19 @@ LispObject b_addr(Interpreter intp, LispEnvironment env, FunctionArgs fargs) {
     return new LispInteger(cast(int) p);
 }
 
+// (TYPE-NAME <type>)
+LispObject b_type_name(Interpreter intp, LispEnvironment env, FunctionArgs fargs) {
+    if (auto t = cast(LispType) fargs.args[0]) {
+        return new LispSymbol(t.name);
+    } else throw new TypeError("TYPE-NAME: type object expected");
+}
+
+// (TYPE x)
+LispObject b_type(Interpreter intp, LispEnvironment env, FunctionArgs fargs) {
+    return fargs.args[0].GetType();
+}
+
+
 
 struct FI {
     BuiltinFunctionSig f;
@@ -61,6 +74,8 @@ FI[dstring] GetBuiltins() {
         "cdr": FI(&b_cdr, 1),
         "cons": FI(&b_cons, 2),
         "eq?": FI(&b_eq, 2),
+        "type": FI(&b_type, 1),
+        "type-name": FI(&b_type_name, 1),
 
         /* b_dict.d */
         "dict-get": FI(&b_dict_get, 2),

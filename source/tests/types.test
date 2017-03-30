@@ -1,0 +1,13 @@
+;; types
+
+(type-name (type 3))
+=> integer
+(type-name (type 'x))
+=> symbol
+(type-name (type "hello"))
+=> string
+(type-name (type '()))
+=> nil
+(type-name (type '(1 2 3)))
+=> pair
+
