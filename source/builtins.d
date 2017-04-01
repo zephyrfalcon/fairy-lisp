@@ -2,6 +2,7 @@
 // Built-in functions.
 
 import std.format;
+import std.stdio;
 import errors;
 import interpreter;
 import types;
@@ -67,12 +68,26 @@ LispObject b_type_parent(Interpreter intp, LispEnvironment env, FunctionArgs far
 }
 
 // crude way to implement equality. XXX temporary solution
+// chances are that EQUAL? will be a multimethod someday. in any case,
+// comparing objects will likely be more complicated than this.
 LispObject b_equal(Interpreter intp, LispEnvironment env, FunctionArgs fargs) {
     auto a = fargs.args[0];
     auto b = fargs.args[1];
     return a == b ? TRUE() : FALSE();
 }
 
+LispObject b_print(Interpreter intp, LispEnvironment env, FunctionArgs fargs) {
+    LispObject last = FALSE();
+    foreach(obj; fargs.args ~ fargs.rest_args) {
+        if (auto s = cast(LispString) obj) {
+            write(s.value);
+        } else {
+            write(obj.Repr());
+        }
+        last = obj;
+    }
+    return last;
+}
 
 struct FI {
     BuiltinFunctionSig f;
@@ -88,6 +103,7 @@ FI[dstring] GetBuiltins() {
         "cons": FI(&b_cons, 2),
         "eq?": FI(&b_eq, 2),
         "equal?": FI(&b_equal, 2),
+        "print": FI(&b_print, 0),
         "type": FI(&b_type, 1),
         "type-name": FI(&b_type_name, 1),
         "type-parent": FI(&b_type_parent, 1),
