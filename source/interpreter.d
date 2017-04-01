@@ -94,11 +94,14 @@ class Interpreter {
 
     void AutoLoadCode() {
         auto path = buildPath(WhereAmI(), "source", "load", "autoload.fl");
-        //File file = File(path, "r");
-        //char[] stuff = file.read();
-        //void[] stuff = read(path);
+        //string stuff = readText(path);
         //dstring all = to!dstring(stuff);
-        string stuff = readText(path);
+        //this.EvalString(all);
+        this.RunFile(path);
+    }
+
+    void RunFile(string filename) {
+        string stuff = readText(filename);
         dstring all = to!dstring(stuff);
         this.EvalString(all);
     }

@@ -1,0 +1,3 @@
+;; -*- mode: Scheme; -*-
+
+(print "Hello, world!\n")
