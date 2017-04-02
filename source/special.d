@@ -5,6 +5,7 @@ import std.stdio;
 import errors;
 import interpreter;
 import stackframe;
+import tools;
 import types;
 
 LispObject sf_quote(Interpreter intp, LispEnvironment env, LispObject[] args) {
@@ -13,6 +14,15 @@ LispObject sf_quote(Interpreter intp, LispEnvironment env, LispObject[] args) {
 
 // currently only: (DEFINE <name> <value>)
 LispObject sf_define(Interpreter intp, LispEnvironment env, LispObject[] args) {
+    if (auto sym = cast(LispSymbol) args[1]) {
+        return _define_symbol(intp, env, args);
+    } else if (auto p = cast(LispPair) args[1]) {
+        return _define_function(intp, env, args);
+    } else 
+        throw new TypeError("DEFINE: invalid form");
+}
+
+LispObject _define_symbol(Interpreter intp, LispEnvironment env, LispObject[] args) {
     if (auto sym = cast(LispSymbol) args[1]) {
         StackFrame top = intp.callstack.Top();
         if (top.evaluated.length == 0) {
@@ -26,6 +36,24 @@ LispObject sf_define(Interpreter intp, LispEnvironment env, LispObject[] args) {
         }
     } else 
         throw new TypeError("DEFINE: name must be a symbol");
+}
+
+LispObject _define_function(Interpreter intp, LispEnvironment env, LispObject[] args) {
+    if (auto p = cast(LispPair) args[1]) {
+        // (DEFINE (name ...args...) ...body...)
+        if (args[2..$].length < 1)
+            throw new Exception("DEFINE: body cannot be empty");
+        LispObject[] fbody = args[2..$];
+        dstring[] header = GetListOfSymbols(p.ToArray());
+        if (header.length < 1)
+            throw new Exception("DEFINE: function must have a name");
+        dstring fname = header[0];
+        dstring[] argnames = header[1..$];
+        auto uf = new LispUserDefinedFunction(argnames, fbody, env, fname);
+        env.Set(fname, uf);
+        return uf;
+    } else
+        throw new TypeError("DEFINE: expected list of symbols");
 }
 
 LispObject sf_lambda(Interpreter intp, LispEnvironment env, LispObject[] args) {

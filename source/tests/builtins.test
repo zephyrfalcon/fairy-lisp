@@ -17,6 +17,16 @@
 x
 => 42
 
+(define (inc x)
+  (+ x 1))
+(inc 5)
+=> 6
+(define (foo x y)
+  (+ x 1)
+  (+ y 1))
+(foo 5 6)
+=> 7
+
 ;; --- lambda ---
 
 (define inc 

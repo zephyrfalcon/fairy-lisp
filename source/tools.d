@@ -96,6 +96,17 @@ dstring[] LispTypeListAsReprs(LispObject[] values) {
     return reprs;
 }
 
+dstring[] GetListOfSymbols(LispObject[] values) {
+    dstring[] names = [];
+    foreach(value; values) {
+        if (auto sym = cast(LispSymbol) value) {
+            names ~= sym.value;
+        } else 
+            throw new TypeError("symbol expected");
+    }
+    return names;
+}
+
 LispObject WrapExprsInDo(LispObject[] exprs) {
     if (exprs.length > 1) {
         auto exprs_as_list = LispList.FromArray(exprs);
