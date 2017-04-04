@@ -7,6 +7,7 @@ import std.format;
 import std.path;
 import std.regex;
 import std.stdio;
+import std.string;
 import errors;
 import types;
 
@@ -113,4 +114,17 @@ LispObject WrapExprsInDo(LispObject[] exprs) {
         auto p = new LispPair(new LispSymbol("do"), exprs_as_list);
         return p;
     } else return exprs[0];
+}
+
+// returns true if x is a symbol with the given value.
+bool IsSymbol(LispObject x, dstring value) {
+    if (auto sym = cast(LispSymbol) x) {
+        return sym.value == toLower(value);
+    }
+    return false;
+}
+
+bool TruthValue(LispObject x) {
+    if (x is FALSE()) return false;
+    return true;
 }

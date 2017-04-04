@@ -2,6 +2,7 @@
 // Implementations of special forms.
 
 import std.stdio;
+import std.string;
 import errors;
 import interpreter;
 import stackframe;
@@ -107,8 +108,67 @@ LispObject sf_if(Interpreter intp, LispEnvironment env, LispObject[] args) {
     }
 }
 
+// (COND (cond1 expr1s...) (cond2 expr2s...) [(else ...)])
+// a COND has a number of sub-expressions of the form (condition
+// ..exprs..). whenever we evaluate a condition, the result goes onto
+// frame.evaluated. if the condition is true, the corresponding
+// expressions are evaluated on the stack, and no other parts of the COND
+// are processed.
+// if no condition is found that is true, the result is false.
+//
+// XXX possible optimization: single expressions do not need wrapped in DO...
+LispObject sf_cond(Interpreter intp, LispEnvironment env, LispObject[] args) {
+    auto top = intp.callstack.Top();
+
+    if (top.evaluated.length > 0) {
+        if (TruthValue(top.evaluated[$-1])) {
+            // this condition is true
+            // evaluate the corresponding expression(s) using TCO
+            auto stuff = args[top.evaluated.length];
+            if (auto list = cast(LispPair) stuff) {
+                // wrap expression(s) up in a DO
+                auto expr = new LispPair(new LispSymbol("do"), list.tail);
+                auto sf = new StackFrame(expr, env);
+                intp.callstack.Pop();
+                intp.callstack.Push(sf);
+                return null;
+            } else
+                throw new TypeError(
+                        format("COND: invalid condition: %s", stuff.Repr()));
+        }
+    }
+
+    // are there still parts left to be processed?
+    if (top.evaluated.length == args.length-1) {
+        // everything processed, we didn't find a matching condition
+        return FALSE();
+    } else {
+        // process the next condition
+        LispObject stuff = args[top.evaluated.length+1];
+        if (auto list = cast(LispPair) stuff) {
+            LispObject cond = list.head;
+            // if condition is symbol "else", then it's considered true
+            if (IsSymbol(cond, "else")) {
+                // might as well push expression on the stack right now (TCO)
+                auto expr = new LispPair(new LispSymbol("do"), list.tail);
+                auto sf = new StackFrame(expr, env);
+                intp.callstack.Pop();
+                intp.callstack.Push(sf);
+                return null;
+            } else {
+                // evaluate the condition
+                auto sf = new StackFrame(cond, env);
+                intp.callstack.Push(sf);
+                return null;
+            }
+        } else 
+            throw new TypeError(format("COND: invalid condition: %s", stuff.Repr()));
+    }
+}
+
 SpecialFormSig[dstring] GetSpecialForms() {
     SpecialFormSig[dstring] forms = [
+        "cond": &sf_cond,
         "define": &sf_define,
         "do": &sf_do,
         "if": &sf_if,
