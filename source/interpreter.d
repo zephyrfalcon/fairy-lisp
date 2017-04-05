@@ -143,8 +143,7 @@ class Interpreter {
             assert(top.evaluated.length == 0, "this is not supposed to happen");
             LispObject result = this.EvalAtomic(top.original_expr, top.env);
             if (top.aux_data !is null) {
-                // top.aux_data.Receive(result);
-                throw new NotImplementedError("auxiliary data");
+                top.aux_data.Receive(result);
             } else {
                 top.evaluated ~= result;
             }

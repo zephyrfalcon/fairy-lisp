@@ -5,8 +5,10 @@ import errors;
 import tools;
 import types;
 
-// FIXME
 abstract class StackFrameHelper {
+    void Receive(LispObject x) {
+        throw new NotImplementedError("abstract method");
+    }
 }
 
 class StackFrame {
@@ -16,7 +18,6 @@ class StackFrame {
     bool is_atomic;                 // is the original expression atomic
     LispEnvironment env;            // environment that the expression will be
                                     // evaluated in
-    // FIXME: helper
     StackFrameHelper aux_data = null;
 
     this(LispObject expr, LispEnvironment env) {

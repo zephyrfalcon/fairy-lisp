@@ -166,6 +166,79 @@ LispObject sf_cond(Interpreter intp, LispEnvironment env, LispObject[] args) {
     }
 }
 
+class LetHelper: StackFrameHelper {
+    LispEnvironment env;
+    LispObject[] values_in;
+    dstring next_name;
+    this(LispObject[] values_in, LispEnvironment env) {
+        this.values_in = values_in;
+        this.env = env;
+        this.next_name = "";
+    }
+    override void Receive(LispObject x) {
+        this.env.Set(this.next_name, x);
+    }
+}
+
+// (LET (..names..) ..body..)
+// Unlike Lisp/Scheme's LET, the first parameter is a list whose values are
+// alternately names and values to be bound to those names.
+// E.g. (LET (a 1 b 2) ...)
+
+/* How LET works internally:
+   LET creates a new namespace. The names specified in LET's first argument 
+   (a list) will be created in this namespace, one by one, so they can refer 
+   to each other once they're defined. (Like Scheme's LET* but unlike its LET.)
+   We need to evaluate the values associated with the names; to do this, we create
+   an auxiliary data structure to keep track of what has been evaluated so far,
+   and to store the new namespace. This is necessary because we will revisiting
+   the sf_let function multiple times.
+   The slice of expressions (name1 value1 name2 value2 ...) will be stored in
+   aux.values_in. Whenever we call sf_let, if this slice is not empty, we take
+   its first two elements (a name and an expression), then add the name to
+   aux.strings, and put the expression up for evaluation.
+   When the resulting value comes back (in top.evaluated), we add this to the
+   new namespace (as stored in aux.env).
+   When aux.values_in is empty, we evaluate the body in the new namespace, which
+   now contains all the names+values specified in LET's first argument.
+   (TCO is done here.)
+*/
+LispObject sf_let(Interpreter intp, LispEnvironment env, LispObject[] args) {
+    auto top = intp.callstack.Top();
+
+    if (top.aux_data is null) {
+        if (auto header = cast(LispList) args[1]) {
+            LispObject[] values = header.ToArray();
+            auto newenv = new LispEnvironment(env);
+            top.aux_data = new LetHelper(values, newenv);
+        } else 
+            throw new Exception("LET: invalid header");
+    }
+
+    if (auto aux = cast(LetHelper) top.aux_data) {
+        if (aux.values_in.length >= 2) {
+            if (auto sym = cast(LispSymbol) aux.values_in[0]) {
+                aux.next_name = sym.value;
+                auto sf = new StackFrame(aux.values_in[1], aux.env);
+                intp.callstack.Push(sf);
+                aux.values_in = aux.values_in[2..$];
+                return null;
+            } else 
+                throw new TypeError("LET: name must be a symbol");
+        } else if (aux.values_in.length == 1) {
+            throw new Exception("LET: header must have even number of elements");
+        } else {
+            // done evaluating the header part
+            // evaluate body in new environment with names bound in it (TCO)
+            LispObject let_body = WrapExprsInDo(args[2..$]);
+            auto sf = new StackFrame(let_body, aux.env);
+            intp.callstack.Pop();
+            intp.callstack.Push(sf);
+            return null;
+        }
+    } else throw new Exception("?!");
+}
+
 SpecialFormSig[dstring] GetSpecialForms() {
     SpecialFormSig[dstring] forms = [
         "cond": &sf_cond,
@@ -173,6 +246,7 @@ SpecialFormSig[dstring] GetSpecialForms() {
         "do": &sf_do,
         "if": &sf_if,
         "lambda": &sf_lambda,
+        "let": &sf_let,
         "quote": &sf_quote,
     ];
     return forms;

@@ -52,8 +52,7 @@ class CallStack {
         } else {
             StackFrame top = this.Top();
             if (top.aux_data !is null) {
-                throw new NotImplementedError("auxiliary data");
-                // top.aux_data.Receive(value);
+                top.aux_data.Receive(value);
             } else {
                 top.evaluated ~= value;
             }
