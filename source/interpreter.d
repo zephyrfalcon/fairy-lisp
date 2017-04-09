@@ -16,16 +16,21 @@ import stackframe;
 import tools;
 import types;
 
+struct DebugOptions {
+    bool show_call_stack = false;
+}
+
 class Interpreter {
     dstring prompt = "> ";
     CallStack callstack;
     LispEnvironment builtin_env;
     LispEnvironment global_env;
-    // TODO: debug options
+    DebugOptions debug_options;
 
     SpecialFormSig[dstring] special_forms;
 
     this() {
+        this.debug_options = DebugOptions();
         this.callstack = new CallStack();
         this.builtin_env = new LispEnvironment();
         this.global_env = new LispEnvironment(this.builtin_env);
@@ -167,13 +172,13 @@ class Interpreter {
             top.to_be_evaluated = top.to_be_evaluated[1..$];
             auto sf = new StackFrame(elem, top.env);
             this.callstack.Push(sf);
-
         }
     }
 
     LispObject Eval() {
         while (true) {
-            // TODO: show call stack if debug option set
+            if (this.debug_options.show_call_stack)
+                this.callstack.Print();
             if (this.callstack.IsDone()) {
                 // there should be only one value as the final result
                 StackFrame top = this.callstack.Top();
