@@ -146,6 +146,18 @@ LispObject b_function_body(Interpreter intp, LispEnvironment env, FunctionArgs f
         throw new TypeError("argument must be a (non-builtin) function");
 }
 
+// (SET-DEBUG-OPTION name value)
+// a work in progress. for now, only supports 'show-call-stack'.
+LispObject b_set_debug_option(Interpreter intp, LispEnvironment env, FunctionArgs fargs) {
+    if (auto name = cast(LispSymbol) fargs.args[0]) {
+        if (name.value == "show-call-stack") {
+            bool value = (fargs.args[1] is FALSE()) ? false : true;
+            intp.debug_options.show_call_stack = value;
+            return TRUE();
+        } else throw new Exception(format("unknown option name: %s", name.value));
+    } else
+        throw new TypeError("first argument must be a symbol");
+}
 
 struct FI {
     BuiltinFunctionSig f;
@@ -165,6 +177,7 @@ FI[dstring] GetBuiltins() {
         "function-args": FI(&b_function_args, 1),
         "function-body": FI(&b_function_body, 1),
         "print": FI(&b_print, 0),
+        "set-debug-option": FI(&b_set_debug_option, 2),
         "type": FI(&b_type, 1),
         "type-name": FI(&b_type_name, 1),
         "type-parent": FI(&b_type_parent, 1),
