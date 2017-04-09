@@ -58,18 +58,34 @@ LispObject _define_function(Interpreter intp, LispEnvironment env, LispObject[] 
 }
 
 LispObject sf_lambda(Interpreter intp, LispEnvironment env, LispObject[] args) {
+    return _function("lambda", intp, env, args);
+}
+
+LispObject sf_macro(Interpreter intp, LispEnvironment env, LispObject[] args) {
+    return _function("macro", intp, env, args);
+}
+
+LispObject _function(string type, Interpreter intp, LispEnvironment env, LispObject[] args) {
     dstring[] argnames = [];
     if (auto list = cast(LispList) args[1]) {
         LispObject[] names = list.ToArray();
         foreach(x; names) {
             if (auto sym = cast(LispSymbol) x) {
                 argnames ~= sym.value;
-            } else throw new TypeError("LAMBDA: argument names must be symbols");
+            } else 
+                throw new TypeError(
+                        format("%s: argument names must be symbols", type));
         }
-    } else throw new TypeError("LAMBDA: first argument must be a list");
+    } else 
+        throw new TypeError(format("%s: first argument must be a list", type));
+
     LispObject[] fbody = args[2..$];
-    auto uf = new LispUserDefinedFunction(argnames, fbody, env);
-    return uf;
+    if (type == "lambda") {
+        return new LispUserDefinedFunction(argnames, fbody, env);
+    } else if (type == "macro") {
+        return new LispMacro(argnames, fbody, env);
+    } else 
+        throw new TypeError(format("Unknown type: %s", type));
 }
  
 LispObject sf_do(Interpreter intp, LispEnvironment env, LispObject[] args) {
@@ -247,6 +263,7 @@ SpecialFormSig[dstring] GetSpecialForms() {
         "if": &sf_if,
         "lambda": &sf_lambda,
         "let": &sf_let,
+        "macro": &sf_macro,
         "quote": &sf_quote,
     ];
     return forms;

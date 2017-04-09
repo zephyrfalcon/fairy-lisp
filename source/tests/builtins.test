@@ -136,3 +136,10 @@ x
     (+ a b c)))
 => 8
 
+;; --- macros ---
+
+(define m 
+  (macro (x) (+ x 1)))
+(macro? m)
+=> true
+
