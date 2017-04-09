@@ -308,6 +308,24 @@ class LispUserDefinedFunction : LispFunction {
     override dstring TypeName() { return "ufunc"; }
 }
 
+class LispMacro : LispUserDefinedFunction {
+    this(dstring[] argnames, LispObject[] fbody, LispEnvironment env, 
+         dstring name="") {
+        super(argnames, fbody, env, name);
+    }
+    override dstring Repr() {
+        return format("#<%s>"d, this.name == "" ? "macro" : this.name);
+    }
+    override bool opEquals(Object o) {
+        if (auto other = cast(LispMacro) o) {
+            return this.name == other.name 
+                && this.arity == other.arity && this.fbody == other.fbody
+                && this.argnames == other.argnames && this.env == other.env;
+        } else return super.opEquals(o);
+    }
+    override dstring TypeName() { return "macro"; }
+}
+
 struct EnvFindResult {
     LispEnvironment env;
     LispObject value;

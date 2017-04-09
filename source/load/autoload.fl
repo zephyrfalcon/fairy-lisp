@@ -25,6 +25,8 @@
     (equal? (type-name (type x)) 'symbol)))
 (define (nil? x)
   (equal? (type-name (type x)) 'nil))
+(define (macro? x)
+  (equal? (type-name (type x)) 'macro))
 
 ;; --- higher-order functions like MAP, FILTER, etc ---
 
