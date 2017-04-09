@@ -21,6 +21,24 @@
 (cdr (cons 1 2))
 => 2
 
+;; --- first, second, etc
+
+(first '(1 2 3))
+=> 1
+(second '(1 2 3))
+=> 2
+(third '(1 2 3))
+=> 3
+
+;; --- c{a,d}+r
+
+(cadr '(1 2 3 4))
+=> 2
+(cddr '(1 2 3 4))
+=> (3 4)
+
+;; --- reverse
+
 (reverse '())
 => ()
 (reverse '(1 2 3))
@@ -28,10 +46,14 @@
 (reverse '(a (b c) d (e f) ()))
 => (() (e f) d (b c) a)
 
+;; --- map
+
 (map (lambda (x) (+ x 1)) '(1 2 3))
 => (2 3 4)
 (map (lambda (x) (+ x 1)) ())
 => ()
+
+;; --- append
 
 (append () ())
 => ()

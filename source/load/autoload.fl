@@ -1,6 +1,20 @@
 ;; -*- mode: Scheme; -*-
 ;; automatically loaded
 
+;; --- macro expansion ---
+
+(define (macroexpand-1 expr env)
+  (if (pair? expr)
+      (if (symbol? (car expr))
+          (let (m (env-get env symbol false))
+            (if m
+                (if (macro? m)
+                    (list (apply m (cdr expr)) true)
+                    (expr false))
+                (expr false)))
+          (expr false))
+      (expr false)))
+
 (define cadr
   (lambda (x) (car (cdr x))))
 (define cdar
@@ -9,6 +23,12 @@
   (lambda (x) (car (car x))))
 (define cddr
   (lambda (x) (cdr (cdr x))))
+(define (caddr x)
+  (car (cdr (cdr x))))
+
+(define (first x) (car x))
+(define (second x) (cadr x))
+(define (third x) (caddr x))
 
 (define list
   (lambda () %rest))
