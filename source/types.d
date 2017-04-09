@@ -424,6 +424,19 @@ class LispDictionary : LispObject {
         }
     }
 
+    // try to convert this LispDictionary into a hashmap LispObject[dstring];
+    // this will only work if the LispDictionary has only keywords as keys.
+    LispObject[dstring] ToHashmap() {
+        LispObject[dstring] d;
+        foreach (key; values.keys) {
+            if (auto kw = cast(LispKeyword) key) {
+                d[kw.value] = values[key];
+            } else 
+                throw new TypeError("key is not a keyword");
+        }
+        return d;
+    }
+
     override dstring Repr() {
         dstring[] stuff = [];
         foreach (key; this.values.keys) {

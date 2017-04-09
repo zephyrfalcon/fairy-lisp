@@ -15,6 +15,11 @@
           (expr false))
       (expr false)))
 
+;; test test...
+(define when
+  (macro (cond body)
+    (list 'if cond body false)))
+
 (define cadr
   (lambda (x) (car (cdr x))))
 (define cdar

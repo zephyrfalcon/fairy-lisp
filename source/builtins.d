@@ -94,6 +94,42 @@ LispObject b_current_env(Interpreter intp, LispEnvironment env, FunctionArgs far
     return env;
 }
 
+// create a new FunctionArgs object to be used by APPLY.
+// this should take into account:
+// - the arity of the function being called (which determines which arguments
+// are "regular", vs which ones are rest arguments
+// - keywords (passed as a keyword dict, the way we get in %keywords)
+FunctionArgs MakeApplyFunctionArgs(LispFunction callable, LispObject[] args, LispDictionary d)
+{
+    auto fa = FunctionArgs.Parse(callable.arity, args);
+    if (d !is null)
+        fa.keyword_args = d.ToHashmap();
+    // NOTE: any keyword args we specify in `args` will be overwritten!
+    return fa;
+}
+
+// (APPLY f args [keywords])
+LispObject b_apply(Interpreter intp, LispEnvironment env, FunctionArgs fargs) {
+    if (auto f = cast(LispFunction) fargs.args[0]) {
+        if (auto lst = cast(LispList) fargs.args[1]) {
+            // prepare FunctionArgs object
+            LispObject[] myargs = lst.ToArray();
+            FunctionArgs fa;
+            if (fargs.rest_args.length > 0) {
+                if (auto kwargs = cast(LispDictionary) fargs.rest_args[0]) {
+                    fa = MakeApplyFunctionArgs(f, myargs, kwargs);
+                } else
+                    throw new TypeError("APPLY: keyword argument must be"
+                                      ~ "passed as a dictionary");
+            } else
+                fa = MakeApplyFunctionArgs(f, myargs, null);
+            return intp.CallFunction(env, f, fa);
+        } else
+            throw new TypeError("APPLY: arguments must be a list");
+    } else
+        throw new TypeError("APPLY: first argument must be a callable");
+}
+
 struct FI {
     BuiltinFunctionSig f;
     int arity;
@@ -104,6 +140,7 @@ FI[dstring] GetBuiltins() {
     FI[dstring] builtins = [
         "+": FI(&b_plus, 0),
         "addr": FI(&b_addr, 1),
+        "apply": FI(&b_apply, 2),
         "current-env": FI(&b_current_env, 0),
         "env-get": FI(&b_env_get, 2),
         "eq?": FI(&b_eq, 2),
