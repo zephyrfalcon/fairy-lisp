@@ -143,3 +143,14 @@ x
 (macro? m)
 => true
 
+;; --- environments ---
+
+(type-name (type (current-env)))
+=> env
+(eq? (current-env) (current-env))
+=> true
+(env-get (current-env) '+)
+=> #<+>
+(env-get (current-env) 'bogus 33)
+=> 33
+
