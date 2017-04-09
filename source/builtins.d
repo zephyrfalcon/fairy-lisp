@@ -19,24 +19,6 @@ LispObject b_plus(Interpreter intp, LispEnvironment env, FunctionArgs fargs) {
     return new LispInteger(result);
 }
 
-LispObject b_cons(Interpreter intp, LispEnvironment env, FunctionArgs fargs) {
-    return new LispPair(fargs.args[0], fargs.args[1]);
-}
-
-LispObject b_car(Interpreter intp, LispEnvironment env, FunctionArgs fargs) {
-    if (auto p = cast(LispPair) fargs.args[0]) {
-        return p.head;
-    } else
-        throw new TypeError("CAR: argument must be a list");
-}
-
-LispObject b_cdr(Interpreter intp, LispEnvironment env, FunctionArgs fargs) {
-    if (auto p = cast(LispPair) fargs.args[0]) {
-        return p.tail;
-    } else
-        throw new TypeError("CDR: argument must be a list");
-}
-
 LispObject b_eq(Interpreter intp, LispEnvironment env, FunctionArgs fargs) {
     auto p1 = cast(void *) fargs.args[0];
     auto p2 = cast(void *) fargs.args[1];
@@ -89,13 +71,6 @@ LispObject b_print(Interpreter intp, LispEnvironment env, FunctionArgs fargs) {
     return last;
 }
 
-LispObject b_reverse(Interpreter intp, LispEnvironment env, FunctionArgs fargs) {
-    if (auto list = cast(LispList) fargs.args[0]) {
-        auto rev = list.Reverse();
-        return rev;
-    } else
-        throw new TypeError("list expected");
-}
 
 struct FI {
     BuiltinFunctionSig f;
@@ -103,16 +78,13 @@ struct FI {
 }
 FI[dstring] GetBuiltins() {
     import b_dict;
+    import b_list;
     FI[dstring] builtins = [
         "+": FI(&b_plus, 0),
         "addr": FI(&b_addr, 1),
-        "car": FI(&b_car, 1),
-        "cdr": FI(&b_cdr, 1),
-        "cons": FI(&b_cons, 2),
         "eq?": FI(&b_eq, 2),
         "equal?": FI(&b_equal, 2),
         "print": FI(&b_print, 0),
-        "reverse": FI(&b_reverse, 1),
         "type": FI(&b_type, 1),
         "type-name": FI(&b_type_name, 1),
         "type-parent": FI(&b_type_parent, 1),
@@ -120,6 +92,12 @@ FI[dstring] GetBuiltins() {
         /* b_dict.d */
         "dict-get": FI(&b_dict_get, 2),
         "make-dict": FI(&b_make_dict, 0),
+
+        /* b_list.d */
+        "car": FI(&b_car, 1),
+        "cdr": FI(&b_cdr, 1),
+        "cons": FI(&b_cons, 2),
+        "reverse": FI(&b_reverse, 1),
     ];
     return builtins;
 }
