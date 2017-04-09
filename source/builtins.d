@@ -94,6 +94,7 @@ FI[dstring] GetBuiltins() {
         "make-dict": FI(&b_make_dict, 0),
 
         /* b_list.d */
+        "append": FI(&b_append, 2),
         "car": FI(&b_car, 1),
         "cdr": FI(&b_cdr, 1),
         "cons": FI(&b_cons, 2),
