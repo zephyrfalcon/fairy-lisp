@@ -1,3 +1,4 @@
+;; -*- mode: Scheme; -*-
 ;; automatically loaded
 
 (define cadr
@@ -22,5 +23,16 @@
 (define symbol?
   (lambda (x)
     (equal? (type-name (type x)) 'symbol)))
+(define (nil? x)
+  (equal? (type-name (type x)) 'nil))
 
+;; --- higher-order functions like MAP, FILTER, etc ---
+
+(define (_map-aux f lst acc)
+  (if (nil? lst)
+      (reverse acc)
+      (_map-aux f (cdr lst) (cons (f (car lst)) acc))))
+
+(define (map f lst)
+  (_map-aux f lst ()))
 

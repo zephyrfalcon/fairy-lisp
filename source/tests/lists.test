@@ -28,3 +28,8 @@
 (reverse '(a (b c) d (e f) ()))
 => (() (e f) d (b c) a)
 
+(map (lambda (x) (+ x 1)) '(1 2 3))
+=> (2 3 4)
+(map (lambda (x) (+ x 1)) ())
+=> ()
+
