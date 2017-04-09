@@ -21,7 +21,8 @@ class StackFrame {
     LispObject original_expr;       // the original Lisp expression
     LispObject[] to_be_evaluated;   // yet to be evaluated
     LispObject[] evaluated;         // what we evaluated so far
-    bool is_atomic;                 // is the original expression atomic
+    bool is_atomic;                 // is the original expression atomic?
+    bool is_special;                // is the expression a special form?
     LispEnvironment env;            // environment that the expression will be
                                     // evaluated in
     StackFrameHelper aux_data = null;
@@ -30,6 +31,7 @@ class StackFrame {
         this.original_expr = expr;
         this.env = env;
         this.evaluated = [];
+        this.is_special = false;  // to be determined later
         if (auto p = cast(LispPair) expr) {
             try {
                 this.to_be_evaluated = p.ToArray();

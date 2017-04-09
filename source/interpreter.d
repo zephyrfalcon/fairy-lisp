@@ -155,15 +155,22 @@ class Interpreter {
         } else {
             // it's a compound expression
 
-            // is it a special form?
-            if (auto sym = cast(LispSymbol) top.to_be_evaluated[0]) {
-                SpecialFormSig *p = (sym.value in this.special_forms);
-                if (p !is null) {
-                    LispObject result = (*p)(this, top.env, top.to_be_evaluated);
-                    if (result !is null)
-                        this.callstack.Collapse(result);
-                    return;
-                }                 
+            // is it a special form? we check for this in two cases:
+            // 1) if top.evaluated is empty, or
+            // 2) if the stack frame has previously been marked as a special
+            // form (this is used for reentrant forms like DEFINE)
+            if (top.evaluated.length == 0 || top.is_special) {
+                if (auto sym = cast(LispSymbol) top.to_be_evaluated[0]) {
+                    SpecialFormSig *p = (sym.value in this.special_forms);
+                    if (p !is null) {
+                        if (top.evaluated.length == 0)
+                            top.is_special = true;
+                        LispObject result = (*p)(this, top.env, top.to_be_evaluated);
+                        if (result !is null)
+                            this.callstack.Collapse(result);
+                        return;
+                    }                 
+                }
             }
 
             // evaluate the next element of the compound form by putting it on

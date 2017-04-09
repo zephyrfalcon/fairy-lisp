@@ -181,6 +181,8 @@ x
   (+ x y z))
 (function-body f)
 => ((+ x y z))
+;; test variable names that are the same as special form names (like COND)
+;; this is not recommended, but should not cause an error per se (see issue #58)
 (define my-when
   (lambda (cond body)
     (list 'if cond body)))
