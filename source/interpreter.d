@@ -30,7 +30,6 @@ class Interpreter {
         this.builtin_env = new LispEnvironment();
         this.global_env = new LispEnvironment(this.builtin_env);
         this.LoadBuiltins();
-        // TODO: autoload code
         this.AutoLoadCode();
     }
 

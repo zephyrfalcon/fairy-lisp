@@ -5,6 +5,7 @@ import std.format;
 import std.stdio;
 import errors;
 import interpreter;
+import tools;
 import types;
 
 LispObject b_plus(Interpreter intp, LispEnvironment env, FunctionArgs fargs) {
@@ -130,6 +131,22 @@ LispObject b_apply(Interpreter intp, LispEnvironment env, FunctionArgs fargs) {
         throw new TypeError("APPLY: first argument must be a callable");
 }
 
+LispObject b_function_args(Interpreter intp, LispEnvironment env, FunctionArgs fargs) {
+    if (auto f = cast(LispUserDefinedFunction) fargs.args[0]) {
+        LispObject[] names = NamesAsSymbols(f.argnames);
+        return LispList.FromArray(names);
+    } else
+        throw new TypeError("argument must be a (non-builtin) function");
+}
+
+LispObject b_function_body(Interpreter intp, LispEnvironment env, FunctionArgs fargs) {
+    if (auto f = cast(LispUserDefinedFunction) fargs.args[0]) {
+        return LispList.FromArray(f.fbody);
+    } else
+        throw new TypeError("argument must be a (non-builtin) function");
+}
+
+
 struct FI {
     BuiltinFunctionSig f;
     int arity;
@@ -145,6 +162,8 @@ FI[dstring] GetBuiltins() {
         "env-get": FI(&b_env_get, 2),
         "eq?": FI(&b_eq, 2),
         "equal?": FI(&b_equal, 2),
+        "function-args": FI(&b_function_args, 1),
+        "function-body": FI(&b_function_body, 1),
         "print": FI(&b_print, 0),
         "type": FI(&b_type, 1),
         "type-name": FI(&b_type_name, 1),

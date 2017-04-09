@@ -166,3 +166,24 @@ x
 => 3
 ;; TODO: make sure keyword args are handled correctly
 
+;; --- function introspection ---
+
+(function-args list)
+=> ()
+(function-args cadr)
+=> (x)
+(define (f x y z)
+  (+ x y z))
+(function-args f)
+=> (x y z)
+
+(define (f x y z)
+  (+ x y z))
+(function-body f)
+=> ((+ x y z))
+(define my-when
+  (lambda (cond body)
+    (list 'if cond body)))
+(function-body my-when)
+=> ((list (quote if) cond body))
+

@@ -1,5 +1,6 @@
 // tools.d
 
+import std.algorithm;
 import std.array;
 import std.conv;
 import std.file;
@@ -106,6 +107,16 @@ dstring[] GetListOfSymbols(LispObject[] values) {
             throw new TypeError("symbol expected");
     }
     return names;
+}
+
+// convert a list of names (as dstrings) to a list of LispSymbols
+LispObject[] NamesAsSymbols(dstring[] names) {
+    //LispObject[] symbols = map!(s => new LispSymbol(s))(names);  // doesn't work
+    LispObject[] symbols = [];
+    foreach(name; names) {
+        symbols ~= new LispSymbol(name);
+    }
+    return symbols;
 }
 
 LispObject WrapExprsInDo(LispObject[] exprs) {
