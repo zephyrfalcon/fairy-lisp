@@ -89,6 +89,14 @@ LispObject b_print(Interpreter intp, LispEnvironment env, FunctionArgs fargs) {
     return last;
 }
 
+LispObject b_reverse(Interpreter intp, LispEnvironment env, FunctionArgs fargs) {
+    if (auto list = cast(LispList) fargs.args[0]) {
+        auto rev = list.Reverse();
+        return rev;
+    } else
+        throw new TypeError("list expected");
+}
+
 struct FI {
     BuiltinFunctionSig f;
     int arity;
@@ -104,6 +112,7 @@ FI[dstring] GetBuiltins() {
         "eq?": FI(&b_eq, 2),
         "equal?": FI(&b_equal, 2),
         "print": FI(&b_print, 0),
+        "reverse": FI(&b_reverse, 1),
         "type": FI(&b_type, 1),
         "type-name": FI(&b_type_name, 1),
         "type-parent": FI(&b_type_parent, 1),

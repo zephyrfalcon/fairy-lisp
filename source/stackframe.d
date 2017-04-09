@@ -5,6 +5,12 @@ import errors;
 import tools;
 import types;
 
+// helper class for when evaluating of a form is more complicated than the
+// usual way allows. special forms and built-in functions that need a helper,
+// should subclass it and add data to it as necessary. the Receive() method
+// should be overridden to handle evaluated values returned by the usual
+// evaluation mechanism.
+// (for example: LET)
 abstract class StackFrameHelper {
     void Receive(LispObject x) {
         throw new NotImplementedError("abstract method");
