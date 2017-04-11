@@ -18,3 +18,17 @@
 ;; this is not a macro, so no expansion
 (macroexpand-1 '(if a b c) (current-env))
 => ((if a b c) false)
+
+;; --- macroexpand-all ---
+
+(define test-when
+  (macro (cond body)
+    (list 'if cond body false)))
+(macroexpand-all '(test-when a b) (current-env))
+=> (if a b false)
+;; TODO: try with more complicated macros...
+
+;; not a macro
+(macroexpand-all '(foo bar) (current-env))
+=> (foo bar)
+

@@ -1,8 +1,22 @@
 ;; -*- mode: Scheme; -*-
 ;; automatically loaded
 
+(define cadr
+  (lambda (x) (car (cdr x))))
+(define cdar
+  (lambda (x) (cdr (car x))))
+(define caar
+  (lambda (x) (car (car x))))
+(define cddr
+  (lambda (x) (cdr (cdr x))))
+(define (caddr x)
+  (car (cdr (cdr x))))
+
 ;; --- macro expansion ---
 
+;; if the given expression is a macro expression, expand it exactly once.
+;; return a list (new-expr true) if expansion succeeded, (old-expr false)
+;; otherwise.
 (define (macroexpand-1 expr env)
   (if (pair? expr)
       (if (symbol? (car expr))
@@ -15,21 +29,20 @@
           (list expr false))
       (list expr false)))
 
+;; like MACROEXPAND-1, but expand the macro expression as many times as possible.
+;; return the resulting expression.
+(define (macroexpand-all expr env)
+  (let (result (macroexpand-1 expr env))
+    (if (cadr result)  ;; if a macro was expanded, try again
+        (macroexpand-all (car result) env)
+        (car result))))
+
 ;; test test...
 (define when
   (macro (cond body)
     (list 'if cond body false)))
 
-(define cadr
-  (lambda (x) (car (cdr x))))
-(define cdar
-  (lambda (x) (cdr (car x))))
-(define caar
-  (lambda (x) (car (car x))))
-(define cddr
-  (lambda (x) (cdr (cdr x))))
-(define (caddr x)
-  (car (cdr (cdr x))))
+;; ---
 
 (define (first x) (car x))
 (define (second x) (cadr x))
