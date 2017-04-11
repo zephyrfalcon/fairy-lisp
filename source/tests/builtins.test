@@ -136,13 +136,6 @@ x
     (+ a b c)))
 => 8
 
-;; --- macros ---
-
-(define m 
-  (macro (x) (+ x 1)))
-(macro? m)
-=> true
-
 ;; --- environments ---
 
 (type-name (type (current-env)))
@@ -165,6 +158,13 @@ x
 (apply dict-get (list d "c" 3))
 => 3
 ;; TODO: make sure keyword args are handled correctly
+
+;; APPLY works on macros as well
+(define test-when
+  (macro (cond body) 
+    (list 'if cond body false)))
+(apply test-when '(a b))
+=> (if a b false)
 
 ;; --- function introspection ---
 

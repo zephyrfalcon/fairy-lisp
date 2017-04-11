@@ -6,14 +6,14 @@
 (define (macroexpand-1 expr env)
   (if (pair? expr)
       (if (symbol? (car expr))
-          (let (m (env-get env symbol false))
+          (let (m (env-get env (car expr) false))
             (if m
                 (if (macro? m)
                     (list (apply m (cdr expr)) true)
-                    (expr false))
-                (expr false)))
-          (expr false))
-      (expr false)))
+                    (list expr false))
+                (list expr false)))
+          (list expr false))
+      (list expr false)))
 
 ;; test test...
 (define when

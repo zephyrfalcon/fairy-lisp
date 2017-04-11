@@ -139,7 +139,10 @@ class Interpreter {
                     if (result !is null)
                         this.callstack.Collapse(result);
                 } else 
-                    throw new Exception("first element of function call must be callable");
+                    throw new Exception(
+                            format("callable expected; got %s instead (%s)",
+                                top.evaluated[0].Repr(),
+                                top.evaluated[0].GetType().name));
             }
             return;
         } 

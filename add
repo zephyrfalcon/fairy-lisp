@@ -1,0 +1,6 @@
+#!/bin/sh
+git add source/*.d
+git add source/tests/*.test
+git add source/examples/*.fl
+git add source/load/*.fl
+

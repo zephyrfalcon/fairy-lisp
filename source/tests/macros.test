@@ -1,0 +1,20 @@
+;; test macros, macro-expansion, etc.
+
+;; --- macro? ---
+
+(define m 
+  (macro (x) (+ x 1)))
+(macro? m)
+=> true
+
+;; --- macroexpand-1 ---
+
+(define test-when
+  (macro (cond body)
+    (list 'if cond body false)))
+(macroexpand-1 '(test-when a b) (current-env))
+=> ((if a b false) true)
+
+;; this is not a macro, so no expansion
+(macroexpand-1 '(if a b c) (current-env))
+=> ((if a b c) false)
