@@ -256,6 +256,7 @@ class Interpreter {
         while (true) {
             LispObject expr;
             write(this.prompt);
+
             try {
                 expr = rd.Read();
             } catch (NoInputException e) {
@@ -263,9 +264,14 @@ class Interpreter {
             } catch (Exception e) {
                 writeln("An error occurred.");  // FIXME
             }
-            //writeln(expr.Repr());
-            LispObject result = this.EvalExpr(expr, this.global_env);
-            writefln("%s", result.Repr());
+
+            try {
+                LispObject result = this.EvalExpr(expr, this.global_env);
+                writefln("%s", result.Repr());
+            } catch (Exception e) {
+                writeln("ERROR: ", e.msg);
+                writeln(e);  // includes traceback (make this an option?)
+            }
         }
     }
 }
