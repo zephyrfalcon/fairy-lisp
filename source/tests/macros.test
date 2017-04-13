@@ -32,3 +32,12 @@
 (macroexpand-all '(foo bar) (current-env))
 => (foo bar)
 
+;; --- macroexpand ---
+
+;; test if macro expansion is applied recursively
+(define test-when
+  (macro (cond body)
+    (list 'if cond body false)))
+(macroexpand '(test-when a (test-when b c)) (current-env))
+=> (if a (if b c false) false)
+

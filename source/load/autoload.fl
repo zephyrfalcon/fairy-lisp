@@ -37,6 +37,15 @@
         (macroexpand-all (car result) env)
         (car result))))
 
+(define (macroexpand expr env)
+  (if (pair? expr)
+      ;; TODO: special forms
+      (let (expr-2 (macroexpand-all expr env))
+        (cons (car expr-2)
+              (map (lambda (subexpr) (macroexpand subexpr env))
+                   (cdr expr-2))))
+      expr))
+
 ;; test test...
 (define when
   (macro (cond body)
