@@ -72,28 +72,6 @@ LispObject b_print(Interpreter intp, LispEnvironment env, FunctionArgs fargs) {
     return last;
 }
 
-// (ENV-GET env name [default])
-LispObject b_env_get(Interpreter intp, LispEnvironment env, FunctionArgs fargs) {
-    if (auto this_env = cast(LispEnvironment) fargs.args[0]) {
-        if (auto name = cast(LispSymbol) fargs.args[1]) {
-            try {
-                LispObject result = this_env.Get(name.value);
-                return result;
-            } catch (EnvironmentKeyException e) {
-                if (fargs.rest_args.length > 0) 
-                    return fargs.rest_args[0];
-                throw e;
-            }
-        } else
-            throw new TypeError("ENV-GET: name must be a symbol");
-    } else 
-        throw new TypeError("ENV-GET: first argument must be an environment");
-}
-
-// return the current environment
-LispObject b_current_env(Interpreter intp, LispEnvironment env, FunctionArgs fargs) {
-    return env;
-}
 
 // create a new FunctionArgs object to be used by APPLY.
 // this should take into account:
@@ -164,14 +142,12 @@ struct FI {
     int arity;
 }
 FI[dstring] GetBuiltins() {
-    import b_dict;
+    import b_dict, b_env;
     import b_list;
     FI[dstring] builtins = [
         "+": FI(&b_plus, 0),
         "addr": FI(&b_addr, 1),
         "apply": FI(&b_apply, 2),
-        "current-env": FI(&b_current_env, 0),
-        "env-get": FI(&b_env_get, 2),
         "eq?": FI(&b_eq, 2),
         "equal?": FI(&b_equal, 2),
         "function-args": FI(&b_function_args, 1),
@@ -185,6 +161,10 @@ FI[dstring] GetBuiltins() {
         /* b_dict.d */
         "dict-get": FI(&b_dict_get, 2),
         "make-dict": FI(&b_make_dict, 0),
+
+        /* b_env.d */
+        "current-env": FI(&b_current_env, 0),
+        "env-get": FI(&b_env_get, 2),
 
         /* b_list.d */
         "append": FI(&b_append, 2),
