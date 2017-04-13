@@ -163,8 +163,11 @@ FI[dstring] GetBuiltins() {
         "make-dict": FI(&b_make_dict, 0),
 
         /* b_env.d */
+        "builtin-env": FI(&b_builtin_env, 0),
         "current-env": FI(&b_current_env, 0),
         "env-get": FI(&b_env_get, 2),
+        "env-has?": FI(&b_env_has, 2),
+        "global-env": FI(&b_global_env, 0),
 
         /* b_list.d */
         "append": FI(&b_append, 2),
