@@ -198,3 +198,14 @@ x
 (function-body my-when)
 => ((list (quote if) cond body))
 
+;; --- not ---
+
+(not 3)
+=> false
+(not false)
+=> true
+(not true)
+=> false
+(not (eq? true true))
+=> false
+

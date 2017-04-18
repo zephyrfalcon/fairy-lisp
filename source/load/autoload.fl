@@ -64,6 +64,9 @@
 (define list
   (lambda () %rest))
 
+(define (not x)
+  (if x false true))
+
 ;; --- type predicates ---
 
 ;; NOTE: later, when we have a symbol cache, use EQ?
