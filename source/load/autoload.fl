@@ -44,6 +44,11 @@
               (map (lambda (subexpr) (macroexpand subexpr env))
                    (cddr expr)))))
 
+(define (_macroexpand-do expr env)
+  (cons (first expr)
+        (map (lambda (subexpr) (macroexpand subexpr env))
+             (cdr expr))))
+
 (define (macroexpand expr env)
   (if (pair? expr)
       (let (sym (car expr))
@@ -54,6 +59,7 @@
          ((equal? sym 'set!) (_macroexpand-define expr env))
          ((equal? sym 'lambda) (_macroexpand-define expr env))
          ((equal? sym 'macro) (_macroexpand-define expr env))
+         ((equal? sym 'do) (_macroexpand-do expr env))
          ((equal? sym 'let) ...)
          ((equal? sym 'cond) ...)
          (else  ;; not a special form

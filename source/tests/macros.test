@@ -68,3 +68,10 @@
 (macroexpand '(test-when a (define (foo x) (test-when x y))) (current-env))
 => (if a (define (foo x) (if x y false)) false)
 
+;; test if DO is handled correctly
+(define test-when
+  (macro (cond body)
+    (list 'if cond body false)))
+(macroexpand '(test-when a (do b c (test-when d e))) (current-env))
+=> (if a (do b c (if d e false)) false)
+
