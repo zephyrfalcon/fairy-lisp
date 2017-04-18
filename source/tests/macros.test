@@ -41,3 +41,16 @@
 (macroexpand '(test-when a (test-when b c)) (current-env))
 => (if a (if b c false) false)
 
+(define test-when
+  (macro (cond body)
+    (list 'if cond body false)))
+(macroexpand '(foo (test-when a b)) (current-env))
+=> (foo (if a b false))
+
+;; test if quote is handled correctly
+(define test-when
+  (macro (cond body)
+    (list 'if cond body false)))
+(macroexpand '(test-when a (quote (test-when b c))) (current-env))
+=> (if a (quote (test-when b c)) false)
+

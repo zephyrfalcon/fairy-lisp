@@ -231,8 +231,10 @@ class Interpreter {
             // make sure the number of arguments matches
             if (fargs.args.length != uf.argnames.length)
                 throw new Exception(
-                        format("incorrect number of arguments; expected %d, got %d", 
-                            uf.argnames.length, fargs.args.length));
+                        format("function: %s; incorrect number of arguments; "
+                             ~ "expected %d, got %d", 
+                               uf.Repr(),
+                               uf.argnames.length, fargs.args.length));
             // create new environment based on the lambda's environment
             auto newenv = new LispEnvironment(uf.env);
             // add new values to it

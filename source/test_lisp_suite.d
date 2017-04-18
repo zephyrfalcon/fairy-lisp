@@ -56,15 +56,12 @@ LispTestCase[] CollectTestsInFile(string filename) {
 }
 
 void RunLispTestCase(LispTestCase testcase) {
-    //writeln("Running:");
-    //writeln(join(testcase.code, ""));
     auto intp = new Interpreter();
     auto code = join(testcase.code, "");
     auto results = intp.EvalString(code);
     bool succeeds = results[$-1].Repr() == testcase.expected_result;
     if (!succeeds) {
         writeln("\n*** TEST FAILED");
-        // XXX put stuff here that shows code etc.
         writefln("File %s, line %d", testcase.filename, testcase.lineno);
         writeln("Code:");
         writeln(join(testcase.code, ""));

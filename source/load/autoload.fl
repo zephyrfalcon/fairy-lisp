@@ -39,11 +39,15 @@
 
 (define (macroexpand expr env)
   (if (pair? expr)
-      ;; TODO: special forms
-      (let (expr-2 (macroexpand-all expr env))
-        (cons (car expr-2)
-              (map (lambda (subexpr) (macroexpand subexpr env))
-                   (cdr expr-2))))
+      ;; handle special forms
+      (let (sym (car expr))
+        (cond
+         ((equal? sym 'quote) expr)
+         (else  ;; not a special form
+          (let (expr-2 (macroexpand-all expr env))
+            (cons (car expr-2)
+                  (map (lambda (subexpr) (macroexpand subexpr env))
+                       (cdr expr-2)))))))
       expr))
 
 ;; test test...
@@ -84,4 +88,3 @@
 
 (define (map f lst)
   (_map-aux f lst ()))
-
