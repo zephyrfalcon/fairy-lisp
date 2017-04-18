@@ -61,8 +61,7 @@
 (define (second x) (cadr x))
 (define (third x) (caddr x))
 
-(define list
-  (lambda () %rest))
+(define (list) %rest)
 
 (define (not x)
   (if x false true))
