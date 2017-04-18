@@ -37,12 +37,25 @@
         (macroexpand-all (car result) env)
         (car result))))
 
+;; a version of MACROEXPAND for forms like DEFINE and SET!.
+(define (_macroexpand-define expr env)
+  (cons (first expr)
+        (cons (second expr)
+              (map (lambda (subexpr) (macroexpand subexpr env))
+                   (cddr expr)))))
+
 (define (macroexpand expr env)
   (if (pair? expr)
-      ;; handle special forms
       (let (sym (car expr))
         (cond
+         ;; handle special forms
          ((equal? sym 'quote) expr)
+         ((equal? sym 'define) (_macroexpand-define expr env))
+         ((equal? sym 'set!) (_macroexpand-define expr env))
+         ((equal? sym 'lambda) (_macroexpand-define expr env))
+         ((equal? sym 'macro) (_macroexpand-define expr env))
+         ((equal? sym 'let) ...)
+         ((equal? sym 'cond) ...)
          (else  ;; not a special form
           (let (expr-2 (macroexpand-all expr env))
             (cons (car expr-2)

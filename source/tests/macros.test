@@ -47,10 +47,24 @@
 (macroexpand '(foo (test-when a b)) (current-env))
 => (foo (if a b false))
 
-;; test if quote is handled correctly
+;; test if QUOTE is handled correctly
 (define test-when
   (macro (cond body)
     (list 'if cond body false)))
 (macroexpand '(test-when a (quote (test-when b c))) (current-env))
 => (if a (quote (test-when b c)) false)
+
+;; test if DEFINE is handled correctly
+(define test-when
+  (macro (cond body)
+    (list 'if cond body false)))
+(macroexpand '(test-when a (define (foo x) (+ x 1))) (current-env))
+=> (if a (define (foo x) (+ x 1)) false)
+
+;; what if there is a macro inside the DEFINE?
+(define test-when
+  (macro (cond body)
+    (list 'if cond body false)))
+(macroexpand '(test-when a (define (foo x) (test-when x y))) (current-env))
+=> (if a (define (foo x) (if x y false)) false)
 
