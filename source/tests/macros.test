@@ -75,3 +75,10 @@
 (macroexpand '(test-when a (do b c (test-when d e))) (current-env))
 => (if a (do b c (if d e false)) false)
 
+;; test if LET is handled correctly
+(define test-when
+  (macro (cond body)
+    (list 'if cond body false)))
+(macroexpand '(test-when a (let (x 3 y (test-when c d)) (test-when a b))) 
+             (current-env))
+=> (if a (let (x 3 y (if c d false)) (if a b false)) false)

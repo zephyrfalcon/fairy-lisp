@@ -49,6 +49,17 @@
         (map (lambda (subexpr) (macroexpand subexpr env))
              (cdr expr))))
 
+;; (LET (name1 expr1 name2 expr2 ...) exprs...)
+;; in the second part, only evaluate elems 2, 4, 6, ...
+;; also evaluate parts 3 and up
+(define (_macroexpand-let expr env)
+  (let (expand      (lambda (e) (macroexpand e env))
+        dont-expand (lambda (e) e))
+    (cons (first expr)
+          (cons (map-alternate dont-expand expand (second expr))
+                (map (lambda (subexpr) (macroexpand subexpr env))
+                     (cddr expr))))))
+
 (define (macroexpand expr env)
   (if (pair? expr)
       (let (sym (car expr))
@@ -60,7 +71,7 @@
          ((equal? sym 'lambda) (_macroexpand-define expr env))
          ((equal? sym 'macro) (_macroexpand-define expr env))
          ((equal? sym 'do) (_macroexpand-do expr env))
-         ((equal? sym 'let) ...)
+         ((equal? sym 'let) (_macroexpand-let expr env))
          ((equal? sym 'cond) ...)
          (else  ;; not a special form
           (let (expr-2 (macroexpand-all expr env))
@@ -109,3 +120,15 @@
 
 (define (map f lst)
   (_map-aux f lst ()))
+
+(define (_map-alternate-aux f g lst f? acc)
+  (if (nil? lst)
+      (reverse acc)
+      (let (func (if f? f g))
+        (_map-alternate-aux f g (cdr lst) (not f?)
+                            (cons (func (car lst)) acc)))))
+
+;; like MAP, but apply F and G alternately to the elements we're processing.
+;; e.g. (1 2 3 4) => ((f 1) (g 2) (f 3) (g 4) ...)
+(define (map-alternate f g lst)
+  (_map-alternate-aux f g lst true ()))

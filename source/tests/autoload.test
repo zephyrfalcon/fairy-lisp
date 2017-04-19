@@ -8,3 +8,13 @@
 (list 1 2 3)
 => (1 2 3)
 
+(map (lambda (x) (+ x 1))
+     '(1 2 3))
+=> (2 3 4)
+
+(map-alternate
+  (lambda (x) (+ x 1))
+  (lambda (x) (+ x 10))
+  '(1 2 3 4))
+=> (2 12 4 14)
+
