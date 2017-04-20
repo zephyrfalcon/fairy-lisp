@@ -100,10 +100,10 @@
                        (cdr expr-2)))))))
       expr))
 
-;; test test...
-(define when
-  (macro (cond body)
-    (list 'if cond body false)))
+;; FIXME: env should be optional (get caller env if not given)
+(define (eval expr env)
+  (let (expanded-expr (macroexpand expr env))
+    (eval-raw expanded-expr env)))
 
 ;; ---
 
@@ -120,16 +120,16 @@
 
 ;; NOTE: later, when we have a symbol cache, use EQ?
 
-(define pair?
-  (lambda (x)
-    (equal? (type-name (type x)) 'pair)))
-(define symbol?
-  (lambda (x)
-    (equal? (type-name (type x)) 'symbol)))
+(define (pair? x)
+  (equal? (type-name (type x)) 'pair))
+(define (symbol? x)
+  (equal? (type-name (type x)) 'symbol))
 (define (nil? x)
   (equal? (type-name (type x)) 'nil))
 (define (macro? x)
   (equal? (type-name (type x)) 'macro))
+;; NOTE: does not work for supertypes
+;; add & use something like IS-INSTANCE-OF? instead!
 
 ;; --- higher-order functions like MAP, FILTER, etc ---
 
@@ -152,3 +152,12 @@
 ;; e.g. (1 2 3 4) => ((f 1) (g 2) (f 3) (g 4) ...)
 (define (map-alternate f g lst)
   (_map-alternate-aux f g lst true ()))
+
+;; NOTE: Any code involved in expanding macros (directly or indirectly), should
+;; be defined above this line.
+
+;; --- TODO: TURN ON MACROS HERE
+
+(define when
+  (macro (cond body)
+    (list 'if cond body false)))

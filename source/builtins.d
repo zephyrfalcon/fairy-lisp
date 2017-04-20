@@ -138,9 +138,10 @@ LispObject b_set_debug_option(Interpreter intp, LispEnvironment env, FunctionArg
         throw new TypeError("first argument must be a symbol");
 }
 
-// (EVAL expr [env])
-// TODO: macro expansion
-LispObject b_eval(Interpreter intp, LispEnvironment env, FunctionArgs fargs) {
+// (EVAL-RAW expr [env])
+// Evaluates the given expression in the given environment (or the current
+// environment). Does NOT expand macros.
+LispObject b_eval_raw(Interpreter intp, LispEnvironment env, FunctionArgs fargs) {
     LispObject expr = fargs.args[0];
     LispEnvironment eval_env = env;
     if (fargs.rest_args.length > 0) {
@@ -169,7 +170,7 @@ FI[dstring] GetBuiltins() {
         "apply": FI(&b_apply, 2),
         "eq?": FI(&b_eq, 2),
         "equal?": FI(&b_equal, 2),
-        "eval": FI(&b_eval, 1),
+        "eval-raw": FI(&b_eval_raw, 1),
         "function-args": FI(&b_function_args, 1),
         "function-body": FI(&b_function_body, 1),
         "print": FI(&b_print, 0),

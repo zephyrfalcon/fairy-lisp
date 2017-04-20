@@ -209,14 +209,29 @@ x
 (not (eq? true true))
 => false
 
-;; --- eval ---
+;; --- eval-raw ---
 
-(eval '(+ 1 2))
+(eval-raw '(+ 1 2))
 => 3
 (let (plus +)
-  (eval '(plus 2 3)))
+  (eval-raw '(plus 2 3)))
+=> 5
+(let (+ (lambda (x y) 0))  ;; fake +
+  (eval-raw '(+ 3 4) (global-env)))  ;; but we use the global env
+=> 7
+
+;; --- eval (does macroexpansion) ---
+
+(eval '(+ 1 2) (current-env))
+=> 3
+(let (plus +)
+  (eval '(plus 2 3) (current-env)))
 => 5
 (let (+ (lambda (x y) 0))  ;; fake +
   (eval '(+ 3 4) (global-env)))  ;; but we use the global env
 => 7
+;; assume WHEN exists
+(let (x 1)
+  (eval '(when x 3) (current-env)))
+=> 3
 
