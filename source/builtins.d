@@ -5,6 +5,7 @@ import std.format;
 import std.stdio;
 import errors;
 import interpreter;
+import stackframe;
 import tools;
 import types;
 
@@ -137,6 +138,24 @@ LispObject b_set_debug_option(Interpreter intp, LispEnvironment env, FunctionArg
         throw new TypeError("first argument must be a symbol");
 }
 
+// (EVAL expr [env])
+// TODO: macro expansion
+LispObject b_eval(Interpreter intp, LispEnvironment env, FunctionArgs fargs) {
+    LispObject expr = fargs.args[0];
+    LispEnvironment eval_env = env;
+    if (fargs.rest_args.length > 0) {
+        if (auto opt_env = cast(LispEnvironment) fargs.rest_args[0]) {
+            eval_env = opt_env;
+        } else 
+            throw new TypeError("EVAL: second argument must be environment");
+    }
+    // put expr and env on the stack
+    StackFrame sf = new StackFrame(expr, eval_env);
+    intp.callstack.Pop();  // TCO
+    intp.callstack.Push(sf);
+    return null;
+}
+
 struct FI {
     BuiltinFunctionSig f;
     int arity;
@@ -150,6 +169,7 @@ FI[dstring] GetBuiltins() {
         "apply": FI(&b_apply, 2),
         "eq?": FI(&b_eq, 2),
         "equal?": FI(&b_equal, 2),
+        "eval": FI(&b_eval, 1),
         "function-args": FI(&b_function_args, 1),
         "function-body": FI(&b_function_body, 1),
         "print": FI(&b_print, 0),

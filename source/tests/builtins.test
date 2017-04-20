@@ -209,3 +209,14 @@ x
 (not (eq? true true))
 => false
 
+;; --- eval ---
+
+(eval '(+ 1 2))
+=> 3
+(let (plus +)
+  (eval '(plus 2 3)))
+=> 5
+(let (+ (lambda (x y) 0))  ;; fake +
+  (eval '(+ 3 4) (global-env)))  ;; but we use the global env
+=> 7
+
