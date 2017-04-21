@@ -38,6 +38,11 @@ x
     (set! x 3))
   x)
 => 1
+(define x 42)
+(define y 43)
+(set! y x)
+y
+=> 42
 
 ;; TODO: setting a non-existant variable should produce an error,
 ;; but we have no way of catching that yet

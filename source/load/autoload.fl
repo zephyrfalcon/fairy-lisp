@@ -156,7 +156,8 @@
 ;; NOTE: Any code involved in expanding macros (directly or indirectly), should
 ;; be defined above this line.
 
-;; --- TODO: TURN ON MACROS HERE
+;; MACROS ARE "TURNED ON" HERE 
+(set! *macroexpand-hook* macroexpand)
 
 (define when
   (macro (cond body)

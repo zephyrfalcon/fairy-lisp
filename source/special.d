@@ -256,10 +256,17 @@ LispObject sf_let(Interpreter intp, LispEnvironment env, LispObject[] args) {
 }
 
 LispObject sf_set(Interpreter intp, LispEnvironment env, LispObject[] args) {
-    if (auto name = cast(LispSymbol) args[1]) {
-        LispObject value = args[2];
-        env.Update(name.value, value);
-        return value;
+    if (auto sym = cast(LispSymbol) args[1]) {
+        StackFrame top = intp.callstack.Top();
+        if (top.evaluated.length == 0) {
+            auto sf = new StackFrame(args[2], top.env);
+            intp.callstack.Push(sf);
+            return null;  // evaluate via stack mechanism
+        } else {
+            // we've evaluated the value
+            env.Update(sym.value, top.evaluated[0]);
+            return top.evaluated[0];
+        }
     } else
         throw new TypeError("SET!: name must be a symbol");
 }
