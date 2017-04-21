@@ -41,6 +41,7 @@ class Interpreter {
     void LoadBuiltins() {
         this.builtin_env.Set("true", TRUE());
         this.builtin_env.Set("false", FALSE());
+        this.global_env.Set("*macroexpand-hook*", FALSE());
 
         // load special forms
         this.special_forms = GetSpecialForms();
