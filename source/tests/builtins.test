@@ -27,6 +27,21 @@ x
 (foo 5 6)
 => 7
 
+;; --- set! ---
+
+(define x 42)
+(set! x 100)
+x
+=> 100
+(let (x 1)
+  (let (x 2)
+    (set! x 3))
+  x)
+=> 1
+
+;; TODO: setting a non-existant variable should produce an error,
+;; but we have no way of catching that yet
+
 ;; --- lambda ---
 
 (define inc 

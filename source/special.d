@@ -255,6 +255,15 @@ LispObject sf_let(Interpreter intp, LispEnvironment env, LispObject[] args) {
     } else throw new Exception("?!");
 }
 
+LispObject sf_set(Interpreter intp, LispEnvironment env, LispObject[] args) {
+    if (auto name = cast(LispSymbol) args[1]) {
+        LispObject value = args[2];
+        env.Update(name.value, value);
+        return value;
+    } else
+        throw new TypeError("SET!: name must be a symbol");
+}
+
 SpecialFormSig[dstring] GetSpecialForms() {
     SpecialFormSig[dstring] forms = [
         "cond": &sf_cond,
@@ -265,6 +274,7 @@ SpecialFormSig[dstring] GetSpecialForms() {
         "let": &sf_let,
         "macro": &sf_macro,
         "quote": &sf_quote,
+        "set!": &sf_set,
     ];
     return forms;
 }
