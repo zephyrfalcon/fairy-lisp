@@ -67,18 +67,19 @@
 ;; (COND (c1 e1) (c2 e2) (else eN))
 ;; all of these should be expanded, except the ELSE...
 ;; and things like (c1 e1) should NOT be considered one function call.
+;; also, note that there can be multiple expressions after a condition.
 (define (_macroexpand-cond expr env)
   (cons (first expr)
         (map (lambda (part) (_macroexpand-cond-part part env))
              (cdr expr))))
 (define (_macroexpand-cond-part part env)
-  ;; must have two parts
-  (let (a (first part)
-        b (second part))
-    (list (if (equal? a 'else)
-              a
-              (macroexpand a env))
-          (macroexpand b env))))
+  ;; must have at least two parts
+  (let (condition (car part)
+        clauses (cdr part))
+    (cons (if (equal? condition 'else)
+              condition
+              (macroexpand condition env))
+          (map (lambda (subexpr) (macroexpand subexpr env)) clauses))))
 
 (define (macroexpand expr env)
   (if (pair? expr)
