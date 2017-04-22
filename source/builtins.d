@@ -81,10 +81,11 @@ LispObject b_print(Interpreter intp, LispEnvironment env, FunctionArgs fargs) {
 // - keywords (passed as a keyword dict, the way we get in %keywords)
 FunctionArgs MakeApplyFunctionArgs(LispFunction callable, LispObject[] args, LispDictionary d)
 {
-    auto fa = FunctionArgs.Parse(callable.arity, args);
+    auto fa = FunctionArgs.Parse(callable.arity, args, []);
     if (d !is null)
         fa.keyword_args = d.ToHashmap();
     // NOTE: any keyword args we specify in `args` will be overwritten!
+    // figure out later if this is desirable...
     return fa;
 }
 

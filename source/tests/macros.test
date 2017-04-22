@@ -104,6 +104,12 @@
              (current-env))
 => (cond (x (if a b false) 7) ((if c d false) y 8) (else (if e f false) 9))
 
+;; test how keywords are handled by MACROEXPAND-1
+(macroexpand-1 '(f 1 :foo 2) (current-env))
+=> ((f 1 :foo 2) false)
+(macroexpand-1 ':x (current-env))
+=> (:x false)
+
 ;; test calling the WHEN macro, then
 ;; XXX does not work yet; currently this is only done in REPL!
 ;;(when true (+ 1 2))

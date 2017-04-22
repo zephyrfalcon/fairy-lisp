@@ -1,5 +1,6 @@
 // types.d
 
+import std.algorithm : canFind;
 import std.array;
 import std.conv;
 import std.stdio;
@@ -216,10 +217,26 @@ struct FunctionArgs {
     LispObject[] rest_args;
     LispObject[dstring] keyword_args;
 
-    static FunctionArgs Parse(int arity, LispObject[] args) {
+    static FunctionArgs Parse(int arity, LispObject[] args, LispKeyword[] kwlit) {
         FunctionArgs fa = FunctionArgs();
+
+        void AddArg(int i) {
+            if (fa.args.length >= arity) {
+                fa.rest_args ~= args[i];
+            } else {
+                fa.args ~= args[i];
+            }
+        }
+
         for (int i=0; i < args.length; i++) {
             if (auto kw = cast(LispKeyword) args[i]) {
+                // a keyword that is not in the list of keyword literals that
+                // we found in the function call, is considered a regular
+                // object rather than a keyword argument!
+                if (!(kwlit.canFind(kw))) {
+                    AddArg(i);
+                    continue;
+                }
                 // a keyword always must be followed by value, so it cannot be the
                 // last argument in the list
                 if (i == args.length+1)
@@ -232,12 +249,10 @@ struct FunctionArgs {
                 } else
                     throw new KeywordError(format("keyword already exists: %s", 
                                            kw.Repr()));
-            } else if (fa.args.length >= arity) {
-                fa.rest_args ~= args[i];
-            } else {
-                fa.args ~= args[i];
-            }
+            } else
+                AddArg(i);
         }
+
         return fa;
     }
 

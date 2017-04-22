@@ -25,12 +25,15 @@ class StackFrame {
     bool is_special;                // is the expression a special form?
     LispEnvironment env;            // environment that the expression will be
                                     // evaluated in
+    LispKeyword[] keyword_literals; // keyword literals found in *original
+                                    // expression*
     StackFrameHelper aux_data = null;
 
     this(LispObject expr, LispEnvironment env) {
         this.original_expr = expr;
         this.env = env;
         this.evaluated = [];
+        this.keyword_literals = FindKeywordLiterals(expr);
         this.is_special = false;  // to be determined later
         if (auto p = cast(LispPair) expr) {
             try {

@@ -135,7 +135,8 @@ class Interpreter {
                 // function.
                 if (auto f = cast(LispFunction) top.evaluated[0]) {
                     auto args = top.evaluated[1..$]; // may be empty
-                    auto fargs = FunctionArgs.Parse(f.arity, args);
+                    auto fargs = FunctionArgs.Parse(f.arity, args,
+                                 top.keyword_literals);
                     auto result = this.CallFunction(top.env, f, fargs);
                     if (result !is null)
                         this.callstack.Collapse(result);

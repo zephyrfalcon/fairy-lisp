@@ -31,3 +31,13 @@ x
 (f 1 2 :foo 5 7)
 => ((7) 5 55)
 
+;; only keyword literals will be considered as keyword arguments. expressions
+;; that evaluate to keywords will be keyword objects, and are regular arguments!
+(list ':x ':y ':z)
+=> (:x :y :z)
+(define kw :x)  ;; works ok with define since it doesn't process kwargs
+(list kw)
+=> (:x)
+(type-name (type ':x))
+=> keyword
+
