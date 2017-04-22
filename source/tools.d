@@ -139,3 +139,22 @@ bool TruthValue(LispObject x) {
     if (x is FALSE()) return false;
     return true;
 }
+
+// scan a Lisp expression (assumed to be a function call form) and return an
+// array of all keyword literals found. does not evaluate anything. only
+// keyword *literals* are considered a match, not any expression that would
+// evaluate to a keyword object.
+LispKeyword[] FindKeywordLiterals(LispObject expr) {
+    LispKeyword[] keywords = [];
+    if (auto list = cast(LispList) expr) {
+        LispObject[] elems = list.ToArray();
+        foreach(elem; elems) {
+            if (auto kw = cast(LispKeyword) elem) {
+                keywords ~= kw;
+            }
+        }
+        return keywords;
+    } else
+        return [];
+}
+

@@ -1,6 +1,8 @@
 // test_tools.d
 
 import interpreter;
+import parser;
+import test_parser;
 import tools;
 import tools_test;
 import types;
@@ -34,4 +36,19 @@ unittest {
     // a single expression doesn't get wrapped in a DO
     expr = WrapExprsInDo([new LispSymbol("x")]);
     AssertEquals(expr.Repr(), "x");
+}
+
+// test FindKeywordLiterals()
+unittest {
+    ParserResult pr = tokenize_and_parse("3");
+    auto keywords = cast(LispObject[]) FindKeywordLiterals(pr.result);
+    AssertEquals(keywords, []);
+
+    pr = tokenize_and_parse("(f 1 :foo 2)");
+    keywords = cast(LispObject[]) FindKeywordLiterals(pr.result);
+    AssertEquals(keywords, [new LispKeyword("foo")]);
+
+    pr = tokenize_and_parse("(f 1 :foo ':bar (g :baz 4))");
+    keywords = cast(LispObject[]) FindKeywordLiterals(pr.result);
+    AssertEquals(keywords, [new LispKeyword("foo")]);
 }

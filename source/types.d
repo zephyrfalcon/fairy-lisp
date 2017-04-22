@@ -88,7 +88,7 @@ class LispCharacter : LispObject {
 
 class LispKeyword : LispObject {
     dstring value;
-    this(dstring s) { this.value = s; }  // XXX what of leading ":"?
+    this(dstring s) { this.value = s; }  // is not supposed to have leading ':'
     override dstring Repr() { return ":"d ~ this.value; }
     override bool opEquals(Object o) {
         if (auto other = cast(LispKeyword) o) {
