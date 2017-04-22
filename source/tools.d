@@ -147,11 +147,15 @@ bool TruthValue(LispObject x) {
 LispKeyword[] FindKeywordLiterals(LispObject expr) {
     LispKeyword[] keywords = [];
     if (auto list = cast(LispList) expr) {
-        LispObject[] elems = list.ToArray();
-        foreach(elem; elems) {
-            if (auto kw = cast(LispKeyword) elem) {
-                keywords ~= kw;
+        try {
+            LispObject[] elems = list.ToArray();
+            foreach(elem; elems) {
+                if (auto kw = cast(LispKeyword) elem) {
+                    keywords ~= kw;
+                }
             }
+        } catch (ImproperListError e) {
+            return []; // improper lists are not considered
         }
         return keywords;
     } else
