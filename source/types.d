@@ -431,7 +431,9 @@ class LispDictionary : LispObject {
         }
     }
 
-    // constructor with hashmap dstring->LispObject
+    // constructor with hashmap dstring->LispObject. used to convert
+    // FunctionArgs.keyword_args to a LispDictionary with *symbols* as keys
+    // (NOT strings or keywords).
     this(LispObject[dstring] d) {
         foreach (key; d.keys) {
             LispSymbol sym = new LispSymbol(key);
@@ -444,10 +446,12 @@ class LispDictionary : LispObject {
     LispObject[dstring] ToHashmap() {
         LispObject[dstring] d;
         foreach (key; values.keys) {
-            if (auto kw = cast(LispKeyword) key) {
+            if (auto kw = cast(LispSymbol) key) {
                 d[kw.value] = values[key];
             } else 
-                throw new TypeError("key is not a keyword");
+                throw new TypeError(
+                        format("key %s is not a symbol, got %s instead",
+                            key.Repr(), key.GetType().name));
         }
         return d;
     }

@@ -186,9 +186,19 @@ y
 (define d (make-dict "a" 1 "b" 2))
 (apply dict-get (list d "c" 3))
 => 3
-;; TODO: make sure keyword args are handled correctly
 
-;; APPLY works on macros as well
+;; test passing around of keyword dict to APPLY
+(define (f x) (list x %rest %keywords))
+(define (g y)
+  (list y %rest (dict-get %keywords 'foo 44) 
+                (dict-get %keywords 'bogus 55)))
+(define stuff (f 1 2 :foo 3))
+;; stuff is a list consisting of 1, (2), and a keyword dict with foo=3
+;; let's see what g does with it...
+(apply g (cons (first stuff) (second stuff)) (third stuff))
+=> (1 (2) 3 55)
+
+;; APPLY works on macros as well (it is treated as a regular function)
 (define test-when
   (macro (cond body) 
     (list 'if cond body false)))
