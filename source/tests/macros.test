@@ -93,4 +93,19 @@
                 (else (test-when e f)))
              (current-env))
 => (cond (x (if a b false)) ((if c d false) y) (else (if e f false)))
+;; ...and with multiple expressions after the condition...?
+(define test-when
+  (macro (cond body)
+    (list 'if cond body false)))
+(macroexpand '(cond
+                (x (test-when a b) 7)
+                ((test-when c d) y 8)
+                (else (test-when e f) 9))
+             (current-env))
+=> (cond (x (if a b false) 7) ((if c d false) y 8) (else (if e f false) 9))
+
+;; test calling the WHEN macro, then
+;; XXX does not work yet; currently this is only done in REPL!
+;;(when true (+ 1 2))
+;;=> 3
 

@@ -58,6 +58,7 @@ LispTestCase[] CollectTestsInFile(string filename) {
 void RunLispTestCase(LispTestCase testcase) {
     auto intp = new Interpreter();
     auto code = join(testcase.code, "");
+    //writeln("--> ", testcase.filename, " :: ", testcase.lineno); writeln(code);  // DEBUG
     auto results = intp.EvalString(code);
     bool succeeds = results[$-1].Repr() == testcase.expected_result;
     if (!succeeds) {
