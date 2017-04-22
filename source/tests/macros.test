@@ -122,3 +122,17 @@
 (when true :x)
 => :x
 
+;; do rest args work inside macros? 
+(define foobar
+  (macro (x)
+    (cons 'list (cons x %rest))))
+(foobar 1 2 3)
+=> (1 2 3)
+
+;; what about keywords? not quite yet...
+(define quux
+  (macro ()
+    (list 'list (cons 'list %rest) %keywords)))
+(quux 1 2 :foo 3)
+=> ((1 2) #d())
+
