@@ -90,6 +90,15 @@ FunctionArgs MakeApplyFunctionArgs(LispFunction callable, LispObject[] args, Lis
 }
 
 // (APPLY f args [keywords])
+// Apply the given arguments to function f. The arguments will be considered
+// regular arguments or rest arguments if there are more of them than the
+// function's arity; any keywords in the argument list are considered regular
+// arguments as well, rather than keyword arguments. In order to pass keyword
+// arguments, use the third parameter (a keyword dictionary).
+//
+// So this:  (apply f '(f 1 :foo 2))
+// has ZERO keyword arguments; rather, it has three regular arguments 1, :foo
+// and 2.
 LispObject b_apply(Interpreter intp, LispEnvironment env, FunctionArgs fargs) {
     if (auto f = cast(LispFunction) fargs.args[0]) {
         if (auto lst = cast(LispList) fargs.args[1]) {

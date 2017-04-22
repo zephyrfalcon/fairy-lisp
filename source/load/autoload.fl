@@ -27,7 +27,7 @@
           (let (m (env-get env (car expr) false))
             (if m
                 (if (macro? m)
-                    (list (apply m (cdr expr)) true)
+                    (list (apply m (cdr expr)) true)  ;; TODO: allow kwargs?
                     (list expr false))
                 (list expr false)))
           (list expr false))
