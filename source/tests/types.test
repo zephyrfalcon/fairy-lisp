@@ -14,6 +14,8 @@
 => bfunc
 (type-name (type cadr))
 => ufunc
+(type-name (type ':x))
+=> keyword
 
 ;; type is its own parent type
 (type-name (type (type 3)))
@@ -38,4 +40,6 @@
 => true
 (symbol? 3)
 => false
+(keyword? ':x)
+=> true
 

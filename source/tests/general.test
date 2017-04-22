@@ -41,3 +41,10 @@ x
 (type-name (type ':x))
 => keyword
 
+;; LIST takes keyword arguments but doesn't do anything with them (which is as
+;; intended, this used to be an error in previous versions):
+(list 1 :foo 2)
+=> (1)
+(when (list 1 :foo 2) (list 3 :bar 4))
+=> (3)
+

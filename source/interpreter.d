@@ -216,7 +216,7 @@ class Interpreter {
         while (true) {
             try {
                 LispObject expr = reader.Read();
-                // TODO: expr = this.MacroExpand(expr, this.global_env);
+                expr = this.MacroExpand(expr, this.global_env);
                 LispObject result = this.EvalExpr(expr, this.global_env);
                 results ~= result;
             } catch (NoInputException e) {
@@ -311,7 +311,7 @@ class Interpreter {
                 // well with the rest of this code either.
             }
             */
-            //FIXME expr = this.MacroExpand(expr, this.global_env);
+            expr = this.MacroExpand(expr, this.global_env);
 
             try {
                 LispObject result = this.EvalExpr(expr, this.global_env);

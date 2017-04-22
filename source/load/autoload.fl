@@ -129,6 +129,8 @@
   (equal? (type-name (type x)) 'nil))
 (define (macro? x)
   (equal? (type-name (type x)) 'macro))
+(define (keyword? x)
+  (equal? (type-name (type x)) 'keyword))
 ;; NOTE: does not work for supertypes
 ;; add & use something like IS-INSTANCE-OF? instead!
 
