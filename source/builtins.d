@@ -205,6 +205,7 @@ FI[dstring] GetBuiltins() {
         "car": FI(&b_car, 1),
         "cdr": FI(&b_cdr, 1),
         "cons": FI(&b_cons, 2),
+        "length": FI(&b_length, 1),
         "reverse": FI(&b_reverse, 1),
     ];
     return builtins;

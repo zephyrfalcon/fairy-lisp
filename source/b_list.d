@@ -55,3 +55,9 @@ LispObject b_append(Interpreter intp, LispEnvironment env, FunctionArgs fargs) {
         throw new TypeError("list expected");
 }
 
+LispObject b_length(Interpreter intp, LispEnvironment env, FunctionArgs fargs) {
+    if (auto list = cast(LispList) fargs.args[0]) {
+        return new LispInteger(list.Length());
+    } else
+        throw new TypeError("list expected");
+}

@@ -162,6 +162,14 @@
 ;; MACROS ARE "TURNED ON" HERE 
 (set! *macroexpand-hook* macroexpand)
 
+;; helper function: take a list of expressions; if there are multiple ones,
+;; wrap them in a DO construct; otherwise return just the single expression.
+;; to be used for macros that may take multiple expressions (like WHEN).
+(define (_wrap-in-do exprs)
+  (if (> (length exprs) 1)
+      (cons 'do exprs)
+      (car exprs)))
+
 (define when
   (macro (cond body)
     (list 'if cond body false)))

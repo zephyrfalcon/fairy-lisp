@@ -136,3 +136,7 @@
 (quux 1 2 :foo 3)
 => ((1 2) #d())
 
+;; test macros with EVAL
+(eval '(when true 1) (current-env))
+=> 1
+

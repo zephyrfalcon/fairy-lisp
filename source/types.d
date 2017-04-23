@@ -116,6 +116,7 @@ abstract class LispList : LispObject {
     LispList Reverse() { throw new Exception("abstract method"); };
     LispObject[] ToArray() { throw new Exception("abstract method"); }
     override dstring TypeName() { return "list"; }
+    int Length() { return 0; }
 
     static LispList FromArray(LispObject[] things) {
         LispList head = NIL();
@@ -139,6 +140,7 @@ class LispEmptyList : LispList {
         } else return super.opEquals(o);
     }
     override dstring TypeName() { return "nil"; }
+    override int Length() { return 0; }
 }
 
 class LispPair : LispList {
@@ -210,6 +212,19 @@ class LispPair : LispList {
     }
 
     override dstring TypeName() { return "pair"; }
+
+    override int Length() {
+        int length = 1;
+        LispPair current = this;
+        while (current.tail !is NIL()) {
+            if (auto tail = cast(LispPair) current.tail) {
+                length++;
+                current = tail;
+            } else
+                throw new ImproperListError("cannot take length of improper list");
+        }
+        return length;
+    }
 }
 
 struct FunctionArgs {
