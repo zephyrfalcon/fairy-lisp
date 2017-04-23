@@ -134,6 +134,9 @@ class Interpreter {
                 // if we're done evaluating all the parts, we can call the
                 // function.
                 if (auto f = cast(LispFunction) top.evaluated[0]) {
+                    if (cast(LispMacro) f) {
+                        throw new TypeError("macros cannot be called as functions!");
+                    }
                     auto args = top.evaluated[1..$]; // may be empty
                     auto fargs = FunctionArgs.Parse(f.arity, args,
                                  top.keyword_literals);
@@ -291,26 +294,6 @@ class Interpreter {
                 writeln("An error occurred.");  // FIXME
             }
 
-            // macroexpansion phase
-            // TODO: refactor to separate method
-            /*
-            LispObject hook = this.global_env.Get("*macroexpand-hook*");
-            if (auto expander = cast(LispFunction) hook) {
-                auto newexpr = new LispPair(new LispSymbol("*macroexpand-hook*"), 
-                                            new LispPair(expr, NIL()));  // bogus
-                auto sf = new StackFrame(newexpr, this.global_env); 
-                sf.to_be_evaluated = [];
-                sf.evaluated = [hook, expr, this.global_env];
-                this.callstack.Push(sf);
-                expr = this.Eval();
-                // TODO: make this a debug option
-                //writeln("after macroexpansion, expr is: ", expr.Repr());
-                this.callstack.Clear();
-                // XXX there is an issue here when we call EVAL... which
-                // should NOT clear the call stack... and which may not play
-                // well with the rest of this code either.
-            }
-            */
             expr = this.MacroExpand(expr, this.global_env);
 
             try {
