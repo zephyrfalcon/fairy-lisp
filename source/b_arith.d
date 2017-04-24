@@ -19,10 +19,33 @@ LispObject b_plus(Interpreter intp, LispEnvironment env, FunctionArgs fargs) {
     return new LispInteger(result);
 }
 
+// XXX the code for =, <, etc, is extremely similar; we need a way to refactor
+// this
+
 LispObject b_equals(Interpreter intp, LispEnvironment env, FunctionArgs fargs) {
     if (auto n1 = cast(LispInteger) fargs.args[0]) {
         if (auto n2 = cast(LispInteger) fargs.args[1]) {
             return (n1.value == n2.value) ? TRUE() : FALSE();
+        } else
+            throw new TypeError("number expected");
+    } else
+        throw new TypeError("number expected");
+}
+
+LispObject b_less_than(Interpreter intp, LispEnvironment env, FunctionArgs fargs) {
+    if (auto n1 = cast(LispInteger) fargs.args[0]) {
+        if (auto n2 = cast(LispInteger) fargs.args[1]) {
+            return (n1.value < n2.value) ? TRUE() : FALSE();
+        } else
+            throw new TypeError("number expected");
+    } else
+        throw new TypeError("number expected");
+}
+
+LispObject b_greater_than(Interpreter intp, LispEnvironment env, FunctionArgs fargs) {
+    if (auto n1 = cast(LispInteger) fargs.args[0]) {
+        if (auto n2 = cast(LispInteger) fargs.args[1]) {
+            return (n1.value > n2.value) ? TRUE() : FALSE();
         } else
             throw new TypeError("number expected");
     } else

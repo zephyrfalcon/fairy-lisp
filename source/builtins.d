@@ -181,6 +181,8 @@ FI[dstring] GetBuiltins() {
         /* b_arith.d */
         "+": FI(&b_plus, 0),
         "=": FI(&b_equals, 2),
+        "<": FI(&b_less_than, 2),
+        ">": FI(&b_greater_than, 2),
 
         /* b_dict.d */
         "dict-get": FI(&b_dict_get, 2),
