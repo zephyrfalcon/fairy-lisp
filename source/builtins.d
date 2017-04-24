@@ -163,6 +163,7 @@ struct FI {
 FI[dstring] GetBuiltins() {
     import b_arith, b_dict, b_env;
     import b_list;
+
     FI[dstring] builtins = [
         "addr": FI(&b_addr, 1),
         "apply": FI(&b_apply, 2),
@@ -179,6 +180,7 @@ FI[dstring] GetBuiltins() {
 
         /* b_arith.d */
         "+": FI(&b_plus, 0),
+        "=": FI(&b_equals, 2),
 
         /* b_dict.d */
         "dict-get": FI(&b_dict_get, 2),
