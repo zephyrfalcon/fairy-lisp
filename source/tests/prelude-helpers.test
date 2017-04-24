@@ -1,0 +1,9 @@
+;; test prelude helper functions here
+
+(_make-one-expr '(4))
+=> 4
+(_make-one-expr '(4 5 6))
+=> (do 4 5 6)
+(_make-one-expr '((+ 1 2) (+ 4 5)))
+=> (do (+ 1 2) (+ 4 5))
+
