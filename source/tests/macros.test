@@ -154,3 +154,12 @@
   (current-env))
 => (define my-macro (macro (foo bar) (quux 42 foo bar)))
 
+(define-macro (my-when cond body)
+  (list 'if cond body false))
+(macroexpand '(my-when 1 2) (current-env))
+=> (if 1 2 false)
+
+(define-macro (my-when cond body)
+  (list 'if cond body false))
+(list (my-when true 3) (my-when false 4))
+=> (3 false)
