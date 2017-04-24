@@ -114,8 +114,14 @@
 
 ;; test calling the WHEN macro, then
 ;; XXX does not work yet; currently this is only done in REPL!
-;;(when true (+ 1 2))
-;;=> 3
+(when true (+ 1 2))
+=> 3
+;; with multiple expressions in body...
+(when true 1 2 3)
+=> 3
+;; what does it look like in MACROEXPAND?
+(macroexpand '(when true a b c) (current-env))
+=> (if true (do a b c) false)
 
 ;; macros currently don't do anything special with keyword arguments. so this
 ;; currently works:
