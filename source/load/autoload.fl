@@ -174,3 +174,12 @@
   (macro (cond expr)
     (let (body (_make-one-expr (cons expr %rest)))
       (list 'if cond body false))))
+
+(define define-macro
+  (macro (header expr)
+    (let (body (_make-one-expr (cons expr %rest))
+          macro-name (car header)
+          macro-args (cdr header))
+      (list 'define macro-name
+            (list 'macro macro-args body)))))
+      

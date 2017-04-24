@@ -146,3 +146,11 @@
 (eval '(when true 1) (current-env))
 => 1
 
+;; --- define-macro ---
+
+(macroexpand
+  '(define-macro (my-macro foo bar) 
+     (quux 42 foo bar))
+  (current-env))
+=> (define my-macro (macro (foo bar) (quux 42 foo bar)))
+
