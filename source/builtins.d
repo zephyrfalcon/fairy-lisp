@@ -9,17 +9,6 @@ import stackframe;
 import tools;
 import types;
 
-LispObject b_plus(Interpreter intp, LispEnvironment env, FunctionArgs fargs) {
-    int result = 0;
-    auto all_args = fargs.GetAllArgs();
-    foreach(arg; all_args) {
-        if (auto li = cast(LispInteger) arg) {
-            result += li.value;
-        } else throw new TypeError(format("number expected; got %s instead (%s)",
-                    "{something else}", arg.Repr()));
-    }
-    return new LispInteger(result);
-}
 
 LispObject b_eq(Interpreter intp, LispEnvironment env, FunctionArgs fargs) {
     auto p1 = cast(void *) fargs.args[0];
@@ -172,10 +161,9 @@ struct FI {
     int arity;
 }
 FI[dstring] GetBuiltins() {
-    import b_dict, b_env;
+    import b_arith, b_dict, b_env;
     import b_list;
     FI[dstring] builtins = [
-        "+": FI(&b_plus, 0),
         "addr": FI(&b_addr, 1),
         "apply": FI(&b_apply, 2),
         "eq?": FI(&b_eq, 2),
@@ -188,6 +176,9 @@ FI[dstring] GetBuiltins() {
         "type": FI(&b_type, 1),
         "type-name": FI(&b_type_name, 1),
         "type-parent": FI(&b_type_parent, 1),
+
+        /* b_arith.d */
+        "+": FI(&b_plus, 0),
 
         /* b_dict.d */
         "dict-get": FI(&b_dict_get, 2),
