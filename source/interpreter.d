@@ -296,10 +296,8 @@ class Interpreter {
                 continue;
             }
 
-            expr = this.MacroExpand(expr, this.global_env);
-            // errors here must also be caught and shown!
-
             try {
+                expr = this.MacroExpand(expr, this.global_env);
                 LispObject result = this.EvalExpr(expr, this.global_env);
                 writefln("%s", result.Repr());
             } catch (Exception e) {

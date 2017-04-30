@@ -35,3 +35,12 @@
 x
 => 1
 
+(and)
+=> true
+(and 2 3 4)
+=> 4
+(and 2 3 4 false)
+=> false
+(and 2 3 4 false 5)
+=> false
+

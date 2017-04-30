@@ -199,6 +199,10 @@
         (list 'let (list name (car %rest))
               (list 'if name name (cons 'or (cdr %rest)))))))))
 
-;      (list 'if (car %rest)
-;                     (car %rest)  ;; XXX potential for side effects...
-;                     (cons 'or (cdr %rest)))))))
+(define-macro (and)
+  (let (num-args (length %rest))
+    (cond
+     ((= num-args 0) true)
+     ((= num-args 1) (car %rest))
+     (else
+      (list 'if (car %rest) (cons 'and (cdr %rest)) false)))))
