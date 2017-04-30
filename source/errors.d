@@ -1,6 +1,8 @@
 // errors.d
 
 import std.exception;
+import std.format;
+import types;
 
 /*
 template GenException(string name, string parent="Exception") {
@@ -39,4 +41,14 @@ class NameError: Exception { mixin basicExceptionCtors; }
 
 class ImproperListError: Exception { mixin basicExceptionCtors; }
 class KeyError: Exception { mixin basicExceptionCtors; }
+
+import std.conv;
+class XTypeError: Exception { 
+    mixin basicExceptionCtors; 
+    this(dstring culprit, dstring expected, LispObject actual) {
+        dstring msg = format("%s: %s expected; got %s instead (%s)"d,
+                        culprit, expected, actual.Repr(), actual.GetType().name);
+        super(to!string(msg));
+    }
+}
 

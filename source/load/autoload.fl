@@ -96,9 +96,11 @@
          ((equal? sym 'cond) (_macroexpand-cond expr env))
          (else  ;; not a special form
           (let (expr-2 (macroexpand-all expr env))
-            (cons (car expr-2)
-                  (map (lambda (subexpr) (macroexpand subexpr env))
-                       (cdr expr-2)))))))
+            (if (pair? expr-2) ;; form does not always stay a list!
+                (cons (car expr-2)
+                      (map (lambda (subexpr) (macroexpand subexpr env))
+                           (cdr expr-2)))
+                expr-2)))))
       expr))
 
 ;; FIXME: env should be optional (get caller env if not given)
@@ -131,6 +133,10 @@
   (equal? (type-name (type x)) 'macro))
 (define (keyword? x)
   (equal? (type-name (type x)) 'keyword))
+(define (list? x)  ;; XXX rewrite once we have OR... >.>
+  (cond ((pair? x) true)
+        ((nil? x) true)
+        (else false)))
 ;; NOTE: does not work for supertypes
 ;; add & use something like IS-INSTANCE-OF? instead!
 
@@ -188,6 +194,11 @@
     (cond
      ((= num-args 0) false)
      ((= num-args 1) (car %rest))
-     (else (list 'if (car %rest)
-                     (car %rest)  ;; XXX potential for side effects...
-                     (cons 'or (cdr %rest)))))))
+     (else
+      (let (name (gensym))
+        (list 'let (list name (car %rest))
+              (list 'if name name (cons 'or (cdr %rest)))))))))
+
+;      (list 'if (car %rest)
+;                     (car %rest)  ;; XXX potential for side effects...
+;                     (cons 'or (cdr %rest)))))))

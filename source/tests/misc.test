@@ -1,0 +1,37 @@
+;; misc sundries
+
+(define (foo)
+  (let (num-args (length %rest))
+    (cond 
+      ((= num-args 0) 100)
+      ((= num-args 1) 101)
+      (else 102))))
+(foo)
+=> 100
+
+;; does it work for a macro too? no :( FIXME
+(define-macro (bar)
+  (let (num-args (length %rest))
+    (cond 
+      ((= num-args 0) 100)
+      ((= num-args 1) 101)
+      (else 102))))
+(bar)
+=> 100
+
+
+
+;; --- to be put somewhere else...
+
+(or)
+=> false
+(or 1 2)
+=> 1
+(or false 3)
+=> 3
+(define x 0)
+;; expressions should only be evaluated once, of course...
+(or false (set! x (+ x 1)) 33)
+x
+=> 1
+

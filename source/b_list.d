@@ -13,7 +13,7 @@ LispObject b_car(Interpreter intp, LispEnvironment env, FunctionArgs fargs) {
     if (auto p = cast(LispPair) fargs.args[0]) {
         return p.head;
     } else
-        throw new TypeError("CAR: argument must be a list");
+        throw new XTypeError("CAR", "list", fargs.args[0]);
 }
 
 LispObject b_cdr(Interpreter intp, LispEnvironment env, FunctionArgs fargs) {

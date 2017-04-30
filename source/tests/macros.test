@@ -103,6 +103,12 @@
                 (else (test-when e f) 9))
              (current-env))
 => (cond (x (if a b false) 7) ((if c d false) y 8) (else (if e f false) 9))
+;; and with atomic expressions as clauses?
+(macroexpand '(cond ((= x 0) 100)
+                    ((= x 1) 101)
+                    (else 102)) 
+             (current-env))
+=> (cond ((= x 0) 100) ((= x 1) 101) (else 102))
 
 ;; test how keywords are handled by MACROEXPAND-1
 (macroexpand-1 '(f 1 :foo 2) (current-env))

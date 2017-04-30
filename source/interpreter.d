@@ -292,16 +292,21 @@ class Interpreter {
                 break;
             } catch (Exception e) {
                 writeln("An error occurred.");  // FIXME
+                this.callstack.Clear();
+                continue;
             }
 
             expr = this.MacroExpand(expr, this.global_env);
+            // errors here must also be caught and shown!
 
             try {
                 LispObject result = this.EvalExpr(expr, this.global_env);
                 writefln("%s", result.Repr());
             } catch (Exception e) {
                 writeln("ERROR: ", e.msg);
+                this.callstack.Print();
                 writeln(e);  // includes traceback (make this an option?)
+                this.callstack.Clear();
             }
         }
     }
