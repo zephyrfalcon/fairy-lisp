@@ -38,8 +38,23 @@ class LispType : LispObject {
 }
 
 class LispSymbol : LispObject {
+    static LispSymbol[dstring] _cache;
     dstring value;
+
     this(dstring s) { this.value = toLower(s); }
+
+    // NOTE: This is the main way to create/get new symbols! Avoid using 'new
+    // LispSymbol'.
+    static LispSymbol Get(dstring name) {
+        auto p = (name in LispSymbol._cache);
+        if (p is null) {
+            LispSymbol sym = new LispSymbol(name);
+            LispSymbol._cache[name] = sym;
+            return sym;
+        } else
+            return *p;
+    }
+
     override dstring Repr() { return value; }
     override bool opEquals(Object o) {
         if (auto other = cast(LispSymbol) o) {
