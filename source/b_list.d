@@ -13,14 +13,14 @@ LispObject b_car(Interpreter intp, LispEnvironment env, FunctionArgs fargs) {
     if (auto p = cast(LispPair) fargs.args[0]) {
         return p.head;
     } else
-        throw new XTypeError("CAR", "list", fargs.args[0]);
+        throw new XTypeError("CAR", "non-empty list", fargs.args[0]);
 }
 
 LispObject b_cdr(Interpreter intp, LispEnvironment env, FunctionArgs fargs) {
     if (auto p = cast(LispPair) fargs.args[0]) {
         return p.tail;
     } else
-        throw new TypeError("CDR: argument must be a list");
+        throw new XTypeError("CDR", "non-empty list", fargs.args[0]);
 }
 
 LispObject b_reverse(Interpreter intp, LispEnvironment env, FunctionArgs fargs) {
@@ -28,7 +28,7 @@ LispObject b_reverse(Interpreter intp, LispEnvironment env, FunctionArgs fargs) 
         auto rev = list.Reverse();
         return rev;
     } else
-        throw new TypeError("list expected");
+        throw new XTypeError("REVERSE", "list", fargs.args[0]);
 }
 
 LispObject b_append(Interpreter intp, LispEnvironment env, FunctionArgs fargs) {

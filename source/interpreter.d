@@ -281,6 +281,8 @@ class Interpreter {
     }
 
     void MainLoop() {
+        writeln("Welcome to Fairy Lisp 0.1.");
+
         auto rd = new FileReader(stdin);
         while (true) {
             LispObject expr;
