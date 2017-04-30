@@ -21,7 +21,6 @@ struct DebugOptions {
 }
 
 class Interpreter {
-    dstring prompt = "> ";
     CallStack callstack;
     LispEnvironment builtin_env;
     LispEnvironment global_env;
@@ -280,35 +279,5 @@ class Interpreter {
             throw new Exception("not a callable");  // should not happen
     }
 
-    void MainLoop() {
-        writeln("Welcome to Fairy Lisp 0.1.");
-
-        auto rd = new FileReader(stdin);
-        while (true) {
-            LispObject expr;
-            write(this.prompt);
-
-            try {
-                expr = rd.Read();
-            } catch (NoInputException e) {
-                break;
-            } catch (Exception e) {
-                writeln("An error occurred.");  // FIXME
-                this.callstack.Clear();
-                continue;
-            }
-
-            try {
-                expr = this.MacroExpand(expr, this.global_env);
-                LispObject result = this.EvalExpr(expr, this.global_env);
-                writefln("%s", result.Repr());
-            } catch (Exception e) {
-                writeln("ERROR: ", e.msg);
-                this.callstack.Print();
-                writeln(e);  // includes traceback (make this an option?)
-                this.callstack.Clear();
-            }
-        }
-    }
 }
 

@@ -1,5 +1,6 @@
 import std.stdio;
 import interpreter;
+import repl;
 
 void main(string[] args)
 {
@@ -10,6 +11,8 @@ void main(string[] args)
         }
         return;
     }
-    intp.MainLoop();
+
+    auto repl = new REPL(intp);
+    repl.MainLoop();
 }
 
