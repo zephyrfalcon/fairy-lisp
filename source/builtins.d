@@ -156,6 +156,10 @@ LispObject b_eval_raw(Interpreter intp, LispEnvironment env, FunctionArgs fargs)
     return null;
 }
 
+LispObject b_gensym(Interpreter intp, LispEnvironment env, FunctionArgs fargs) {
+    return LispSymbol.GenUnique();
+}
+
 struct FI {
     BuiltinFunctionSig f;
     int arity;
@@ -172,6 +176,7 @@ FI[dstring] GetBuiltins() {
         "eval-raw": FI(&b_eval_raw, 1),
         "function-args": FI(&b_function_args, 1),
         "function-body": FI(&b_function_body, 1),
+        "gensym": FI(&b_gensym, 0),
         "print": FI(&b_print, 0),
         "set-debug-option": FI(&b_set_debug_option, 2),
         "type": FI(&b_type, 1),

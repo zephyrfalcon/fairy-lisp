@@ -55,6 +55,24 @@ class LispSymbol : LispObject {
             return *p;
     }
 
+    static bool Exists(dstring name) {
+        auto p = (name in LispSymbol._cache);
+        return (p !is null);
+    }
+
+    static LispSymbol GenUnique() {
+        static ulong counter = 0;
+        while (true) {
+            counter++;
+            dstring name = format("!g!#%s"d, counter);
+            if (LispSymbol.Exists(name)) {
+                counter++;
+            } else {
+                return LispSymbol.Get(name);
+            }
+        }
+    }
+
     override dstring Repr() { return value; }
     override bool opEquals(Object o) {
         if (auto other = cast(LispSymbol) o) {
