@@ -232,7 +232,7 @@ class Interpreter {
     LispObject MacroExpand(LispObject expr, LispEnvironment env) {
         LispObject hook = this.global_env.Get("*macroexpand-hook*");
         if (auto expander = cast(LispFunction) hook) {
-            auto newexpr = new LispPair(new LispSymbol("*macroexpand-hook*"), 
+            auto newexpr = new LispPair(LispSymbol.Get("*macroexpand-hook*"), 
                                         new LispPair(expr, NIL()));  // bogus
             auto sf = new StackFrame(newexpr, env); 
             sf.to_be_evaluated = [];

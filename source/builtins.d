@@ -24,7 +24,7 @@ LispObject b_addr(Interpreter intp, LispEnvironment env, FunctionArgs fargs) {
 // (TYPE-NAME <type>)
 LispObject b_type_name(Interpreter intp, LispEnvironment env, FunctionArgs fargs) {
     if (auto t = cast(LispType) fargs.args[0]) {
-        return new LispSymbol(t.name);
+        return LispSymbol.Get(t.name);
     } else throw new TypeError("TYPE-NAME: type object expected");
 }
 

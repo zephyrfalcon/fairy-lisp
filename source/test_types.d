@@ -14,33 +14,33 @@ unittest {
     AssertEquals(e.Repr(), "()");
 
     /* proper list */
-    auto l1 = new LispPair(new LispSymbol("foo"),
-                  new LispPair(new LispSymbol("bar"), e));
+    auto l1 = new LispPair(LispSymbol.Get("foo"),
+                  new LispPair(LispSymbol.Get("bar"), e));
     AssertEquals(l1.Repr(), "(foo bar)");
-    auto l2 = new LispPair(new LispSymbol("quux"), l1);
+    auto l2 = new LispPair(LispSymbol.Get("quux"), l1);
     AssertEquals(l2.Repr(), "(quux foo bar)");
     auto l3 = new LispPair(e, l1);
     AssertEquals(l3.Repr(), "(() foo bar)");
 
     /* improper list */
-    auto p = new LispPair(new LispSymbol("a"), new LispSymbol("b"));
+    auto p = new LispPair(LispSymbol.Get("a"), LispSymbol.Get("b"));
     AssertEquals(p.Repr(), "(a . b)");
-    auto p2 = new LispPair(new LispSymbol("z"), p);
+    auto p2 = new LispPair(LispSymbol.Get("z"), p);
     AssertEquals(p2.Repr(), "(z a . b)");
 
 }
 
 /* test Reverse() */
 unittest {
-    LispList l1 = new LispPair(new LispSymbol("a"),
-                  new LispPair(new LispSymbol("b"),
-                  new LispPair(new LispSymbol("c"), NIL())));
+    LispList l1 = new LispPair(LispSymbol.Get("a"),
+                  new LispPair(LispSymbol.Get("b"),
+                  new LispPair(LispSymbol.Get("c"), NIL())));
     auto l2 = l1.Reverse();
     AssertEquals(l2.Repr(), "(c b a)");
 
-    LispList l3 = new LispPair(new LispSymbol("k"),
+    LispList l3 = new LispPair(LispSymbol.Get("k"),
                   new LispPair(l1,
-                  new LispPair(new LispSymbol("m"), NIL())));
+                  new LispPair(LispSymbol.Get("m"), NIL())));
     AssertEquals(l3.Repr(), "(k (a b c) m)");
     AssertEquals(l3.Reverse().Repr(), "(m (a b c) k)");
 
@@ -50,11 +50,11 @@ unittest {
 /* test ToArray() */
 unittest {
     // assumption: LispSymbols can be compared
-    assert(new LispSymbol("a") == new LispSymbol("a"), "bwoi");
+    assert(LispSymbol.Get("a") == LispSymbol.Get("a"), "bwoi");
 
-    auto SA = new LispSymbol("a"),
-         SB = new LispSymbol("b"),
-         SC = new LispSymbol("c");
+    auto SA = LispSymbol.Get("a"),
+         SB = LispSymbol.Get("b"),
+         SC = LispSymbol.Get("c");
     LispList l1 = new LispPair(SA,
                   new LispPair(SB,
                   new LispPair(SC, NIL())));
@@ -70,9 +70,9 @@ unittest {
 
 /* test tools.FromArray() */
 unittest {
-    auto SA = new LispSymbol("a"),
-         SB = new LispSymbol("b"),
-         SC = new LispSymbol("c");
+    auto SA = LispSymbol.Get("a"),
+         SB = LispSymbol.Get("b"),
+         SC = LispSymbol.Get("c");
     LispList l1 = new LispPair(SA,
                   new LispPair(SB,
                   new LispPair(SC, NIL())));

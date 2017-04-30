@@ -48,7 +48,7 @@ class LispSymbol : LispObject {
     static LispSymbol Get(dstring name) {
         auto p = (name in LispSymbol._cache);
         if (p is null) {
-            LispSymbol sym = new LispSymbol(name);
+            LispSymbol sym = new LispSymbol(name);  // sic
             LispSymbol._cache[name] = sym;
             return sym;
         } else
@@ -466,7 +466,7 @@ class LispDictionary : LispObject {
     // (NOT strings or keywords).
     this(LispObject[dstring] d) {
         foreach (key; d.keys) {
-            LispSymbol sym = new LispSymbol(key);
+            LispSymbol sym = LispSymbol.Get(key);
             this.values[sym] = d[key];
         }
     }

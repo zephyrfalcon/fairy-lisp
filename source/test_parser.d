@@ -14,7 +14,7 @@ ParserResult tokenize_and_parse(dstring text) {
 /* test parser, general */
 unittest {
     ParserResult x = tokenize_and_parse("quux");
-    AssertEquals(x.result, new LispSymbol("quux"));
+    AssertEquals(x.result, LispSymbol.Get("quux"));
     AssertEquals(x.rest_tokens, []);
 
     x = tokenize_and_parse("()");
@@ -22,12 +22,12 @@ unittest {
     AssertEquals(x.rest_tokens, []);
 
     x = tokenize_and_parse("x y");
-    AssertEquals(x.result, new LispSymbol("x"));
+    AssertEquals(x.result, LispSymbol.Get("x"));
     AssertEquals(x.rest_tokens, ["y"]);
 
     x = tokenize_and_parse("(a b c)");
-    AssertEquals(x.result, new LispPair(new LispSymbol("a"), new LispPair(new
-                    LispSymbol("b"), new LispPair(new LispSymbol("c"), NIL()))));
+    AssertEquals(x.result, new LispPair(LispSymbol.Get("a"), new LispPair(
+                    LispSymbol.Get("b"), new LispPair(LispSymbol.Get("c"), NIL()))));
     AssertEquals(x.rest_tokens, []);
 
     x = tokenize_and_parse("((a (b) c () (d (e (f g))))) bogus");
@@ -38,8 +38,8 @@ unittest {
 /* test QUOTE */
 unittest {
     ParserResult x = tokenize_and_parse(" 'p ");
-    AssertEquals(x.result, new LispPair(new LispSymbol("quote"), new
-                LispPair(new LispSymbol("p"), NIL())));
+    AssertEquals(x.result, new LispPair(LispSymbol.Get("quote"), 
+                               new LispPair(LispSymbol.Get("p"), NIL())));
     AssertEquals(x.rest_tokens, []);
 
     x = tokenize_and_parse("'(hello kitty)");

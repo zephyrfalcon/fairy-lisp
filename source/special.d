@@ -143,7 +143,7 @@ LispObject sf_cond(Interpreter intp, LispEnvironment env, LispObject[] args) {
             auto stuff = args[top.evaluated.length];
             if (auto list = cast(LispPair) stuff) {
                 // wrap expression(s) up in a DO
-                auto expr = new LispPair(new LispSymbol("do"), list.tail);
+                auto expr = new LispPair(LispSymbol.Get("do"), list.tail);
                 auto sf = new StackFrame(expr, env);
                 intp.callstack.Pop();
                 intp.callstack.Push(sf);
@@ -166,7 +166,7 @@ LispObject sf_cond(Interpreter intp, LispEnvironment env, LispObject[] args) {
             // if condition is symbol "else", then it's considered true
             if (IsSymbol(cond, "else")) {
                 // might as well push expression on the stack right now (TCO)
-                auto expr = new LispPair(new LispSymbol("do"), list.tail);
+                auto expr = new LispPair(LispSymbol.Get("do"), list.tail);
                 auto sf = new StackFrame(expr, env);
                 intp.callstack.Pop();
                 intp.callstack.Push(sf);

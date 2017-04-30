@@ -91,6 +91,9 @@ y
 => true
 (eq? '(1 2 3) '(1 2 3))
 => false
+;; symbols of the same name, should compare equal!
+(eq? 'a 'a)
+=> true
 
 ;; --- equal? ---
 

@@ -21,7 +21,7 @@ unittest {
 unittest {
     LispEnvironment e1 = new LispEnvironment();
     e1.Set("foo", new LispInteger(42));
-    e1.Set("bar", new LispSymbol("bar"));
+    e1.Set("bar", LispSymbol.Get("bar"));
     AssertEquals(e1.names.length, 2);
 
     auto efr = e1.Find("foo");
@@ -42,11 +42,11 @@ unittest {
     AssertEquals(e2.Get("foo"), new LispInteger(100));
     AssertEquals(e2.parent.Get("foo"), new LispInteger(43));
     AssertEquals(e1.Get("foo"), new LispInteger(43));
-    AssertEquals(e2.Get("bar"), new LispSymbol("bar"));
+    AssertEquals(e2.Get("bar"), LispSymbol.Get("bar"));
 
-    e2.Update("bar", new LispSymbol("quux"));
-    AssertEquals(e2.Get("bar"), new LispSymbol("quux"));
-    AssertEquals(e1.Get("bar"), new LispSymbol("quux"));
+    e2.Update("bar", LispSymbol.Get("quux"));
+    AssertEquals(e2.Get("bar"), LispSymbol.Get("quux"));
+    AssertEquals(e1.Get("bar"), LispSymbol.Get("quux"));
     assertThrown!EnvironmentKeyException(e2.GetLocal("bar"));
 
     efr = e2.Find("bar");

@@ -36,7 +36,7 @@ ParserResult parse(dstring[] tokens) {
         if (tokens.length <= 1)
             throw new IncompleteExpressionException("incomplete expression");
         ParserResult pr = parse(tokens[1..$]);
-        LispObject expr = new LispPair(new LispSymbol("quote"), 
+        LispObject expr = new LispPair(LispSymbol.Get("quote"), 
                           new LispPair(pr.result, NIL()));
         return ParserResult(expr, pr.rest_tokens);
     } else {
@@ -59,6 +59,6 @@ LispObject CreateFromToken(dstring token) {
     if (!(matchFirst(token, `^:.+$`d).empty)) {
         return new LispKeyword(token[1..$]);
     }
-    return new LispSymbol(token); // default
+    return LispSymbol.Get(token); // default
 }
 

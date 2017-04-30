@@ -34,7 +34,7 @@ unittest {
     AssertEquals(expr.Repr(), "(do 3 4 5)");
 
     // a single expression doesn't get wrapped in a DO
-    expr = WrapExprsInDo([new LispSymbol("x")]);
+    expr = WrapExprsInDo([LispSymbol.Get("x")]);
     AssertEquals(expr.Repr(), "x");
 }
 

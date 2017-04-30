@@ -183,3 +183,11 @@
       (list 'define macro-name
             (list 'macro macro-args body)))))
       
+(define-macro (or)
+  (let (num-args (length %rest))
+    (cond
+     ((= num-args 0) false)
+     ((= num-args 1) (car %rest))
+     (else (list 'if (car %rest)
+                     (car %rest)  ;; XXX potential for side effects...
+                     (cons 'or (cdr %rest)))))))
