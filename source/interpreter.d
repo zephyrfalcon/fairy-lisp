@@ -99,16 +99,14 @@ class Interpreter {
 
     void AutoLoadCode() {
         auto path = buildPath(WhereAmI(), "source", "load", "autoload.fl");
-        //string stuff = readText(path);
-        //dstring all = to!dstring(stuff);
-        //this.EvalString(all);
         this.RunFile(path);
     }
 
+    // maybe specify custom env?
     void RunFile(string filename) {
         string stuff = readText(filename);
         dstring all = to!dstring(stuff);
-        this.EvalString(all);
+        this.EvalString(all, this.global_env);
     }
 
     LispObject EvalAtomic(LispObject expr, LispEnvironment env) {
@@ -212,14 +210,14 @@ class Interpreter {
     }
 
     // TODO: specify environment (optionally)
-    LispObject[] EvalString(dstring s) {
+    LispObject[] EvalString(dstring s, LispEnvironment env) {
         LispObject[] results = [];
         auto reader = new StringReader(s);
         while (true) {
             try {
                 LispObject expr = reader.Read();
-                expr = this.MacroExpand(expr, this.global_env);
-                LispObject result = this.EvalExpr(expr, this.global_env);
+                expr = this.MacroExpand(expr, env);
+                LispObject result = this.EvalExpr(expr, env);
                 results ~= result;
             } catch (NoInputException e) {
                 break;

@@ -59,7 +59,7 @@ void RunLispTestCase(LispTestCase testcase) {
     auto intp = new Interpreter();
     auto code = join(testcase.code, "");
     //writeln("--> ", testcase.filename, " :: ", testcase.lineno); writeln(code);  // DEBUG
-    auto results = intp.EvalString(code);
+    auto results = intp.EvalString(code, intp.global_env);
     bool succeeds = results[$-1].Repr() == testcase.expected_result;
     if (!succeeds) {
         writeln("\n*** TEST FAILED");

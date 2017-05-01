@@ -160,6 +160,13 @@ LispObject b_gensym(Interpreter intp, LispEnvironment env, FunctionArgs fargs) {
     return LispSymbol.GenUnique();
 }
 
+LispObject b_eval_string(Interpreter intp, LispEnvironment env, FunctionArgs fargs) {
+    if (auto s = cast(LispString) fargs.args[0]) {
+        throw new NotImplementedError("eval-string");
+    } else
+        throw new XTypeError("EVAL-STRING", "string", fargs.args[0]);
+}
+
 struct FI {
     BuiltinFunctionSig f;
     int arity;
