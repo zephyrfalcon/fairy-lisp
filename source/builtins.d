@@ -6,6 +6,7 @@ import std.stdio;
 import errors;
 import interpreter;
 import stackframe;
+import reader;
 import tools;
 import types;
 
@@ -160,9 +161,58 @@ LispObject b_gensym(Interpreter intp, LispEnvironment env, FunctionArgs fargs) {
     return LispSymbol.GenUnique();
 }
 
+class EvalStringHelper : StackFrameHelper {
+    StringReader reader;
+    LispObject[] results;
+    this(StringReader reader) {
+        this.reader = reader;
+        this.results = [];
+    }
+    override void Receive(LispObject x) {
+        //this.env.Set(this.next_name, x);
+        this.results ~= x;
+    }
+}
+
+// TODO: add optional environment
 LispObject b_eval_string(Interpreter intp, LispEnvironment env, FunctionArgs fargs) {
     if (auto s = cast(LispString) fargs.args[0]) {
-        throw new NotImplementedError("eval-string");
+        auto top = intp.callstack.Top();
+        if (top.aux_data is null) {
+            auto reader = new StringReader(s.value);
+            auto aux = new EvalStringHelper(reader);
+            top.aux_data = aux;
+        }
+
+        if (auto aux = cast(EvalStringHelper) top.aux_data) {
+            // check reader for next expression
+            LispObject expr;
+            try {
+                expr = aux.reader.Read();
+            } catch (NoInputException e) {
+                // end of expressions reached
+                if (aux.results.length > 0)
+                    return aux.results[$-1];
+                else 
+                    return FALSE();
+            }
+
+            // transform into: (EVAL <expr> (CURRENT-ENV))
+            // (because macroexpansion etc is already done by EVAL in prelude!)
+            auto curr_env_call = new LispPair(LispSymbol.Get("current-env"), NIL());
+            auto quoted_expr = new LispPair(LispSymbol.Get("quote"), new
+                    LispPair(expr, NIL()));
+            auto newexpr = new LispPair(LispSymbol.Get("eval"),
+                    new LispPair(quoted_expr, new LispPair(curr_env_call,
+                            NIL())));
+            //writeln("#DEBUG: to be evaluated: ", newexpr.Repr());
+
+            // and evaluate that via stack!
+            auto sf = new StackFrame(newexpr, env);
+            intp.callstack.Push(sf);
+            return null;
+        } else
+            throw new TypeError("invalid auxiliary data");
     } else
         throw new XTypeError("EVAL-STRING", "string", fargs.args[0]);
 }
@@ -181,6 +231,7 @@ FI[dstring] GetBuiltins() {
         "eq?": FI(&b_eq, 2),
         "equal?": FI(&b_equal, 2),
         "eval-raw": FI(&b_eval_raw, 1),
+        "eval-string": FI(&b_eval_string, 1),
         "function-args": FI(&b_function_args, 1),
         "function-body": FI(&b_function_body, 1),
         "gensym": FI(&b_gensym, 0),

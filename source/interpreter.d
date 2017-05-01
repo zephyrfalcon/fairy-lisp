@@ -209,7 +209,6 @@ class Interpreter {
         return result;
     }
 
-    // TODO: specify environment (optionally)
     LispObject[] EvalString(dstring s, LispEnvironment env) {
         LispObject[] results = [];
         auto reader = new StringReader(s);

@@ -252,7 +252,7 @@ LispObject sf_let(Interpreter intp, LispEnvironment env, LispObject[] args) {
             intp.callstack.Push(sf);
             return null;
         }
-    } else throw new Exception("?!");
+    } else throw new Exception("LET: invalid helper data");
 }
 
 LispObject sf_set(Interpreter intp, LispEnvironment env, LispObject[] args) {

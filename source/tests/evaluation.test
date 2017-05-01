@@ -1,0 +1,42 @@
+;; evaluation tests
+
+;; --- eval-raw ---
+
+(eval-raw '(+ 1 2))
+=> 3
+(let (plus +)
+  (eval-raw '(plus 2 3)))
+=> 5
+(let (+ (lambda (x y) 0))  ;; fake +
+  (eval-raw '(+ 3 4) (global-env)))  ;; but we use the global env
+=> 7
+
+;; --- eval (does macroexpansion) ---
+
+(eval '(+ 1 2) (current-env))
+=> 3
+(let (plus +)
+  (eval '(plus 2 3) (current-env)))
+=> 5
+(let (+ (lambda (x y) 0))  ;; fake +
+  (eval '(+ 3 4) (global-env)))  ;; but we use the global env
+=> 7
+;; assume WHEN exists
+(let (x 1)
+  (eval '(when x 3) (current-env)))
+=> 3
+
+;; --- eval-string (uses EVAL in prelude) ---
+
+(eval-string "1")
+=> 1
+(eval-string "1 2 3")
+=> 3
+(define x 4)
+(eval-string "x")
+=> 4
+(define x 10)
+(eval-string "(set! x 20) (+ x 1)")
+x
+=> 20
+
