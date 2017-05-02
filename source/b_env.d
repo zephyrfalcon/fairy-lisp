@@ -23,6 +23,19 @@ LispObject b_env_get(Interpreter intp, LispEnvironment env, FunctionArgs fargs) 
         throw new TypeError("ENV-GET: first argument must be an environment");
 }
 
+// (ENV-SET! env name value)
+LispObject b_env_set(Interpreter intp, LispEnvironment env, FunctionArgs fargs) {
+    if (auto this_env = cast(LispEnvironment) fargs.args[0]) {
+        if (auto name = cast(LispSymbol) fargs.args[1]) {
+            LispObject value = fargs.args[2];
+            this_env.Set(name.value, value);
+            return value;
+        } else
+            throw new XTypeError("ENV-SET!", "symbol", fargs.args[1]);
+    } else
+        throw new XTypeError("ENV-SET!", "environment", fargs.args[0]);
+}
+
 LispObject b_env_has(Interpreter intp, LispEnvironment env, FunctionArgs fargs) {
     fargs.rest_args = [];
     try {
