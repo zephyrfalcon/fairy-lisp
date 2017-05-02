@@ -297,7 +297,9 @@ FI[dstring] GetBuiltins() {
         "current-env": FI(&b_current_env, 0),
         "env-get": FI(&b_env_get, 2),
         "env-has?": FI(&b_env_has, 2),
+        "env-set!": FI(&b_env_set, 3),
         "global-env": FI(&b_global_env, 0),
+        "make-env": FI(&b_make_env, 0),
 
         /* b_list.d */
         "append": FI(&b_append, 2),

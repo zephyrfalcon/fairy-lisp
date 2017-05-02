@@ -61,3 +61,14 @@ LispObject b_builtin_env(Interpreter intp, LispEnvironment env, FunctionArgs far
     return intp.builtin_env;
 }
 
+// (MAKE-ENV [parent])
+LispObject b_make_env(Interpreter intp, LispEnvironment env, FunctionArgs fargs) {
+    if (fargs.rest_args.length > 0) {
+        if (auto parentenv = cast(LispEnvironment) fargs.rest_args[0]) {
+            return new LispEnvironment(parentenv);
+        } else
+            throw new XTypeError("MAKE-ENV", "environment", fargs.rest_args[0]);
+    } else
+        return new LispEnvironment();  // no parent
+}
+
