@@ -222,3 +222,6 @@ y
 (not (eq? true true))
 => false
 
+;; --- read-file-as-string
+
+;; TODO! but we need some rudimentary path stuff first!

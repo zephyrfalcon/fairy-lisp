@@ -1,6 +1,8 @@
 // builtins.d
 // Built-in functions.
 
+import std.conv;
+import std.file;
 import std.format;
 import std.stdio;
 import errors;
@@ -161,6 +163,18 @@ LispObject b_gensym(Interpreter intp, LispEnvironment env, FunctionArgs fargs) {
     return LispSymbol.GenUnique();
 }
 
+// (READ-FILE-AS-STRING filename)
+// later: replace with pure Lisp version?
+LispObject b_read_file_as_string(Interpreter intp, LispEnvironment env, FunctionArgs fargs) {
+    if (auto filename = cast(LispString) fargs.args[0]) {
+        string stuff = readText(filename.value);
+        dstring all = to!dstring(stuff);
+        return new LispString(all);
+    } else
+        throw new XTypeError("READ-FILE-AS-STRING", "string", fargs.args[0]);
+}
+
+
 /*** EVAL-STRING ***/
 
 // Expressions in the string are evaluated in a given environment, or, if such
@@ -277,6 +291,7 @@ FI[dstring] GetBuiltins() {
         "function-body": FI(&b_function_body, 1),
         "gensym": FI(&b_gensym, 0),
         "print": FI(&b_print, 0),
+        "read-file-as-string": FI(&b_read_file_as_string, 1),
         "set-debug-option": FI(&b_set_debug_option, 2),
         "type": FI(&b_type, 1),
         "type-name": FI(&b_type_name, 1),
