@@ -174,6 +174,13 @@ LispObject b_gensym(Interpreter intp, LispEnvironment env, FunctionArgs fargs) {
 // current environment, which contains such a name. (This name is generated
 // much like GENSYM, and should be unique.) The (EVAL ..) expression mentioned
 // above is then evaluated in this temporary environment.
+//
+// NOTE: The original expression passed to EVAL should be evaluated in the
+// environment specified, but the expression (EVAL ..) *itself* should be
+// evaluated in the current environment! Otherwise, code like
+//   (EVAL-STRING "(+ 1 2)" (BUILTIN-ENV))
+// ...would not work, even though the expression (+ 1 2) should evaluate just
+// find in the builtin environment.
 
 class EvalStringHelper : StackFrameHelper {
     StringReader reader;
@@ -210,8 +217,8 @@ LispObject b_eval_string(Interpreter intp, LispEnvironment env, FunctionArgs far
             auto aux = new EvalStringHelper(reader, thisenv);
             // create a new temporary environment, containing a (gensym'ed)
             // name that refers to the environment we want to evaluate the
-            // expressions in
-            aux.temp_env = new LispEnvironment(thisenv);
+            // expressions in. 
+            aux.temp_env = new LispEnvironment(env);  // not thisenv
             aux.env_name = LispSymbol.GenUnique().value;
             aux.temp_env.Set(aux.env_name, thisenv);
             top.aux_data = aux;

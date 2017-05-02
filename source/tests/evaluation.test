@@ -39,4 +39,10 @@
 (eval-string "(set! x 20) (+ x 1)")
 x
 => 20
+;; The following should work just fine, even though the builtin env does not
+;; contain EVAL and prelude stuff. Note that (+ 1 2) is evaluated in the
+;; builtin env here, but the underlying (EVAL ...) expression is evaluated in
+;; the current environment!
+(eval-string "(+ 1 2)" (builtin-env))
+=> 3
 
