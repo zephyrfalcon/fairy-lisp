@@ -1,0 +1,23 @@
+;; environment tests
+
+;; --- environments ---
+
+(type-name (type (current-env)))
+=> env
+(eq? (current-env) (current-env))
+=> true
+(env-get (current-env) '+)
+=> #<+>
+(env-get (current-env) 'bogus 33)
+=> 33
+
+(env-has? (global-env) 'cadr)
+=> true
+(env-has? (global-env) 'bogus-does-not-exist)
+=> false
+(env-has? (builtin-env) '+)
+=> true
+(env-has? (builtin-env) 'bogus-does-not-exist)
+=> false
+
+

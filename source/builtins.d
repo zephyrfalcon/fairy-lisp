@@ -161,26 +161,59 @@ LispObject b_gensym(Interpreter intp, LispEnvironment env, FunctionArgs fargs) {
     return LispSymbol.GenUnique();
 }
 
+/*** EVAL-STRING ***/
+
+// Expressions in the string are evaluated in a given environment, or, if such
+// an environment is not specified, the current environment.
+//
+// This is done by creating a new expression (EVAL (QUOTE <expr>) <env>),
+// using the EVAL procedure defined in the prelude.
+//
+// Since we need to refer to the environment (in which the expressions must be
+// evaluated) *by name*, we create a *temporary environment* based on the
+// current environment, which contains such a name. (This name is generated
+// much like GENSYM, and should be unique.) The (EVAL ..) expression mentioned
+// above is then evaluated in this temporary environment.
+
 class EvalStringHelper : StackFrameHelper {
     StringReader reader;
     LispObject[] results;
-    this(StringReader reader) {
+    LispEnvironment env;
+    LispEnvironment temp_env;
+    dstring env_name;
+    this(StringReader reader, LispEnvironment env) {
         this.reader = reader;
+        this.env = env;
         this.results = [];
     }
     override void Receive(LispObject x) {
-        //this.env.Set(this.next_name, x);
         this.results ~= x;
     }
 }
 
-// TODO: add optional environment
+// (EVAL-STRING string [env])
 LispObject b_eval_string(Interpreter intp, LispEnvironment env, FunctionArgs fargs) {
     if (auto s = cast(LispString) fargs.args[0]) {
         auto top = intp.callstack.Top();
         if (top.aux_data is null) {
             auto reader = new StringReader(s.value);
-            auto aux = new EvalStringHelper(reader);
+            LispEnvironment thisenv;
+            if (fargs.rest_args.length > 0) {
+                if (auto eenv = cast(LispEnvironment) fargs.rest_args[0]) {
+                    thisenv = eenv;
+                } else
+                    throw new XTypeError("EVAL-STRING", "environment",
+                                         fargs.rest_args[0]);
+            } else {
+                thisenv = env;
+            }
+            auto aux = new EvalStringHelper(reader, thisenv);
+            // create a new temporary environment, containing a (gensym'ed)
+            // name that refers to the environment we want to evaluate the
+            // expressions in
+            aux.temp_env = new LispEnvironment(thisenv);
+            aux.env_name = LispSymbol.GenUnique().value;
+            aux.temp_env.Set(aux.env_name, thisenv);
             top.aux_data = aux;
         }
 
@@ -199,16 +232,17 @@ LispObject b_eval_string(Interpreter intp, LispEnvironment env, FunctionArgs far
 
             // transform into: (EVAL <expr> (CURRENT-ENV))
             // (because macroexpansion etc is already done by EVAL in prelude!)
-            auto curr_env_call = new LispPair(LispSymbol.Get("current-env"), NIL());
             auto quoted_expr = new LispPair(LispSymbol.Get("quote"), new
                     LispPair(expr, NIL()));
             auto newexpr = new LispPair(LispSymbol.Get("eval"),
-                    new LispPair(quoted_expr, new LispPair(curr_env_call,
-                            NIL())));
+                           new LispPair(quoted_expr, 
+                           new LispPair(LispSymbol.Get(aux.env_name), 
+                               NIL())));
+
             //writeln("#DEBUG: to be evaluated: ", newexpr.Repr());
 
             // and evaluate that via stack!
-            auto sf = new StackFrame(newexpr, env);
+            auto sf = new StackFrame(newexpr, aux.temp_env);
             intp.callstack.Push(sf);
             return null;
         } else
