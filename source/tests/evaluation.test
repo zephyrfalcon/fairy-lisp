@@ -52,3 +52,10 @@ x
 (eval-string "(+ 1 2)" ε)
 => 0
 
+;; any stuff defined in the evaluation environment, should still be there
+;; afterwards:
+(define e (make-env (current-env)))
+(eval-string "(define y 200)" e)
+(env-get e 'y)
+=> 200
+
