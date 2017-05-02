@@ -20,4 +20,14 @@
 (env-has? (builtin-env) 'bogus-does-not-exist)
 => false
 
+(define e1 (make-env))
+(env-has? e1 '+)
+=> false
+(define e2 (make-env (current-env)))
+(env-has? e2 '+)
+=> true
+(define e3 (make-env (current-env)))
+(env-set! e3 'foo 42)
+(env-get e3 'foo)
+=> 42
 

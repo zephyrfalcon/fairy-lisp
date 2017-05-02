@@ -46,3 +46,9 @@ x
 (eval-string "(+ 1 2)" (builtin-env))
 => 3
 
+;; let's try a fresh environment, no parent, with bogus + operator
+(define ε (make-env))
+(env-set! ε '+ (lambda (x y) 0))
+(eval-string "(+ 1 2)" ε)
+=> 0
+
