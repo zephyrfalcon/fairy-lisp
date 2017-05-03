@@ -329,6 +329,7 @@ FI[dstring] GetBuiltins() {
         "get-dir-part": FI(&b_get_dir_part, 1),
         "get-executable": FI(&b_get_executable, 0),
         "get-file-part": FI(&b_get_file_part, 1),
+        "path-join": FI(&b_path_join, 1),
     ];
     return builtins;
 }

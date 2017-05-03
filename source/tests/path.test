@@ -1,0 +1,6 @@
+;; path.test
+
+(path-join (list "a" "b" "c"))
+=> "a/b/c"
+;; on Unixoid systems anyway...
+
