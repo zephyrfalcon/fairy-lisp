@@ -31,3 +31,10 @@
 (env-get e3 'foo)
 => 42
 
+(define k 0)
+(define (modify-caller-env x)
+  (env-set! %caller-env 'k x))
+(modify-caller-env 44)
+k
+=> 44
+
