@@ -325,7 +325,10 @@ FI[dstring] GetBuiltins() {
         "reverse": FI(&b_reverse, 1),
 
         /* b_path.d */
+        "absolute-path": FI(&b_absolute_path, 1),
+        "get-dir-part": FI(&b_get_dir_part, 1),
         "get-executable": FI(&b_get_executable, 0),
+        "get-file-part": FI(&b_get_file_part, 1),
     ];
     return builtins;
 }
