@@ -19,7 +19,12 @@
 (bar)
 => 100
 
+;; --- include ---
 
+(include (path-join (list (get-dir-part (get-executable)) "source" "tests"
+                          "etc" "including.fs")))
+hello
+=> "world"
 
 ;; --- to be put somewhere else...
 

@@ -207,9 +207,12 @@
      (else
       (list 'if (car %rest) (cons 'and (cdr %rest)) false)))))
 
-;; paths...
-
 ;; directory where prelude is located
 (define *lisp-prelude-path*
   (path-join (list (get-dir-part (get-executable)) "source" "load")))
-                   
+
+(define (include filename)
+  (let (contents (read-file-as-string filename))
+    (eval-string contents %caller-env)))
+
+;; (include (path-join *lisp-prelude-path* "stuff.fs"))

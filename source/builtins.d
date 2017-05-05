@@ -164,7 +164,8 @@ LispObject b_gensym(Interpreter intp, LispEnvironment env, FunctionArgs fargs) {
 }
 
 // (READ-FILE-AS-STRING filename)
-// later: replace with pure Lisp version?
+// XXX can be written in pure Lisp later, once we have files and a way to read
+// their contents as one big string
 LispObject b_read_file_as_string(Interpreter intp, LispEnvironment env, FunctionArgs fargs) {
     if (auto filename = cast(LispString) fargs.args[0]) {
         string stuff = readText(filename.value);
@@ -213,6 +214,7 @@ class EvalStringHelper : StackFrameHelper {
 }
 
 // (EVAL-STRING string [env])
+// XXX can be written in pure Lisp once we have a string reader
 LispObject b_eval_string(Interpreter intp, LispEnvironment env, FunctionArgs fargs) {
     if (auto s = cast(LispString) fargs.args[0]) {
         auto top = intp.callstack.Top();
