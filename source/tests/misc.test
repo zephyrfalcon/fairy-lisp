@@ -19,6 +19,12 @@
 (bar)
 => 100
 
+;; --- read-file-as-string ---
+
+(define filename (path-join (list *lisp-test-path* "etc" "bogus.txt")))
+(read-file-as-string filename)
+=> "hello\nworld\n"
+
 ;; --- include ---
 
 (include (path-join (list (get-dir-part (get-executable)) "source" "tests"
