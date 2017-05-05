@@ -541,6 +541,27 @@ class LispDictionary : LispObject {
     }
 }
 
+class LispModule : LispObject {
+    LispEnvironment env;
+    dstring name;
+    dstring path;  // if it originated from a file
+
+    this(LispEnvironment env) {
+        this.env = env;
+    }
+
+    override dstring Repr() {
+        return format("#<module %s>"d, this.name);
+    }
+    override bool opEquals(Object o) {
+        if (auto other = cast(LispModule) o) {
+            return this.env == other.env && this.name == other.name &&
+                   this.path == other.path;
+        } else return super.opEquals(o);
+    }
+    override dstring TypeName() { return "module"; }
+}
+
 /* "singletons", sort of kind of */
 
 // this is one way to make sure we always use the same object... through a
