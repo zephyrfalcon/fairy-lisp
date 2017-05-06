@@ -3,6 +3,7 @@
 
 import errors;
 import interpreter;
+import tools;
 import types;
 
 // (ENV-GET env name [default])
@@ -70,5 +71,29 @@ LispObject b_make_env(Interpreter intp, LispEnvironment env, FunctionArgs fargs)
             throw new XTypeError("MAKE-ENV", "environment", fargs.rest_args[0]);
     } else
         return new LispEnvironment();  // no parent
+}
+
+// (ENV-NAMES env)
+// Return a list of all names defined in this environment and any parent
+// environments.
+LispObject b_env_names(Interpreter intp, LispEnvironment env, FunctionArgs fargs) {
+    if (auto thisenv = cast(LispEnvironment) fargs.args[0]) {
+        dstring[] snames = thisenv.GetNames();
+        LispObject[] names = NamesAsSymbols(snames);
+        return LispList.FromArray(names);
+    } else
+        throw new XTypeError("ENV-NAMES", "environment", fargs.args[0]);
+}
+
+// (ENV-LOCAL-NAMES env)
+// Return a list of all names defined in this environment (not looking in any
+// parent environments).
+LispObject b_env_local_names(Interpreter intp, LispEnvironment env, FunctionArgs fargs) {
+    if (auto thisenv = cast(LispEnvironment) fargs.args[0]) {
+        dstring[] snames = thisenv.GetLocalNames();
+        LispObject[] names = NamesAsSymbols(snames);
+        return LispList.FromArray(names);
+    } else
+        throw new XTypeError("ENV-LOCAL-NAMES", "environment", fargs.args[0]);
 }
 

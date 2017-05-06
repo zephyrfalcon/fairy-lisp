@@ -38,3 +38,20 @@
 k
 => 44
 
+(define e2 (make-env))
+(env-set! e2 'foo 1)
+(env-local-names e2)
+=> (foo)
+
+(define e3 (make-env (global-env)))
+(env-set! e3 'bar 2)
+(env-local-names e3)
+=> (bar)
+
+(define e4 (make-env (global-env)))
+(env-set! e4 'baz 3)
+(define names (env-names e4))
+(> (length names) 10)
+=> true
+
+

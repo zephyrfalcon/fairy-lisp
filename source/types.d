@@ -1,6 +1,7 @@
 // types.d
 
 import std.algorithm : canFind;
+import std.algorithm.sorting;
 import std.array;
 import std.conv;
 import std.stdio;
@@ -460,8 +461,27 @@ class LispEnvironment : LispObject {
         }
     }
 
+    dstring[] GetLocalNames() {
+        dstring[] localnames = this.names.keys;  // in no particular order
+        localnames.sort();
+        return localnames;
+    }
+
     dstring[] GetNames() {
-        return this.names.keys;  // in no particular order
+        bool[dstring] all_names;
+        LispEnvironment env = this;
+        while (true) {
+            foreach (key; env.names.keys) {
+                all_names[key] = true;
+            }
+            if (env.parent is null)
+                break;
+            else
+                env = env.parent;
+        }
+        dstring[] names = all_names.keys();
+        names.sort();
+        return names;
     }
 
     override dstring TypeName() { return "env"; }

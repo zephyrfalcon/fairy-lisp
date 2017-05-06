@@ -52,8 +52,8 @@ unittest {
     efr = e2.Find("bar");
     AssertEquals(efr.env, e1);
 
-    dstring[] e1_names = e1.GetNames();
-    dstring[] e2_names = e2.GetNames();
+    dstring[] e1_names = e1.GetLocalNames();
+    dstring[] e2_names = e2.GetLocalNames();
     e1_names.sort();
     e2_names.sort();
     AssertEquals(e1_names, ["bar", "foo"]);

@@ -314,6 +314,8 @@ FI[dstring] GetBuiltins() {
         "current-env": FI(&b_current_env, 0),
         "env-get": FI(&b_env_get, 2),
         "env-has?": FI(&b_env_has, 2),
+        "env-local-names": FI(&b_env_local_names, 1),
+        "env-names": FI(&b_env_names, 1),
         "env-set!": FI(&b_env_set, 3),
         "global-env": FI(&b_global_env, 0),
         "make-env": FI(&b_make_env, 0),

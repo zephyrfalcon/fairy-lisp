@@ -40,7 +40,7 @@ class Interpreter {
     void LoadBuiltins() {
         this.builtin_env.Set("true", TRUE());
         this.builtin_env.Set("false", FALSE());
-        this.global_env.Set("*macroexpand-hook*", FALSE());
+        this.builtin_env.Set("*macroexpand-hook*", FALSE());
 
         // load special forms
         this.special_forms = GetSpecialForms();
@@ -99,11 +99,13 @@ class Interpreter {
 
     void AutoLoadCode() {
         auto path = buildPath(WhereAmI(), "source", "load", "autoload.fl");
-        this.RunFile(path);
+        this.RunFile(path, this.builtin_env);
     }
 
     // maybe specify custom env?
-    void RunFile(string filename) {
+    void RunFile(string filename, LispEnvironment env = null) {
+        if (env is null)
+            env = this.global_env;
         string stuff = readText(filename);
         dstring all = to!dstring(stuff);
         this.EvalString(all, this.global_env);
@@ -226,7 +228,7 @@ class Interpreter {
     }
 
     LispObject MacroExpand(LispObject expr, LispEnvironment env) {
-        LispObject hook = this.global_env.Get("*macroexpand-hook*");
+        LispObject hook = this.builtin_env.Get("*macroexpand-hook*");
         if (auto expander = cast(LispFunction) hook) {
             auto newexpr = new LispPair(LispSymbol.Get("*macroexpand-hook*"), 
                                         new LispPair(expr, NIL()));  // bogus
