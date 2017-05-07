@@ -562,6 +562,8 @@ class LispDictionary : LispObject {
 }
 
 class LispModule : LispObject {
+    // NOTE: this is the module's environment, so any names inside the module
+    // will be defined in here. 
     LispEnvironment env;
     dstring name;
     dstring path;  // if it originated from a file

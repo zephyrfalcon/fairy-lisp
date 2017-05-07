@@ -280,7 +280,7 @@ struct FI {
 }
 FI[dstring] GetBuiltins() {
     import b_arith, b_dict, b_env;
-    import b_list, b_path;
+    import b_list, b_module, b_path;
 
     FI[dstring] builtins = [
         "addr": FI(&b_addr, 1),
@@ -327,6 +327,9 @@ FI[dstring] GetBuiltins() {
         "cons": FI(&b_cons, 2),
         "length": FI(&b_length, 1),
         "reverse": FI(&b_reverse, 1),
+
+        /* b_module.d */
+        "make-module": FI(&b_make_module, 0),
 
         /* b_path.d */
         "absolute-path": FI(&b_absolute_path, 1),
