@@ -14,3 +14,12 @@
 (string-starts-with? "abc" "")  ;; empty prefix counts as true
 => true
 
+(string-ends-with? "abc" "c")
+=> true
+(string-ends-with? "abc" "bc")
+=> true
+(string-ends-with? "abc" "b")
+=> false
+(string-ends-with? "foo/bar/baz.fs" ".fs")
+=> true
+
