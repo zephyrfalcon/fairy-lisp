@@ -340,6 +340,7 @@ FI[dstring] GetBuiltins() {
 
         /* b_string.d */
         "string->symbol": FI(&b_string_to_symbol, 1),
+        "string-starts-with?": FI(&b_string_starts_with, 2),
     ];
     return builtins;
 }

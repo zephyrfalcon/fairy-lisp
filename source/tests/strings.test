@@ -5,3 +5,12 @@
 (string->symbol "DEF")
 => def
 
+(string-starts-with? "abc" "a")
+=> true
+(string-starts-with? "abc" "A")
+=> false
+(string-starts-with? "abc" "b")
+=> false
+(string-starts-with? "abc" "")  ;; empty prefix counts as true
+=> true
+
