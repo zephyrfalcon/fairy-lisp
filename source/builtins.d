@@ -329,7 +329,7 @@ FI[dstring] GetBuiltins() {
         "reverse": FI(&b_reverse, 1),
 
         /* b_module.d */
-        "make-module": FI(&b_make_module, 0),
+        "make-module": FI(&b_make_module, 1),
 
         /* b_path.d */
         "absolute-path": FI(&b_absolute_path, 1),

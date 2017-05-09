@@ -1,0 +1,6 @@
+;; module.test
+
+(define m (make-module 'bah))
+(type-name (type m))
+=> module
+

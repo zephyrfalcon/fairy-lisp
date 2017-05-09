@@ -568,7 +568,8 @@ class LispModule : LispObject {
     dstring name;
     dstring path;  // if it originated from a file
 
-    this(LispEnvironment env) {
+    this(dstring name, LispEnvironment env) {
+        this.name = name;
         this.env = env;
     }
 

@@ -76,6 +76,7 @@ class Interpreter {
             ["boolean", "type"],
             ["keyword", "type"],
             ["macro", "ufunc"],
+            ["module", "type"],
         ];
         foreach(dstring[] spec; typespecs) {
             if (spec.length == 1) {
