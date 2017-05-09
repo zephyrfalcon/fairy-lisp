@@ -280,7 +280,7 @@ struct FI {
 }
 FI[dstring] GetBuiltins() {
     import b_arith, b_dict, b_env;
-    import b_list, b_module, b_path;
+    import b_list, b_module, b_path, b_string;
 
     FI[dstring] builtins = [
         "addr": FI(&b_addr, 1),
@@ -337,6 +337,9 @@ FI[dstring] GetBuiltins() {
         "get-executable": FI(&b_get_executable, 0),
         "get-file-part": FI(&b_get_file_part, 1),
         "path-join": FI(&b_path_join, 1),
+
+        /* b_string.d */
+        "string->symbol": FI(&b_string_to_symbol, 1),
     ];
     return builtins;
 }

@@ -47,6 +47,7 @@ class LispSymbol : LispObject {
     // NOTE: This is the main way to create/get new symbols! Avoid using 'new
     // LispSymbol'.
     static LispSymbol Get(dstring name) {
+        name = toLower(name);
         auto p = (name in LispSymbol._cache);
         if (p is null) {
             LispSymbol sym = new LispSymbol(name);  // sic

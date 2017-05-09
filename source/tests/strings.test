@@ -1,0 +1,7 @@
+;; strings.test
+
+(string->symbol "abc")
+=> abc
+(string->symbol "DEF")
+=> def
+
