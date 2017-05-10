@@ -14,3 +14,8 @@
 (module-get m 'baz)
 => 44
 
+(define m (make-module 'quux))
+(module-set! m 'baz 44)
+(module-set! m 'belch 1)
+(module-names m)
+=> (baz belch)

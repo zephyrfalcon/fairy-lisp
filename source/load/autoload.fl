@@ -219,7 +219,11 @@
 
 ;; (include (path-join *lisp-prelude-path* "stuff.fs"))
 
+;; TODO: allow default?
 (define (module-get mod name)
   (env-get (module-env mod) name))
 (define (module-set! mod name value)
   (env-set! (module-env mod) name value))
+(define (module-names mod)
+  ;; only return the names defined in the module.
+  (env-local-names (module-env mod)))
