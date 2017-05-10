@@ -16,3 +16,11 @@ LispObject b_make_module(Interpreter intp, LispEnvironment env, FunctionArgs far
         throw new XTypeError("MAKE-MODULE", "symbol", fargs.args[0]);
 }
 
+// (MODULE-ENV module)
+LispObject b_module_env(Interpreter intp, LispEnvironment env, FunctionArgs fargs) {
+    if (auto mod = cast(LispModule) fargs.args[0]) {
+        return mod.env;
+    } else
+        throw new XTypeError("MODULE-ENV", "module", fargs.args[0]);
+}
+

@@ -4,3 +4,8 @@
 (type-name (type m))
 => module
 
+(define m (make-module 'quux))
+(env-set! (module-env m) 'zork 33)
+(env-get (module-env m) 'zork)
+=> 33
+
