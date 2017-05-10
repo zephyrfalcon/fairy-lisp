@@ -9,3 +9,8 @@
 (env-get (module-env m) 'zork)
 => 33
 
+(define m (make-module 'quux))
+(module-set! m 'baz 44)
+(module-get m 'baz)
+=> 44
+

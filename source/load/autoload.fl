@@ -218,3 +218,8 @@
     (eval-string contents %caller-env)))
 
 ;; (include (path-join *lisp-prelude-path* "stuff.fs"))
+
+(define (module-get mod name)
+  (env-get (module-env mod) name))
+(define (module-set! mod name value)
+  (env-set! (module-env mod) name value))
