@@ -1,4 +1,6 @@
 // b_path.d
+// NOTE: Eventually (almost) all this stuff can be written in pure Lisp, but
+// for now, it's built-in.
 
 import std.array;
 import std.conv;
@@ -41,10 +43,24 @@ LispObject b_get_dir_part(Interpreter intp, LispEnvironment env, FunctionArgs fa
 LispObject b_get_file_part(Interpreter intp, LispEnvironment env, FunctionArgs fargs) {
     if (auto path = cast(LispString) fargs.args[0]) {
         string spath = to!string(path.value);
-        string filename = dirName(spath);
+        string filename = baseName(spath);
         return new LispString(to!dstring(filename));
     } else
         throw new XTypeError("GET-FILE-PART", "string", fargs.args[0]);
+}
+
+// (GET-FILE-BASE-NAME filename)
+// Get the "base name" of a file, i.e. the filename without any directories or
+// extensions. foo/bar/baz.fs => baz
+LispObject b_get_file_base_name(Interpreter intp, LispEnvironment env, FunctionArgs fargs) {
+    if (auto path = cast(LispString) fargs.args[0]) {
+        string spath = to!string(path.value);
+        string filename = baseName(spath);
+        string ext = extension(filename);
+        string basename = baseName(filename, ext);
+        return new LispString(to!dstring(basename));
+    } else
+        throw new XTypeError("GET-FILE-BASE-NAME", "string", fargs.args[0]);
 }
 
 // (PATH-JOIN parts)

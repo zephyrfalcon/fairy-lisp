@@ -336,6 +336,7 @@ FI[dstring] GetBuiltins() {
         "absolute-path": FI(&b_absolute_path, 1),
         "get-dir-part": FI(&b_get_dir_part, 1),
         "get-executable": FI(&b_get_executable, 0),
+        "get-file-base-name": FI(&b_get_file_base_name, 1),
         "get-file-part": FI(&b_get_file_part, 1),
         "path-join": FI(&b_path_join, 1),
 

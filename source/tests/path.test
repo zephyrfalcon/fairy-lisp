@@ -4,3 +4,16 @@
 => "a/b/c"
 ;; on Unixoid systems anyway...
 
+(get-dir-part "/usr/bin/ls")
+=> "/usr/bin"
+;; note: without trailing slash
+
+(get-file-part "/usr/bin/ls")
+=> "ls"
+(get-file-part (absolute-path (get-executable)))
+=> "fairy-lisp-test-library"
+;; note: for testing
+
+(get-file-base-name "/foo/bar/baz.fs")
+=> "baz"
+
