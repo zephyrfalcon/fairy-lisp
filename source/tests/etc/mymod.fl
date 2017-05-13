@@ -1,0 +1,10 @@
+;; mymod.fl
+;; Baby's first module 
+
+(define (foo x)
+  (+ x 1))
+
+(define (bar y)
+  (lambda (x)
+    (foo (+ x y))))
+
