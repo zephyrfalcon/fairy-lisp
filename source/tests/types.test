@@ -42,4 +42,8 @@
 => false
 (keyword? ':x)
 => true
+(string? "abc")
+=> true
+(string? 'abc)
+=> false
 

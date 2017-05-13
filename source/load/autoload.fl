@@ -125,6 +125,8 @@
 
 (define (pair? x)
   (equal? (type-name (type x)) 'pair))
+(define (string? x)
+  (eq? (type-name (type x)) 'string))
 (define (symbol? x)
   (equal? (type-name (type x)) 'symbol))
 (define (nil? x)
