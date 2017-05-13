@@ -214,6 +214,8 @@
   (path-join (list (get-dir-part (get-executable)) "source" "load")))
 (define *lisp-test-path*
   (path-join (list (get-dir-part (get-executable)) "source" "tests")))
+(define *lisp-library-path*
+  (path-join (list (get-dir-part (get-executable)) "source" "lib")))
 
 (define (include filename)
   (let (contents (read-file-as-string filename))
