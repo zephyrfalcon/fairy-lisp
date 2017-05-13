@@ -19,3 +19,28 @@
 (module-set! m 'belch 1)
 (module-names m)
 => (baz belch)
+
+;; --- tests/etc/mymod.fl ---
+
+(define filename (path-join (list *lisp-test-path* "etc" "mymod.fl")))
+(%%import-string filename)
+(eq? (type mymod) <module>)
+=> true
+
+(define filename (path-join (list *lisp-test-path* "etc" "mymod.fl")))
+(%%import-string filename)
+(module-names mymod)
+=> (bar foo)
+
+(define filename (path-join (list *lisp-test-path* "etc" "mymod.fl")))
+(%%import-string filename)
+((module-get mymod 'foo) 33)
+=> 34
+
+(define filename (path-join (list *lisp-test-path* "etc" "mymod.fl")))
+(%%import-string filename)
+(define f ((module-get mymod 'bar) 10))
+(define g ((module-get mymod 'bar) 20))
+(list (f 20) (g 20))
+=> (31 41)
+

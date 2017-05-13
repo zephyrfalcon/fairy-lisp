@@ -231,3 +231,22 @@
 (define (module-names mod)
   ;; only return the names defined in the module.
   (env-local-names (module-env mod)))
+
+(define (%%import name)
+  (cond ((string? name) (%%import-string name))
+        ((symbol? name) (%%import-symbol name))
+        (else ...)))
+
+(define (%%import-string filename)
+  (let (basename (get-file-base-name filename)
+        mod-name (string->symbol basename)
+        mod (make-module mod-name)
+        code (read-file-as-string filename))
+    (eval-string code (module-env mod))
+    (env-set! %caller-env mod-name mod)
+    mod))
+
+(define (%%import-symbol name)
+  ...)
+
+;; eventually: macro: (IMPORT [string | symbol])
