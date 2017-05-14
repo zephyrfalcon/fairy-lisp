@@ -341,6 +341,7 @@ FI[dstring] GetBuiltins() {
         "path-join": FI(&b_path_join, 1),
 
         /* b_string.d */
+        "%%string-join": FI(&b_xx_string_join, 1),
         "->string": FI(&b_to_string, 1),
         "string->symbol": FI(&b_string_to_symbol, 1),
         "string-ends-with?": FI(&b_string_ends_with, 2),

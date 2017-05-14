@@ -32,3 +32,10 @@
 (->string #\ß)
 => "ß"
 
+;; --- string-join ---
+
+(%%string-join (list "a" "b" "c"))
+=> "abc"
+(%%string-join (list "a" "b" "c") " ")
+=> "a b c"
+
