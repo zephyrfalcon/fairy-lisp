@@ -232,6 +232,10 @@
   ;; only return the names defined in the module.
   (env-local-names (module-env mod)))
 
+(define (string-join parts)
+  (let (sep (if (nil? %rest) "" (first %rest)))
+    (%%string-join (map ->string parts) sep)))
+
 (define (%%import name)
   (cond ((string? name) (%%import-string name))
         ((symbol? name) (%%import-symbol name))

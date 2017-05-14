@@ -39,3 +39,10 @@
 (%%string-join (list "a" "b" "c") " ")
 => "a b c"
 
+(string-join '(a 1 b 2))
+=> "a1b2"
+(string-join '(a 1 b 2) ".")
+=> "a.1.b.2"
+(string-join (list "a" #\b 'c) " ")
+=> "a b c"
+
