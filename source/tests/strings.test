@@ -23,3 +23,12 @@
 (string-ends-with? "foo/bar/baz.fs" ".fs")
 => true
 
+(->string "abc")
+=> "abc"
+(->string "abc\ndef")
+=> "abc\ndef"
+(->string 123)
+=> "123"
+(->string #\ß)
+=> "ß"
+

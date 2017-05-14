@@ -34,4 +34,10 @@ LispObject b_string_ends_with(Interpreter intp, LispEnvironment env, FunctionArg
         throw new XTypeError("STRING-STARTS-WITH?", "string", fargs.args[0]);
 }
 
+// (->STRING x)
+// May be renamed later to STRING? Also would become a multimethod? But for
+// now, it's a built-in.
+LispObject b_to_string(Interpreter intp, LispEnvironment env, FunctionArgs fargs) {
+    return new LispString(fargs.args[0].ToString());
+}
 

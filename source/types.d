@@ -22,6 +22,7 @@ abstract class LispObject {
     LispType GetType() {
         return this._types[this.TypeName()];
     }
+    dstring ToString() { return this.Repr(); }
 }
 
 class LispType : LispObject {
@@ -101,6 +102,7 @@ class LispString : LispObject {
     dstring value;
     this(dstring s) { this.value = s; }
     override dstring Repr() { return EscapeString(this.value); } 
+    override dstring ToString() { return this.value; }
     override bool opEquals(Object o) {
         if (auto other = cast(LispString) o) {
             return this.value == other.value;
@@ -114,6 +116,7 @@ class LispCharacter : LispObject {
     dchar value;
     this(dchar c) { this.value = c; }
     override dstring Repr() { return "#\\"d ~ this.value; }
+    override dstring ToString() { return format("%c"d, this.value); }
     override bool opEquals(Object o) {
         if (auto other = cast(LispCharacter) o) {
             return this.value == other.value;
