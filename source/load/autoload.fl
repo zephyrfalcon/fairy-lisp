@@ -236,6 +236,9 @@
   (let (sep (if (nil? %rest) "" (first %rest)))
     (%%string-join (map ->string parts) sep)))
 
+(define (conc)
+  (string-join %rest))
+
 (define (%%import name)
   (cond ((string? name) (%%import-string name))
         ((symbol? name) (%%import-symbol name))

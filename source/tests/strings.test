@@ -46,3 +46,9 @@
 (string-join (list "a" #\b 'c) " ")
 => "a b c"
 
+(conc "Hello" #\, " world" #\!)
+=> "Hello, world!"
+(define x 42)
+(conc "We ordered " x " hamburgers.")
+=> "We ordered 42 hamburgers."
+
