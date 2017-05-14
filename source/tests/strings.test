@@ -52,3 +52,14 @@
 (conc "We ordered " x " hamburgers.")
 => "We ordered 42 hamburgers."
 
+;; --- string-split ---
+
+(string-split "a b c")
+=> ("a" "b" "c")
+(string-split "a   b  \n  c")
+=> ("a" "b" "c")
+(string-split "  a b  c  ")
+=> ("a" "b" "c")
+(string-split "foo:bar" ":")
+=> ("foo" "bar")
+

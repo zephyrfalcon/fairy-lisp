@@ -345,6 +345,7 @@ FI[dstring] GetBuiltins() {
         "->string": FI(&b_to_string, 1),
         "string->symbol": FI(&b_string_to_symbol, 1),
         "string-ends-with?": FI(&b_string_ends_with, 2),
+        "string-split": FI(&b_string_split, 1),
         "string-starts-with?": FI(&b_string_starts_with, 2),
     ];
     return builtins;

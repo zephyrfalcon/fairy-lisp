@@ -1,7 +1,7 @@
 // b_string.d
 
 import std.algorithm.searching : startsWith, endsWith;
-import std.array : join;
+import std.array : join, split;
 import errors;
 import interpreter;
 import tools;
@@ -68,5 +68,29 @@ LispObject b_xx_string_join(Interpreter intp, LispEnvironment env, FunctionArgs 
         return new LispString(result);
     } else
         throw new XTypeError("%%STRING-JOIN", "list", fargs.args[0]);
+}
+
+// (STRING-SPLIT s [sep])
+// Split a string on whitespace. If a separator is given, split on that.
+// Return a list of the parts; the separators are not included.
+LispObject b_string_split(Interpreter intp, LispEnvironment env, FunctionArgs fargs) {
+    if (auto s = cast(LispString) fargs.args[0]) {
+        // do we have a separator?
+        dstring sep = "";
+        if (fargs.rest_args.length > 0) {
+            if (auto xsep = cast(LispString) fargs.rest_args[0]) {
+                sep = xsep.value;
+            } else
+                throw new XTypeError("STRING-SPLIT", "string", fargs.rest_args[0]);
+        }
+        // split the string
+        dstring[] parts = (sep == "") ? split(s.value) : split(s.value, sep);
+        // construct a result list
+        LispObject[] xparts = [];
+        foreach(part; parts) 
+            xparts ~= new LispString(part);
+        return LispList.FromArray(xparts);
+    } else
+        throw new XTypeError("STRING-SPLIT", "string", fargs.args[0]);
 }
 
