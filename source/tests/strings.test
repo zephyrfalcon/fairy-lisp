@@ -62,4 +62,6 @@
 => ("a" "b" "c")
 (string-split "foo:bar" ":")
 => ("foo" "bar")
+(map string->symbol (string-split "foo:bar" ":"))
+=> (foo bar)
 
