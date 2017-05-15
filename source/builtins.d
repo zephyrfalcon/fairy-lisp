@@ -163,6 +163,14 @@ LispObject b_gensym(Interpreter intp, LispEnvironment env, FunctionArgs fargs) {
     return LispSymbol.GenUnique();
 }
 
+// (ERROR msg)
+LispObject b_error(Interpreter intp, LispEnvironment env, FunctionArgs fargs) {
+    if (auto msg = cast(LispString) fargs.args[0]) {
+        throw new Exception(to!string(msg.value));
+    } else
+        throw new XTypeError("ERROR", "string", fargs.args[0]);
+}
+
 // (READ-FILE-AS-STRING filename)
 // XXX can be written in pure Lisp later, once we have files and a way to read
 // their contents as one big string
@@ -287,6 +295,7 @@ FI[dstring] GetBuiltins() {
         "apply": FI(&b_apply, 2),
         "eq?": FI(&b_eq, 2),
         "equal?": FI(&b_equal, 2),
+        "error": FI(&b_error, 1),
         "eval-raw": FI(&b_eval_raw, 1),
         "eval-string": FI(&b_eval_string, 1),
         "function-args": FI(&b_function_args, 1),
