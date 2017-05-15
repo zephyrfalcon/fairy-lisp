@@ -251,6 +251,12 @@ class Interpreter {
     LispObject CallFunction(LispEnvironment caller_env, LispFunction callable,
                             FunctionArgs fargs) {
         if (auto bf = cast(LispBuiltinFunction) callable) {
+            if (fargs.args.length < bf.arity) 
+                throw new Exception(
+                        format("function: %s; incorrect number of arguments; "
+                             ~ "expected %d, got %d", 
+                               bf.Repr(),
+                               bf.arity, fargs.args.length));
             LispObject result = bf.f(this, caller_env, fargs);
             return result;
         } else if (auto uf = cast(LispUserDefinedFunction) callable) {
