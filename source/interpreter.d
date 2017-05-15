@@ -259,6 +259,7 @@ class Interpreter {
                                bf.arity, fargs.args.length));
             LispObject result = bf.f(this, caller_env, fargs);
             return result;
+
         } else if (auto uf = cast(LispUserDefinedFunction) callable) {
             // make sure the number of arguments matches
             if (fargs.args.length != uf.argnames.length)
@@ -270,9 +271,8 @@ class Interpreter {
             // create new environment based on the lambda's environment
             auto newenv = new LispEnvironment(uf.env);
             // add new values to it
-            foreach(i, name; uf.argnames) {
+            foreach(i, name; uf.argnames) 
                 newenv.Set(name, fargs.args[i]);
-            }
             // create %rest, %keywords variables in new env
             newenv.Set("%rest", LispList.FromArray(fargs.rest_args));
             newenv.Set("%keywords", new LispDictionary(fargs.keyword_args));
@@ -282,6 +282,7 @@ class Interpreter {
             this.callstack.Pop();  // pop frame containing function call (TCO)
             this.callstack.Push(sf);
             return null;  // evaluate via stack as usual
+
         } else 
             throw new Exception("not a callable");  // should not happen
     }
