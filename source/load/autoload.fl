@@ -232,6 +232,14 @@
   ;; only return the names defined in the module.
   (env-local-names (module-env mod)))
 
+(define (module-get*)
+  (cond ((= (length %rest) 2)
+         (module-get (first %rest) (second %rest)))
+        ((> (length %rest) 2)
+         (let (mod (module-get (first %rest) (second %rest)))
+           (apply module-get* (cons mod (cddr %rest)))))
+        (else (error "MODULE-GET*: must have at least two arguments"))))
+
 (define (string-join parts)
   (let (sep (if (nil? %rest) "" (first %rest)))
     (%%string-join (map ->string parts) sep)))

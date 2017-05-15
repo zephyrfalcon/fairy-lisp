@@ -44,3 +44,15 @@
 (list (f 20) (g 20))
 => (31 41)
 
+;; --- module-get* ---
+
+(define foo (make-module 'foo))
+(module-set! foo 'x 11)
+(module-get* foo 'x)
+=> 11
+
+(define foo (make-module 'foo))
+(module-set! foo 'bar (make-module 'bar))
+(module-set! (module-get foo 'bar) 'baz 42)
+(module-get* foo 'bar 'baz)
+=> 42
