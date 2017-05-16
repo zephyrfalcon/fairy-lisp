@@ -56,3 +56,15 @@
 (module-set! (module-get foo 'bar) 'baz 42)
 (module-get* foo 'bar 'baz)
 => 42
+
+;; --- module accessor forms ---
+
+(module-accessor-form? 'foo:bar)
+=> true
+(module-accessor-form? 'foo:bar:)
+=> false
+(module-accessor-form? ':foo:bar)
+=> false
+(module-accessor-form? 'foobar)
+=> false
+

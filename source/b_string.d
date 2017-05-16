@@ -95,6 +95,7 @@ LispObject b_string_split(Interpreter intp, LispEnvironment env, FunctionArgs fa
 }
 
 // (STRING-CONTAINS? s substr)
+// (later: we could accept a char as the second argument as well...)
 LispObject b_string_contains(Interpreter intp, LispEnvironment env, FunctionArgs fargs) {
     if (auto s = cast(LispString) fargs.args[0]) {
         if (auto substr = cast(LispString) fargs.args[1]) {

@@ -241,11 +241,13 @@
         (else (error "MODULE-GET*: must have at least two arguments"))))
 
 (define (module-accessor-form? form)
-  (and (not (string-starts-with? form ":"))
-       (not (string-ends-with? form ":"))
-       (string-contains? form ":")))
+  (and (symbol? form)
+       (let (s (->string form))
+         (and (not (string-starts-with? s ":"))
+              (not (string-ends-with? s ":"))
+              (string-contains? s ":")))))
 (define (module-accessor-expand form)
-  (let (parts (string-split form ":"))
+  (let (parts (string-split (->string form) ":"))
     ...))
 
 (define (string-join parts)
