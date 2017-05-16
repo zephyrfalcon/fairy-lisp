@@ -240,6 +240,14 @@
            (apply module-get* (cons mod (cddr %rest)))))
         (else (error "MODULE-GET*: must have at least two arguments"))))
 
+(define (module-accessor-form? form)
+  (and (not (string-starts-with? form ":"))
+       (not (string-ends-with? form ":"))
+       (string-contains? form ":")))
+(define (module-accessor-expand form)
+  (let (parts (string-split form ":"))
+    ...))
+
 (define (string-join parts)
   (let (sep (if (nil? %rest) "" (first %rest)))
     (%%string-join (map ->string parts) sep)))

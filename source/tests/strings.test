@@ -23,6 +23,17 @@
 (string-ends-with? "foo/bar/baz.fs" ".fs")
 => true
 
+(string-contains? "abc" "a")
+=> true
+(string-contains? "abc" "b")
+=> true
+(string-contains? "abcde" "bcd")
+=> true
+(string-contains? "abababa" "aa")
+=> false
+(string-contains? "abc" "A")
+=> false
+
 (->string "abc")
 => "abc"
 (->string "abc\ndef")

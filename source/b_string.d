@@ -1,6 +1,6 @@
 // b_string.d
 
-import std.algorithm.searching : startsWith, endsWith;
+import std.algorithm.searching : startsWith, endsWith, count;
 import std.array : join, split;
 import errors;
 import interpreter;
@@ -92,5 +92,17 @@ LispObject b_string_split(Interpreter intp, LispEnvironment env, FunctionArgs fa
         return LispList.FromArray(xparts);
     } else
         throw new XTypeError("STRING-SPLIT", "string", fargs.args[0]);
+}
+
+// (STRING-CONTAINS? s substr)
+LispObject b_string_contains(Interpreter intp, LispEnvironment env, FunctionArgs fargs) {
+    if (auto s = cast(LispString) fargs.args[0]) {
+        if (auto substr = cast(LispString) fargs.args[1]) {
+            auto numocc = count(s.value, substr.value);
+            return numocc > 0 ? TRUE() : FALSE();
+        } else
+            throw new XTypeError("STRING-CONTAINS?", "string", fargs.args[1]);
+    } else
+        throw new XTypeError("STRING-CONTAINS?", "string", fargs.args[0]);
 }
 
