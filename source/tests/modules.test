@@ -68,3 +68,8 @@
 (module-accessor-form? 'foobar)
 => false
 
+(module-accessor-expand 'foo:bar)
+=> (module-get* foo (quote bar))
+(module-accessor-expand 'math:trig:sin)
+=> (module-get* math (quote trig) (quote sin))
+

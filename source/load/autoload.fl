@@ -240,15 +240,21 @@
            (apply module-get* (cons mod (cddr %rest)))))
         (else (error "MODULE-GET*: must have at least two arguments"))))
 
+;; XXX if this is going to be part of the macro expansion, then AND might
+;; not be defined yet... :(
 (define (module-accessor-form? form)
   (and (symbol? form)
        (let (s (->string form))
          (and (not (string-starts-with? s ":"))
               (not (string-ends-with? s ":"))
               (string-contains? s ":")))))
+
 (define (module-accessor-expand form)
   (let (parts (string-split (->string form) ":"))
-    ...))
+    (cons 'module-get*
+          (cons (string->symbol (first parts))
+                (map (lambda (s) (list 'quote (string->symbol s)))
+                     (cdr parts))))))
 
 (define (string-join parts)
   (let (sep (if (nil? %rest) "" (first %rest)))
