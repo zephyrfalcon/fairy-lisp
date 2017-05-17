@@ -242,12 +242,23 @@
 
 ;; XXX if this is going to be part of the macro expansion, then AND might
 ;; not be defined yet... :(
+;(define (module-accessor-form? form)
+;  (and (symbol? form)
+;       (let (s (->string form))
+;         (and (not (string-starts-with? s ":"))
+;              (not (string-ends-with? s ":"))
+;              (string-contains? s ":")))))
+
+;; version of MODULE-ACCESSOR-FORM? that does not use macros.
 (define (module-accessor-form? form)
-  (and (symbol? form)
-       (let (s (->string form))
-         (and (not (string-starts-with? s ":"))
-              (not (string-ends-with? s ":"))
-              (string-contains? s ":")))))
+  (if (symbol? form)
+      (let (s (->string form))
+        (if (string-starts-with? s ":")
+            false
+            (if (string-ends-with? s ":")
+                false
+                (string-contains? s ":"))))
+      false))
 
 (define (module-accessor-expand form)
   (let (parts (string-split (->string form) ":"))
