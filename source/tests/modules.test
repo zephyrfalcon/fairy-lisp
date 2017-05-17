@@ -72,4 +72,10 @@
 => (module-get* foo (quote bar))
 (module-accessor-expand 'math:trig:sin)
 => (module-get* math (quote trig) (quote sin))
+;; should leave non-module-accessor forms alone
+(module-accessor-expand '(a b c))
+=> (a b c)
+;; does not expand recursively
+(module-accessor-expand '(a b:c d))
+=> (a b:c d)
 
