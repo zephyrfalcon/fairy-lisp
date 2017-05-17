@@ -79,3 +79,19 @@
 (module-accessor-expand '(a b:c d))
 => (a b:c d)
 
+(define foo (make-module 'foo))
+(module-set! foo 'bar 42)
+foo:bar
+=> 42
+
+(define foo (make-module 'foo))
+(module-set! foo 'bar 42)
+(+ foo:bar 1)
+=> 43
+
+;; XXX does not work yet
+(define foo (make-module 'foo))
+(module-set! foo 'add (lambda (a b) (+ a b)))
+(foo:add 1 2)
+=> 3
+

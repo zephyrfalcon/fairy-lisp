@@ -101,7 +101,7 @@
                       (map (lambda (subexpr) (macroexpand subexpr env))
                            (cdr expr-2)))
                 expr-2)))))
-      expr))
+      (module-accessor-expand expr)))
 
 ;; FIXME: env should be optional (get caller env if not given)
 (define (eval expr env)
@@ -164,6 +164,60 @@
 (define (map-alternate f g lst)
   (_map-alternate-aux f g lst true ()))
 
+;; TODO: allow default?
+(define (module-get mod name)
+  (env-get (module-env mod) name))
+(define (module-set! mod name value)
+  (env-set! (module-env mod) name value))
+(define (module-names mod)
+  ;; only return the names defined in the module.
+  (env-local-names (module-env mod)))
+
+(define (module-get*)
+  (cond ((= (length %rest) 2)
+         (module-get (first %rest) (second %rest)))
+        ((> (length %rest) 2)
+         (let (mod (module-get (first %rest) (second %rest)))
+           (apply module-get* (cons mod (cddr %rest)))))
+        (else (error "MODULE-GET*: must have at least two arguments"))))
+
+;; XXX if this is going to be part of the macro expansion, then AND might
+;; not be defined yet... :(
+;(define (module-accessor-form? form)
+;  (and (symbol? form)
+;       (let (s (->string form))
+;         (and (not (string-starts-with? s ":"))
+;              (not (string-ends-with? s ":"))
+;              (string-contains? s ":")))))
+
+;; version of MODULE-ACCESSOR-FORM? that does not use macros.
+(define (module-accessor-form? form)
+  (if (symbol? form)
+      (let (s (->string form))
+        (if (string-starts-with? s ":")
+            false
+            (if (string-ends-with? s ":")
+                false
+                (string-contains? s ":"))))
+      false))
+
+(define (module-accessor-expand form)
+  (if (module-accessor-form? form)
+      (let (parts (string-split (->string form) ":"))
+        (cons 'module-get*
+              (cons (string->symbol (first parts))
+                    (map (lambda (s) (list 'quote (string->symbol s)))
+                         (cdr parts)))))
+      form))
+
+(define (string-join parts)
+  (let (sep (if (nil? %rest) "" (first %rest)))
+    (%%string-join (map ->string parts) sep)))
+
+(define (conc)
+  (string-join %rest))
+
+
 ;; NOTE: Any code involved in expanding macros (directly or indirectly), should
 ;; be defined above this line.
 
@@ -223,58 +277,6 @@
 
 ;; (include (path-join *lisp-prelude-path* "stuff.fs"))
 
-;; TODO: allow default?
-(define (module-get mod name)
-  (env-get (module-env mod) name))
-(define (module-set! mod name value)
-  (env-set! (module-env mod) name value))
-(define (module-names mod)
-  ;; only return the names defined in the module.
-  (env-local-names (module-env mod)))
-
-(define (module-get*)
-  (cond ((= (length %rest) 2)
-         (module-get (first %rest) (second %rest)))
-        ((> (length %rest) 2)
-         (let (mod (module-get (first %rest) (second %rest)))
-           (apply module-get* (cons mod (cddr %rest)))))
-        (else (error "MODULE-GET*: must have at least two arguments"))))
-
-;; XXX if this is going to be part of the macro expansion, then AND might
-;; not be defined yet... :(
-;(define (module-accessor-form? form)
-;  (and (symbol? form)
-;       (let (s (->string form))
-;         (and (not (string-starts-with? s ":"))
-;              (not (string-ends-with? s ":"))
-;              (string-contains? s ":")))))
-
-;; version of MODULE-ACCESSOR-FORM? that does not use macros.
-(define (module-accessor-form? form)
-  (if (symbol? form)
-      (let (s (->string form))
-        (if (string-starts-with? s ":")
-            false
-            (if (string-ends-with? s ":")
-                false
-                (string-contains? s ":"))))
-      false))
-
-(define (module-accessor-expand form)
-  (if (module-accessor-form? form)
-      (let (parts (string-split (->string form) ":"))
-        (cons 'module-get*
-              (cons (string->symbol (first parts))
-                    (map (lambda (s) (list 'quote (string->symbol s)))
-                         (cdr parts)))))
-      form))
-
-(define (string-join parts)
-  (let (sep (if (nil? %rest) "" (first %rest)))
-    (%%string-join (map ->string parts) sep)))
-
-(define (conc)
-  (string-join %rest))
 
 (define (%%import name)
   (cond ((string? name) (%%import-string name))
