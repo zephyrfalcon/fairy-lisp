@@ -18,8 +18,6 @@
 
 ;; --- macro expansion ---
 
-;; helper functions...
-
 ;; expand the module accessor and check if it refers to a macro.
 ;; if so, apply the macro; otherwise, return the expanded form (!).
 (define (_me-handle-module-accessor expr env)

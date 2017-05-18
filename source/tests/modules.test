@@ -102,5 +102,16 @@ foo:bar
 => 7
 
 ;; TODO: test a macro... >.>
+(define foo (make-module 'foo))
+(module-set! foo 'when (macro (c b) (list 'if c b false)))
+(foo:when (= 2 2) 5 6)
+=> 5
 
+;; test import && macros
+(define filename (path-join (list *lisp-test-path* "etc" "macri.fl")))
+(%%import-string filename)
+(define x 1)
+(macri:when (= x 1) (set! x 2) (set! x 3))
+x
+=> 2
 
