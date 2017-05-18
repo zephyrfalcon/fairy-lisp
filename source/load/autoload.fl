@@ -18,18 +18,31 @@
 
 ;; --- macro expansion ---
 
+;; helper functions...
+
+;; expand the module accessor and check if it refers to a macro.
+;; if so, apply the macro; otherwise, return the expanded form (!).
+(define (_me-handle-module-accessor expr env)
+  (let (get-method-expr (module-accessor-expand (car expr))
+        m (eval get-method-expr env))
+    (if (macro? m)
+        (list (apply m (cdr expr)) true)  ;; duplicate code >:
+        (list (cons get-method-expr (cdr expr)) true)))) ;; keep expanded form
+
 ;; if the given expression is a macro expression, expand it exactly once.
 ;; return a list (new-expr true) if expansion succeeded, (old-expr false)
 ;; otherwise.
 (define (macroexpand-1 expr env)
   (if (pair? expr)
       (if (symbol? (car expr))
-          (let (m (env-get env (car expr) false))
-            (if m
-                (if (macro? m)
-                    (list (apply m (cdr expr)) true)  ;; TODO: allow kwargs?
-                    (list expr false))
-                (list expr false)))
+          (if (module-accessor-form? (car expr))
+              (_me-handle-module-accessor expr env)
+              (let (m (env-get env (car expr) false))
+                (if m
+                    (if (macro? m)
+                        (list (apply m (cdr expr)) true)  ;; TODO: allow kwargs?
+                        (list expr false))
+                    (list expr false))))
           (list expr false))
       (list expr false)))
 

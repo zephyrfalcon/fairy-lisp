@@ -19,6 +19,12 @@
 (macroexpand-1 '(if a b c) (current-env))
 => ((if a b c) false)
 
+;; accessor expansion, where the accessor refers to a macro
+(define foo (make-module 'foo))
+(module-set! foo 'add (lambda (a b) (+ a b)))
+(macroexpand-1 '(foo:add 1 2) (current-env))
+=> (((module-get* foo (quote add)) 1 2) true)
+
 ;; --- macroexpand-all ---
 
 (define test-when
