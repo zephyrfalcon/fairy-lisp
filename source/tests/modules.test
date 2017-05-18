@@ -115,3 +115,8 @@ foo:bar
 x
 => 2
 
+(define filename (path-join (list *lisp-test-path* "etc" "macri.fl")))
+(%%import-string filename)
+(macroexpand '(macri:when a b) (current-env))
+=> (if a b false)
+
