@@ -1,0 +1,5 @@
+;; macri.fl
+
+(define-macro (when condition body)
+  (list 'if condition body false))
+
