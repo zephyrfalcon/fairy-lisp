@@ -24,3 +24,30 @@ LispObject b_module_env(Interpreter intp, LispEnvironment env, FunctionArgs farg
         throw new XTypeError("MODULE-ENV", "module", fargs.args[0]);
 }
 
+// (MODULE-NAME module)
+LispObject b_module_name(Interpreter intp, LispEnvironment env, FunctionArgs fargs) {
+    if (auto mod = cast(LispModule) fargs.args[0]) {
+        return LispSymbol.Get(mod.name);
+    } else
+        throw new XTypeError("MODULE-NAME", "module", fargs.args[0]);
+}
+
+// (MODULE-PATH module)
+LispObject b_module_path(Interpreter intp, LispEnvironment env, FunctionArgs fargs) {
+    if (auto mod = cast(LispModule) fargs.args[0]) {
+        return new LispString(mod.path);
+    } else
+        throw new XTypeError("MODULE-PATH", "module", fargs.args[0]);
+}
+
+// (MODULE-PATH-SET! module path)
+LispObject b_module_path_set(Interpreter intp, LispEnvironment env, FunctionArgs fargs) {
+    if (auto mod = cast(LispModule) fargs.args[0]) {
+        if (auto path = cast(LispString) fargs.args[1]) {
+            mod.path = path.value;
+            return mod;
+        } else
+            throw new XTypeError("MODULE-PATH-SET!", "string", fargs.args[0]);
+    } else
+        throw new XTypeError("MODULE-PATH-SET!", "module", fargs.args[0]);
+}

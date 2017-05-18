@@ -301,9 +301,13 @@
         code (read-file-as-string filename))
     (eval-string code (module-env mod))
     (env-set! %caller-env mod-name mod)
+    (module-path-set! mod filename)
     mod))
 
 (define (%%import-symbol name)
   ...)
 
 ;; eventually: macro: (IMPORT [string | symbol])
+
+(define (module-names mod)
+  (env-local-names (module-env mod)))

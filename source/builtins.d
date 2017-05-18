@@ -340,6 +340,9 @@ FI[dstring] GetBuiltins() {
         /* b_module.d */
         "make-module": FI(&b_make_module, 1),
         "module-env": FI(&b_module_env, 1),
+        "module-name": FI(&b_module_name, 1),
+        "module-path": FI(&b_module_path, 1),
+        "module-path-set!": FI(&b_module_path_set, 2),
 
         /* b_path.d */
         "absolute-path": FI(&b_absolute_path, 1),
