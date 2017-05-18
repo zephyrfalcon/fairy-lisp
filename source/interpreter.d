@@ -109,7 +109,7 @@ class Interpreter {
             env = this.global_env;
         string stuff = readText(filename);
         dstring all = to!dstring(stuff);
-        this.EvalString(all, this.global_env);
+        this.EvalString(all, env);
     }
 
     LispObject EvalAtomic(LispObject expr, LispEnvironment env) {
