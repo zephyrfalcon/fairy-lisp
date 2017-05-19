@@ -146,6 +146,8 @@
   (equal? (type-name (type x)) 'macro))
 (define (keyword? x)
   (equal? (type-name (type x)) 'keyword))
+(define (module? x)
+  (eq? (type-name (type x)) 'module))
 (define (list? x)  ;; XXX rewrite once we have OR... >.>
   (cond ((pair? x) true)
         ((nil? x) true)
@@ -191,15 +193,6 @@
          (let (mod (module-get (first %rest) (second %rest)))
            (apply module-get* (cons mod (cddr %rest)))))
         (else (error "MODULE-GET*: must have at least two arguments"))))
-
-;; XXX if this is going to be part of the macro expansion, then AND might
-;; not be defined yet... :(
-;(define (module-accessor-form? form)
-;  (and (symbol? form)
-;       (let (s (->string form))
-;         (and (not (string-starts-with? s ":"))
-;              (not (string-ends-with? s ":"))
-;              (string-contains? s ":")))))
 
 ;; version of MODULE-ACCESSOR-FORM? that does not use macros.
 (define (module-accessor-form? form)
@@ -309,5 +302,3 @@
 
 ;; eventually: macro: (IMPORT [string | symbol])
 
-(define (module-names mod)
-  (env-local-names (module-env mod)))

@@ -29,6 +29,10 @@
 (module-name foo)
 => bark
 
+(define foo (make-module 'foo))
+(module? foo)
+=> true
+
 ;; --- tests/etc/mymod.fl ---
 
 (define filename (path-join (list *lisp-test-path* "etc" "mymod.fl")))
