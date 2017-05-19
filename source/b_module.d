@@ -1,4 +1,7 @@
 // b_module.d
+// TODO:
+// module-env-set!
+// module-name-set!
 
 import errors;
 import interpreter;
@@ -30,6 +33,18 @@ LispObject b_module_name(Interpreter intp, LispEnvironment env, FunctionArgs far
         return LispSymbol.Get(mod.name);
     } else
         throw new XTypeError("MODULE-NAME", "module", fargs.args[0]);
+}
+
+// (MODULE-NAME-SET! module name)
+LispObject b_module_name_set(Interpreter intp, LispEnvironment env, FunctionArgs fargs) {
+    if (auto mod = cast(LispModule) fargs.args[0]) {
+        if (auto sym = cast(LispSymbol) fargs.args[1]) {
+            mod.name = sym.value;
+            return mod;
+        } else
+            throw new XTypeError("MODULE-NAME-SET!", "symbol", fargs.args[1]);
+    } else
+        throw new XTypeError("MODULE-NAME-SET!", "module", fargs.args[0]);
 }
 
 // (MODULE-PATH module)

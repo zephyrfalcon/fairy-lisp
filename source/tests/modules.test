@@ -24,6 +24,11 @@
 (module-name foo)
 => foo
 
+(define foo (make-module 'foo))
+(module-name-set! foo 'bark)
+(module-name foo)
+=> bark
+
 ;; --- tests/etc/mymod.fl ---
 
 (define filename (path-join (list *lisp-test-path* "etc" "mymod.fl")))
