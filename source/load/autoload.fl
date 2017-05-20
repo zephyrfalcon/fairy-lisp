@@ -148,6 +148,11 @@
   (equal? (type-name (type x)) 'keyword))
 (define (module? x)
   (eq? (type-name (type x)) 'module))
+(define (integer? x)
+  (eq? (type-name (type x)) 'integer))
+(define (float? x)
+  (eq? (type-name (type x)) 'float))
+
 (define (list? x)  ;; XXX rewrite once we have OR... >.>
   (cond ((pair? x) true)
         ((nil? x) true)
