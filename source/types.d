@@ -89,6 +89,7 @@ class LispSymbol : LispObject {
 abstract class LispNumber : LispObject {
     override dstring TypeName() { return "number"; }
     // TODO: needs special number comparison?
+    real AsFloat() { throw new NotImplementedError("AsFloat"); }
 }
 
 class LispInteger : LispNumber {
@@ -101,6 +102,7 @@ class LispInteger : LispNumber {
         } else return super.opEquals(o);
     }
     override dstring TypeName() { return "integer"; }
+    override real AsFloat() { return this.value * 1.0; }
 }
 
 class LispFloat : LispNumber {
@@ -113,6 +115,7 @@ class LispFloat : LispNumber {
         } else return super.opEquals(o);
     }
     override dstring TypeName() { return "float"; }
+    override real AsFloat() { return this.value; }
 }
 
 class LispString : LispObject {
