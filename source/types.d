@@ -86,7 +86,12 @@ class LispSymbol : LispObject {
     override dstring TypeName() { return "symbol"; }
 }
 
-class LispInteger : LispObject {
+abstract class LispNumber : LispObject {
+    override dstring TypeName() { return "number"; }
+    // TODO: needs special number comparison?
+}
+
+class LispInteger : LispNumber {
     int value;
     this(int x) { this.value = x; }
     override dstring Repr() { return to!dstring(this.value); }
@@ -96,6 +101,18 @@ class LispInteger : LispObject {
         } else return super.opEquals(o);
     }
     override dstring TypeName() { return "integer"; }
+}
+
+class LispFloat : LispNumber {
+    real value;
+    this(real x) { this.value = x; }
+    override dstring Repr() { return to!dstring(this.value); }
+    override bool opEquals(Object o) {
+        if (auto other = cast(LispFloat) o) {
+            return this.value == other.value;
+        } else return super.opEquals(o);
+    }
+    override dstring TypeName() { return "float"; }
 }
 
 class LispString : LispObject {

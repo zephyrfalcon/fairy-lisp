@@ -62,6 +62,7 @@ class Interpreter {
             ["type"],
             ["number", "type"],
             ["integer", "number"],
+            ["float", "number"],
             ["string", "type"],
             ["symbol", "type"],
             ["char", "type"],

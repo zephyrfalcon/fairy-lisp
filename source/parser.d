@@ -46,9 +46,11 @@ ParserResult parse(dstring[] tokens) {
 }
 
 LispObject CreateFromToken(dstring token) {
-    auto m = matchFirst(token, `^-?\d+$`d);
-    if (!m.empty) {
+    if (!(matchFirst(token, `^-?\d+$`d).empty)) {
         return new LispInteger(to!int(token));
+    }
+    if (!(matchFirst(token, `^-?\d+\.\d+$`d).empty)) {
+        return new LispFloat(to!real(token));
     }
     if (!(matchFirst(token, `^".*"$`d).empty)) {
         return new LispString(UnescapeString(token));
