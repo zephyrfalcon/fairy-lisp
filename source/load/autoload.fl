@@ -182,6 +182,28 @@
 (define (map-alternate f g lst)
   (_map-alternate-aux f g lst true ()))
 
+(define (_filter-aux pred lst acc)
+  (if (nil? lst)
+      (reverse acc)
+      (if (pred (car lst))
+          (_filter-aux pred (cdr lst) (cons (car lst) acc))
+          (_filter-aux pred (cdr lst) acc))))
+
+(define (filter pred lst)
+  (_filter-aux pred lst ()))
+
+(define (foldl f lst initial)
+  (if (nil? lst)
+      initial
+      (foldl f (cdr lst)
+             (f (car lst) initial))))
+
+;; not tail-recursive...
+(define (foldr f lst initial)
+  (if (nil? lst)
+      initial
+      (f (car lst) (foldr f (cdr lst) initial))))
+
 ;; TODO: allow default?
 (define (module-get mod name)
   (env-get (module-env mod) name))
@@ -225,6 +247,9 @@
 
 (define (conc)
   (string-join %rest))
+
+(define (string-append s1 s2)
+  (string-join (list s1 s2)))
 
 
 ;; NOTE: Any code involved in expanding macros (directly or indirectly), should
