@@ -152,6 +152,8 @@
   (eq? (type-name (type x)) 'integer))
 (define (float? x)
   (eq? (type-name (type x)) 'float))
+(define (number? x)
+  (instance-of? x <number>))
 
 (define (list? x)  ;; XXX rewrite once we have OR... >.>
   (cond ((pair? x) true)

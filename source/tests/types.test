@@ -60,4 +60,9 @@
 => true
 (string? 'abc)
 => false
-
+(number? 2)
+=> true
+(number? 0.2)
+=> true
+(number? "7")
+=> false

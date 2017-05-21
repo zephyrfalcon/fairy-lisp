@@ -44,7 +44,7 @@ class LispType : LispObject {
     }
     bool HasParentType(LispType other) {
         if (this.parent is null) return false;
-        if (this.parent is other) return true;  // ?
+        if (this.parent is other) return true;  // same type counts as false
         if (this is this.parent) return false;  // type is its own parent
         return this.parent.HasParentType(other);
     }
