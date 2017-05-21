@@ -42,6 +42,12 @@ LispObject b_xx_plus(Interpreter intp, LispEnvironment env, FunctionArgs fargs) 
             function(real x, real y) { return x + y; });
 }
 
+LispObject b_xx_minus(Interpreter intp, LispEnvironment env, FunctionArgs fargs) {
+    return _binop_template(intp, env, fargs, "%%-", 
+            function(int x, int y) { return x - y; },
+            function(real x, real y) { return x - y; });
+}
+
 /*** current, un-generalized functions ***/
 
 LispObject b_plus(Interpreter intp, LispEnvironment env, FunctionArgs fargs) {

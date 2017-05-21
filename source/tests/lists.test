@@ -102,3 +102,11 @@
 (foldr string-append '("a" "b" "c") "")
 => "abc"
 
+;; note that we call (%%- <list element> <acc>), not the other way around!
+;; so this doesn't work like (- 1 1 2 3)...
+(foldl %%- '(1 2 3) 1)
+=> 1
+;; but this does...
+(foldl (flip %%-) '(1 2 3) 1)
+=> -5
+

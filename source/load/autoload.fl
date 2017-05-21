@@ -192,6 +192,8 @@
 (define (filter pred lst)
   (_filter-aux pred lst ()))
 
+;; NOTE: function F is called with a list element as first argument, and the
+;; initial/accumulated value as the second!
 (define (foldl f lst initial)
   (if (nil? lst)
       initial
@@ -251,6 +253,23 @@
 (define (string-append s1 s2)
   (string-join (list s1 s2)))
 
+;; FIXME: rename
+(define (my-+)
+  (foldl %%+ %rest 0))
+
+(define (- n)
+  (if (> (length %rest) 0)
+      (%%- n (foldl %%+ %rest 0))
+      (%%- 0 n)))
+
+(define (flip f)
+  (lambda (x y) (f y x)))
+
+(define (do-times n thunk)
+  (if (> n 0)
+      (do (thunk)
+          (do-times (- n 1) thunk))
+      true))
 
 ;; NOTE: Any code involved in expanding macros (directly or indirectly), should
 ;; be defined above this line.

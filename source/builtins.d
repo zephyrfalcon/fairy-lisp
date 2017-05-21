@@ -310,6 +310,7 @@ FI[dstring] GetBuiltins() {
 
         /* b_arith.d */
         "%%+": FI(&b_xx_plus, 2),
+        "%%-": FI(&b_xx_minus, 2),
         "+": FI(&b_plus, 0),
         "=": FI(&b_equals, 2),
         "<": FI(&b_less_than, 2),
