@@ -50,6 +50,8 @@ LispObject b_xx_minus(Interpreter intp, LispEnvironment env, FunctionArgs fargs)
 
 /*** current, un-generalized functions ***/
 
+// NOTE: built-in + has been replaced with Lisp +, which uses built-in %%+.
+/*
 LispObject b_plus(Interpreter intp, LispEnvironment env, FunctionArgs fargs) {
     int result = 0;
     auto all_args = fargs.GetAllArgs();
@@ -61,6 +63,7 @@ LispObject b_plus(Interpreter intp, LispEnvironment env, FunctionArgs fargs) {
     }
     return new LispInteger(result);
 }
+*/
 
 // XXX the code for =, <, etc, is extremely similar; we need a way to refactor
 // this

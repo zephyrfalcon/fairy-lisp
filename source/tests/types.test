@@ -10,7 +10,7 @@
 => nil
 (type-name (type '(1 2 3)))
 => pair
-(type-name (type +))
+(type-name (type cons))
 => bfunc
 (type-name (type cadr))
 => ufunc

@@ -253,8 +253,7 @@
 (define (string-append s1 s2)
   (string-join (list s1 s2)))
 
-;; FIXME: rename
-(define (my-+)
+(define (+)
   (foldl %%+ %rest 0))
 
 (define (- n)

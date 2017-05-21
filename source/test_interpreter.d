@@ -23,11 +23,11 @@ unittest {
     AssertEquals(results.length, 1);
     AssertEquals(results[0], TRUE());
 
-    // check if the built-in function '+' exists
-    results = intp.EvalString("+", intp.global_env);
+    // check if the built-in function '%%+' exists
+    results = intp.EvalString("%%+", intp.global_env);
     AssertEquals(results.length, 1);
     if (auto bf = cast(LispBuiltinFunction) results[0]) {
-        AssertEquals(bf.name, "+");
+        AssertEquals(bf.name, "%%+");
     } else Fail("not a built-in function");
 }
 
