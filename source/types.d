@@ -37,6 +37,17 @@ class LispType : LispObject {
     }
     override dstring Repr() { return format("#<type:%s>"d, this.name); }
     override dstring TypeName() { return "type"; }
+    override bool opEquals(Object o) {
+        if (auto other = cast(LispType) o) {
+            return this.name == other.name && this.parent == other.parent;
+        } else return super.opEquals(o);
+    }
+    bool HasParentType(LispType other) {
+        if (this.parent is null) return false;
+        if (this.parent is other) return true;  // ?
+        if (this is this.parent) return false;  // type is its own parent
+        return this.parent.HasParentType(other);
+    }
 }
 
 class LispSymbol : LispObject {

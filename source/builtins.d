@@ -171,6 +171,27 @@ LispObject b_error(Interpreter intp, LispEnvironment env, FunctionArgs fargs) {
         throw new XTypeError("ERROR", "string", fargs.args[0]);
 }
 
+// (INSTANCE-OF? x type)
+LispObject b_instance_of(Interpreter intp, LispEnvironment env, FunctionArgs fargs) {
+    if (auto tuup = cast(LispType) fargs.args[1]) {
+        auto t = fargs.args[0].GetType();
+        if (t is tuup) return TRUE();
+        return t.HasParentType(tuup) ? TRUE() : FALSE();
+    } else
+        throw new XTypeError("INSTANCE-OF?", "type", fargs.args[1]);
+}
+
+// (SUBTYPE-OF? type parent-type)
+LispObject b_subtype_of(Interpreter intp, LispEnvironment env, FunctionArgs fargs) {
+    if (auto subtype = cast(LispType) fargs.args[0]) {
+        if (auto parenttype = cast(LispType) fargs.args[1]) {
+            return subtype.HasParentType(parenttype) ? TRUE() : FALSE();
+        } else
+            throw new XTypeError("SUBTYPE-OF?", "type", fargs.args[1]);
+    } else
+        throw new XTypeError("SUBTYPE-OF?", "type", fargs.args[0]);
+}
+
 // (READ-FILE-AS-STRING filename)
 // XXX can be written in pure Lisp later, once we have files and a way to read
 // their contents as one big string
@@ -301,9 +322,11 @@ FI[dstring] GetBuiltins() {
         "function-args": FI(&b_function_args, 1),
         "function-body": FI(&b_function_body, 1),
         "gensym": FI(&b_gensym, 0),
+        "instance-of?": FI(&b_instance_of, 2),
         "print": FI(&b_print, 0),
         "read-file-as-string": FI(&b_read_file_as_string, 1),
         "set-debug-option": FI(&b_set_debug_option, 2),
+        "subtype-of?": FI(&b_subtype_of, 2),
         "type": FI(&b_type, 1),
         "type-name": FI(&b_type_name, 1),
         "type-parent": FI(&b_type_parent, 1),

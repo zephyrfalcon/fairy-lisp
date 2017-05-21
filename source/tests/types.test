@@ -34,6 +34,20 @@
 (type-name (type-parent (type +)))
 => function
 
+(subtype-of? <integer> <number>)
+=> true
+(subtype-of? <integer> <integer>)
+=> false
+
+(instance-of? 3 <integer>)
+=> true
+(instance-of? 4 <number>)
+=> true
+(instance-of? 5 <type>)
+=> true
+(instance-of? 6 <string>)
+=> false
+
 ;; --- predicates ---
 
 (symbol? 'x)
