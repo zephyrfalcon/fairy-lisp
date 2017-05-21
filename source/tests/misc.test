@@ -34,3 +34,8 @@ hello
 
 ;; --- to be put somewhere else...
 
+(define x 0)
+(do-times 10 (lambda () (set! x (+ x 1))))
+x
+=> 10
+
