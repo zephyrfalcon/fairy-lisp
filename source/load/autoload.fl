@@ -154,6 +154,15 @@
   (eq? (type-name (type x)) 'float))
 (define (number? x)
   (instance-of? x <number>))
+(define (bfunc? x)
+  (instance-of? x <bfunc>))
+(define builtin-function? bfunc?)
+(define (ufunc? x)
+  (instance-of? x <ufunc>))
+(define user-defined-function? ufunc?)
+(define lambda? ufunc?)
+(define (function? x)
+  (instance-of? x <function>))
 
 (define (list? x)  ;; XXX rewrite once we have OR... >.>
   (cond ((pair? x) true)

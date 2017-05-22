@@ -66,3 +66,12 @@
 => true
 (number? "7")
 => false
+(function? (lambda (x) x))
+=> true
+(function? cons)
+=> true
+(function? or)  ;; a macro counts as a function, so this is true
+=> true
+(macro? or)
+=> true
+
