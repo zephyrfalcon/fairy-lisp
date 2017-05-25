@@ -272,6 +272,9 @@
       (%%- n (foldl %%+ %rest 0))
       (%%- 0 n)))
 
+(define (*)
+  (foldl %%* %rest 1))
+
 (define (flip f)
   (lambda (x y) (f y x)))
 
