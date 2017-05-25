@@ -119,7 +119,12 @@ class LispInteger : LispNumber {
 class LispFloat : LispNumber {
     real value;
     this(real x) { this.value = x; }
-    override dstring Repr() { return to!dstring(this.value); }
+    override dstring Repr() { 
+        dstring repr = to!dstring(this.value); 
+        if (count(repr, ".") == 0)
+            repr ~= ".0";
+        return repr;
+    }
     override bool opEquals(Object o) {
         if (auto other = cast(LispFloat) o) {
             return this.value == other.value;
