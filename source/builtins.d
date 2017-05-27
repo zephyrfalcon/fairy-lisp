@@ -337,7 +337,9 @@ FI[dstring] GetBuiltins() {
         "%%*": FI(&b_xx_times, 2),
         "=": FI(&b_equals, 2),
         "<": FI(&b_less_than, 2),
+        "<=": FI(&b_le, 2),
         ">": FI(&b_greater_than, 2),
+        ">=": FI(&b_ge, 2),
 
         /* b_dict.d */
         "dict-get": FI(&b_dict_get, 2),
