@@ -55,6 +55,12 @@ LispObject b_xx_times(Interpreter intp, LispEnvironment env, FunctionArgs fargs)
             function(real x, real y) { return x * y; });
 }
 
+LispObject b_xx_div(Interpreter intp, LispEnvironment env, FunctionArgs fargs) {
+    return _binop_template(intp, env, fargs, "%%/", 
+            function(int x, int y) { return x / y; },
+            function(real x, real y) { return x / y; });
+}
+
 /*** current, un-generalized functions ***/
 
 // NOTE: built-in + has been replaced with Lisp +, which uses built-in %%+.

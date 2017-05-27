@@ -275,6 +275,13 @@
 (define (*)
   (foldl %%* %rest 1))
 
+;; always returns a float. (/ x) and (/ x y ...) wouldn't make much sense
+;; without it.
+(define (/ n)
+  (if (> (length %rest) 0)
+      (foldl (flip %%/) %rest (* 1.0 n))
+      (%%/ 1.0 n))) 
+
 (define (flip f)
   (lambda (x y) (f y x)))
 

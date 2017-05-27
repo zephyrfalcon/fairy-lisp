@@ -335,6 +335,7 @@ FI[dstring] GetBuiltins() {
         "%%+": FI(&b_xx_plus, 2),
         "%%-": FI(&b_xx_minus, 2),
         "%%*": FI(&b_xx_times, 2),
+        "%%/": FI(&b_xx_div, 2),
         "=": FI(&b_equals, 2),
         "<": FI(&b_less_than, 2),
         "<=": FI(&b_le, 2),
