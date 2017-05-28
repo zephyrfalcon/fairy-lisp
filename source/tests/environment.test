@@ -54,4 +54,8 @@ k
 (> (length names) 10)
 => true
 
+(define e5 (make-env (global-env)))
+(define e6 (make-env e5))
+(eq? (env-parent e6) e5)
+=> true
 

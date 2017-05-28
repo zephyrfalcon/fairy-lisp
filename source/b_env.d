@@ -97,3 +97,9 @@ LispObject b_env_local_names(Interpreter intp, LispEnvironment env, FunctionArgs
         throw new XTypeError("ENV-LOCAL-NAMES", "environment", fargs.args[0]);
 }
 
+LispObject b_env_parent(Interpreter intp, LispEnvironment env, FunctionArgs fargs) {
+    if (auto thisenv = cast(LispEnvironment) fargs.args[0]) {
+        return (thisenv.parent is null) ? FALSE() : thisenv.parent;
+    } else
+        throw new XTypeError("ENV-PARENT", "environment", fargs.args[0]);
+}

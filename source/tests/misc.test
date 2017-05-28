@@ -39,3 +39,16 @@ hello
 x
 => 10
 
+(let ()
+  (define hidden 42)
+  (define (add x)
+    (+ hidden x))
+  (env-set! (env-parent (current-env)) 'add add))
+(add 4)
+=> 46
+
+(let ()
+  (define hidden 42))
+(env-has? (current-env) 'hidden)
+=> false
+
