@@ -631,23 +631,40 @@ class LispVector : LispObject {
     this(int size, LispObject _default = null) {
         if (_default is null)
             _default = FALSE();
-        // ...
+        this.values = [];
+        this.values.length = size;
+        for (auto i=0; i < size; i++) 
+            this.values[i] = _default;
     }
     this(LispObject[] stuff) {
-        // ...
+        this.values = stuff.dup;
     }
 
     override dstring Repr() {
-        // ...
+        dstring[] reprs = [];
+        foreach (x; this.values) {
+            reprs ~= x.Repr();
+        }
+        return format("#(%s)"d, join(reprs, " "));
     }
+
     override bool opEquals(Object o) {
         if (auto other = cast(LispVector) o) {
-            // ...
+            if (this.values.length == other.values.length) {
+                for (auto i = 0; i < this.values.length; i++) {
+                    if (this.values[i] != other.values[i])
+                        return false;
+                }
+                return true;
+            } else 
+                return false;
         } else return super.opEquals(o);
     }
+
     override dstring TypeName() { return "vector"; }
 
-    int GetSize() {
+    ulong GetSize() {
+        return this.values.length;
     }
 }
 
