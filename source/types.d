@@ -625,6 +625,32 @@ class LispModule : LispObject {
     override dstring TypeName() { return "module"; }
 }
 
+class LispVector : LispObject {
+    LispObject[] values;
+
+    this(int size, LispObject _default = null) {
+        if (_default is null)
+            _default = FALSE();
+        // ...
+    }
+    this(LispObject[] stuff) {
+        // ...
+    }
+
+    override dstring Repr() {
+        // ...
+    }
+    override bool opEquals(Object o) {
+        if (auto other = cast(LispVector) o) {
+            // ...
+        } else return super.opEquals(o);
+    }
+    override dstring TypeName() { return "vector"; }
+
+    int GetSize() {
+    }
+}
+
 /* "singletons", sort of kind of */
 
 // this is one way to make sure we always use the same object... through a

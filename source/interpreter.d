@@ -78,6 +78,7 @@ class Interpreter {
             ["keyword", "type"],
             ["macro", "ufunc"],
             ["module", "type"],
+            ["vector", "type"],
         ];
         foreach(dstring[] spec; typespecs) {
             if (spec.length == 1) {
