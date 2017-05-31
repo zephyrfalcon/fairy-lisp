@@ -152,6 +152,8 @@
   (eq? (type-name (type x)) 'integer))
 (define (float? x)
   (eq? (type-name (type x)) 'float))
+(define (vector? x)
+  (eq? (type-name (type x)) 'vector))
 (define (number? x)
   (instance-of? x <number>))
 (define (bfunc? x)

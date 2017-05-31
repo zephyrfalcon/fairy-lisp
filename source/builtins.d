@@ -309,7 +309,7 @@ struct FI {
 }
 FI[dstring] GetBuiltins() {
     import b_arith, b_dict, b_env;
-    import b_list, b_module, b_path, b_string;
+    import b_list, b_module, b_path, b_string, b_vector;
 
     FI[dstring] builtins = [
         "addr": FI(&b_addr, 1),
@@ -391,6 +391,11 @@ FI[dstring] GetBuiltins() {
         "string-ends-with?": FI(&b_string_ends_with, 2),
         "string-split": FI(&b_string_split, 1),
         "string-starts-with?": FI(&b_string_starts_with, 2),
+
+        /* b_vector.d */
+        "list->vector": FI(&b_list_to_vector, 1),
+        "make-vector": FI(&b_make_vector, 1),
+        "vector->list": FI(&b_vector_to_list, 1),
     ];
     return builtins;
 }

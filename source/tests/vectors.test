@@ -1,0 +1,15 @@
+;; vectors.test
+
+(make-vector 3)
+=> #(false false false)
+(make-vector 3 0)
+=> #(0 0 0)
+
+(list->vector '(1 2 3))
+=> #(1 2 3)
+
+(vector->list (list->vector '(2 3 4)))
+=> (2 3 4)
+;; TODO: test with mutable objects; do we still refer to the same object?
+;; (we should)
+
