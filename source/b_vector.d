@@ -34,3 +34,20 @@ LispObject b_vector_to_list(Interpreter intp, LispEnvironment env, FunctionArgs 
         throw new XTypeError("VECTOR->LIST", "vector", fargs.args[0]);
 }
 
+// (VECTOR-GET vec idx [default])
+LispObject b_vector_get(Interpreter intp, LispEnvironment env, FunctionArgs fargs) {
+    if (auto vec = cast(LispVector) fargs.args[0]) {
+        if (auto idx = cast(LispInteger) fargs.args[1]) {
+            if (fargs.rest_args.length > 0) {
+                if (idx.value >= 0 && idx.value < vec.values.length)
+                    return vec.values[idx.value];  
+                else 
+                    return fargs.rest_args[0];
+            } else {
+                return vec.values[idx.value];
+            }
+        } else
+            throw new XTypeError("VECTOR-GET", "integer", fargs.args[1]);
+    } else
+        throw new XTypeError("VECTOR-GET", "vector", fargs.args[0]);
+}

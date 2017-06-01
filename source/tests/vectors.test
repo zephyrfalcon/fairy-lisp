@@ -13,3 +13,13 @@
 ;; TODO: test with mutable objects; do we still refer to the same object?
 ;; (we should)
 
+(define v (list->vector '(a b c)))
+(vector-get v 0)
+=> a
+(define v (list->vector '(a b c)))
+(vector-get v 2)
+=> c
+(define v (list->vector ()))
+(vector-get v 0 'default)
+=> default
+

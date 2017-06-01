@@ -88,7 +88,7 @@ unittest {
     foreach(i, testcase; all_testcases) {
         RunLispTestCase(testcase);
         write(i+1, " ");
-        stdout.flush();  // does not seem to do anything :(
+        std.stdio.stdout.flush();  // does not seem to do anything :(
     }
     writeln("tested");
 }
