@@ -23,3 +23,18 @@
 (vector-get v 0 'default)
 => default
 
+(define v (list->vector '(a b c)))
+(vector-set! v 1 'd)
+=> #(a d c)
+
+(define v1 (list->vector '(1 2 3)))
+(define v2 (make-vector 3 v1))
+v2
+=> #(#(1 2 3) #(1 2 3) #(1 2 3))
+
+(define v1 (list->vector '(1 2 3)))
+(define v2 (make-vector 3 v1))
+(vector-set! v1 2 4)
+v2
+=> #(#(1 2 4) #(1 2 4) #(1 2 4))
+

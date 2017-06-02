@@ -51,3 +51,16 @@ LispObject b_vector_get(Interpreter intp, LispEnvironment env, FunctionArgs farg
     } else
         throw new XTypeError("VECTOR-GET", "vector", fargs.args[0]);
 }
+
+// (VECTOR-SET! vec idx value)
+LispObject b_vector_set(Interpreter intp, LispEnvironment env, FunctionArgs fargs) {
+    if (auto vec = cast(LispVector) fargs.args[0]) {
+        if (auto idx = cast(LispInteger) fargs.args[1]) {
+            vec.values[idx.value] = fargs.args[2];
+            return vec;
+        } else
+            throw new XTypeError("VECTOR-GET", "integer", fargs.args[1]);
+    } else
+        throw new XTypeError("VECTOR-GET", "vector", fargs.args[0]);
+}
+
