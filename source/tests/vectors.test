@@ -38,3 +38,11 @@ v2
 v2
 => #(#(1 2 4) #(1 2 4) #(1 2 4))
 
+(vector* 3 4 5)
+=> #(3 4 5)
+
+(vector-length (vector*))
+=> 0
+(vector-length (vector* 4 5 6))
+=> 3
+

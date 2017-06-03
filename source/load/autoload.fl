@@ -173,6 +173,9 @@
 ;; NOTE: does not work for supertypes
 ;; add & use something like IS-INSTANCE-OF? instead!
 
+(define (vector*)
+  (list->vector %rest))
+
 ;; --- higher-order functions like MAP, FILTER, etc ---
 
 (define (_map-aux f lst acc)
@@ -265,6 +268,8 @@
 
 (define (string-append s1 s2)
   (string-join (list s1 s2)))
+
+;; srsly these need to become builtins again...
 
 (define (+)
   (foldl %%+ %rest 0))

@@ -64,3 +64,9 @@ LispObject b_vector_set(Interpreter intp, LispEnvironment env, FunctionArgs farg
         throw new XTypeError("VECTOR-GET", "vector", fargs.args[0]);
 }
 
+LispObject b_vector_length(Interpreter intp, LispEnvironment env, FunctionArgs fargs) {
+    if (auto vec = cast(LispVector) fargs.args[0]) {
+        return new LispInteger(cast(int) vec.values.length);
+    } else
+        throw new XTypeError("VECTOR-LENGTH", "vector", fargs.args[0]);
+}

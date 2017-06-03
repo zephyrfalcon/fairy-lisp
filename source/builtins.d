@@ -397,6 +397,7 @@ FI[dstring] GetBuiltins() {
         "make-vector": FI(&b_make_vector, 1),
         "vector->list": FI(&b_vector_to_list, 1),
         "vector-get": FI(&b_vector_get, 2),
+        "vector-length": FI(&b_vector_length, 1),
         "vector-set!": FI(&b_vector_set, 3),
     ];
     return builtins;
