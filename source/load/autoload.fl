@@ -380,10 +380,17 @@
 
 ;; --- benchmarking ---
 
-;; add: DO-TIMES n expr
+;; there seems to be a lot of function call overhead... u___u'''
 
-(define (timeit f)
+(define (do-times n thunk)
+  (if (<= n 0)
+      true
+      (do
+        (thunk)
+        (do-times (- n 1) thunk))))
+
+(define (timeit thunk)
   (let (t1 (system-ticks)
-        result (f)
+        result (thunk)
         t2 (system-ticks))
     (- t2 t1)))
