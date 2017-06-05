@@ -378,3 +378,12 @@
 
 ;; eventually: macro: (IMPORT [string | symbol])
 
+;; --- benchmarking ---
+
+;; add: DO-TIMES n expr
+
+(define (timeit f)
+  (let (t1 (system-ticks)
+        result (f)
+        t2 (system-ticks))
+    (- t2 t1)))
