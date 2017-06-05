@@ -2,6 +2,7 @@
 // Built-in functions.
 
 import std.conv;
+import std.datetime;
 import std.file;
 import std.format;
 import std.stdio;
@@ -204,6 +205,23 @@ LispObject b_read_file_as_string(Interpreter intp, LispEnvironment env, Function
         throw new XTypeError("READ-FILE-AS-STRING", "string", fargs.args[0]);
 }
 
+// (SYSTEM-TICKS)
+LispObject b_system_ticks(Interpreter intp, LispEnvironment env, FunctionArgs fargs) {
+    /*
+    auto t = core.time.MonoTime.currTime;
+    writeln(t);
+    writeln(t.ticks());
+    writeln(core.time.MonoTime.ticksPerSecond(), " ticks per second");
+    real tt = 1.0 * t.ticks();
+    tt = tt / core.time.MonoTime.ticksPerSecond();
+    writefln("%f", tt);
+    */
+    auto time = core.time.MonoTime.currTime;
+    real ticks = (1.0 * time.ticks()) / core.time.MonoTime.ticksPerSecond();
+    writefln("%f", ticks);
+    return new LispFloat(ticks);
+}
+
 
 /*** EVAL-STRING ***/
 
@@ -327,6 +345,7 @@ FI[dstring] GetBuiltins() {
         "read-file-as-string": FI(&b_read_file_as_string, 1),
         "set-debug-option": FI(&b_set_debug_option, 2),
         "subtype-of?": FI(&b_subtype_of, 2),
+        "system-ticks": FI(&b_system_ticks, 0),
         "type": FI(&b_type, 1),
         "type-name": FI(&b_type_name, 1),
         "type-parent": FI(&b_type_parent, 1),
