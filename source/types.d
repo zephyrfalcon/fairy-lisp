@@ -120,9 +120,11 @@ class LispFloat : LispNumber {
     real value;
     this(real x) { this.value = x; }
     override dstring Repr() { 
-        dstring repr = to!dstring(this.value); 
-        if (count(repr, ".") == 0)
-            repr ~= ".0";
+        dstring repr = format("%.20f"d, this.value);
+        while (endsWith(repr, "0"))
+            repr = repr[0..$-1];
+        if (endsWith(repr, "."))
+            repr ~= "0";
         return repr;
     }
     override bool opEquals(Object o) {

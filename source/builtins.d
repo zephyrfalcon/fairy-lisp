@@ -207,18 +207,8 @@ LispObject b_read_file_as_string(Interpreter intp, LispEnvironment env, Function
 
 // (SYSTEM-TICKS)
 LispObject b_system_ticks(Interpreter intp, LispEnvironment env, FunctionArgs fargs) {
-    /*
-    auto t = core.time.MonoTime.currTime;
-    writeln(t);
-    writeln(t.ticks());
-    writeln(core.time.MonoTime.ticksPerSecond(), " ticks per second");
-    real tt = 1.0 * t.ticks();
-    tt = tt / core.time.MonoTime.ticksPerSecond();
-    writefln("%f", tt);
-    */
     auto time = core.time.MonoTime.currTime;
     real ticks = (1.0 * time.ticks()) / core.time.MonoTime.ticksPerSecond();
-    writefln("%f", ticks);
     return new LispFloat(ticks);
 }
 
