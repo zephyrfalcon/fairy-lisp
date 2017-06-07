@@ -1,0 +1,14 @@
+;; quasiquoting
+
+(quasiquote 3)
+=> 3
+(quasiquote x)
+=> x
+(quasiquote (x y z))
+=> (x y z)
+(quasiquote (x y (unquote (+ 1 2)) z))
+=> (x y 3 z)
+(define a 13)
+(quasiquote (x y (unquote (+ a 1)) z))
+=> (x y 14 z)
+
