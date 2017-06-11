@@ -11,4 +11,6 @@
 (define a 13)
 (quasiquote (x y (unquote (+ a 1)) z))
 => (x y 14 z)
+(quasiquote (x y (unquote-splicing '(1 2 3)) z))
+=> (x y 1 2 3 z)
 
