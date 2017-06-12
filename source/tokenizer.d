@@ -50,9 +50,15 @@ dstring[] tokenize(dstring text) {
         } else if (token == ')') {
             add_token_if_any();
             tokens ~= ")";
-        } else if (token == '\'') {
+        } else if (token == ',' && text[i+1] == '@') {  
+            // unquote-splicing
             add_token_if_any();
-            tokens ~= "'";
+            tokens ~= ",@";
+            i += 1;
+        } else if (token == '\'' || token == '`' || token == ',') {
+            // quote, quasiquote, unquote
+            add_token_if_any();
+            tokens ~= format("%c"d, token);
         } else if (token == ';') {
             in_comment = true;
             add_token_if_any();
