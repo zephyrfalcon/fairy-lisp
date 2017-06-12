@@ -32,11 +32,21 @@ ParserResult parse(dstring[] tokens) {
         }
     } else if (tokens[0] == ")") {
         throw new UnbalancedParenException("unbalanced parenthesis");
-    } else if (tokens[0] == "'") {
+    } else if (tokens[0] == "'" || tokens[0] == "," || tokens[0] == "`" ||
+               tokens[0] == ",@") {
         if (tokens.length <= 1)
             throw new IncompleteExpressionException("incomplete expression");
         ParserResult pr = parse(tokens[1..$]);
-        LispObject expr = new LispPair(LispSymbol.Get("quote"), 
+        dstring sym = "";
+        switch (tokens[0]) {
+            case "'": sym = "quote"; break;
+            case ",": sym = "unquote"; break;
+            case "`": sym = "quasiquote"; break;
+            case ",@": sym = "unquote-splicing"; break;
+            default:
+                throw new Exception("not a quote");
+        }
+        LispObject expr = new LispPair(LispSymbol.Get(sym), 
                           new LispPair(pr.result, NIL()));
         return ParserResult(expr, pr.rest_tokens);
     } else {

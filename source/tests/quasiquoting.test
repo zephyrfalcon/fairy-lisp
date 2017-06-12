@@ -14,3 +14,31 @@
 (quasiquote (x y (unquote-splicing '(1 2 3)) z))
 => (x y 1 2 3 z)
 
+;; --- special syntax ---
+
+`3
+=> 3
+`x
+=> x
+`(1 2 3)
+=> (1 2 3)
+`(x y z)
+=> (x y z)
+(define x 4)
+`(,x y z)
+=> (4 y z)
+(define p '(1 2 3))
+`(x y ,@p z)
+=> (x y 1 2 3 z)
+
+;; let's inspect the contents with QUOTE
+
+(quote `x)
+=> (quasiquote x)
+(quote ,x)
+=> (unquote x)
+(quote ,@p)
+=> (unquote-splicing p)
+(quote `(f ,x))
+=> (quasiquote (f (unquote x)))
+
