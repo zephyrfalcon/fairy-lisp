@@ -16,17 +16,21 @@ ParserResult parse(dstring[] tokens) {
     if (tokens.length == 0)
         throw new NoInputException("no input");
     if (tokens[0] == "(") {
-        LispList list = NIL();
+        //LispList list = NIL();
+        LispObject[] elems = [];
         tokens = tokens[1..$];
         while (true) {
             if (tokens.length == 0) 
                 throw new UnbalancedParenException("missing closing parenthesis");
             if (tokens[0] == ")") {
                 // matching closing parenthesis reached
-                return ParserResult(list.Reverse(), tokens[1..$]);
+                //reverse(elems);
+                auto list = LispList.FromArray(elems);
+                return ParserResult(list, tokens[1..$]);
             } else {
                 ParserResult stuff = parse(tokens);
-                list = new LispPair(stuff.result, list);
+                elems ~= stuff.result;
+                //list = new LispPair(stuff.result, list);
                 tokens = stuff.rest_tokens;
             }
         }
