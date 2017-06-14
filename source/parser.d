@@ -16,7 +16,6 @@ ParserResult parse(dstring[] tokens) {
     if (tokens.length == 0)
         throw new NoInputException("no input");
     if (tokens[0] == "(") {
-        //LispList list = NIL();
         LispObject[] elems = [];
         tokens = tokens[1..$];
         while (true) {
@@ -24,13 +23,18 @@ ParserResult parse(dstring[] tokens) {
                 throw new UnbalancedParenException("missing closing parenthesis");
             if (tokens[0] == ")") {
                 // matching closing parenthesis reached
-                //reverse(elems);
-                auto list = LispList.FromArray(elems);
+                // FIXME: check if "." is in any other spot; that's an error
+                // check if this is an improper list
+                LispList list;
+                if (elems.length > 2 && elems[$-2] == LispSymbol.Get(".")) {
+                    list = LispList.MakeImproperList(elems[0..$-2], elems[$-1]);
+                } else {
+                    list = LispList.FromArray(elems);
+                }
                 return ParserResult(list, tokens[1..$]);
             } else {
                 ParserResult stuff = parse(tokens);
                 elems ~= stuff.result;
-                //list = new LispPair(stuff.result, list);
                 tokens = stuff.rest_tokens;
             }
         }

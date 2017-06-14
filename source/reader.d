@@ -56,6 +56,8 @@ class FileReader : Reader {
                 this.tokens_read = pr.rest_tokens;
                 return pr.result;
             } catch (Exception error) {
+                // FIXME: needs to be more specific, we don't want to catch
+                // ALL exceptions
                 // that didn't work. let's read another line
                 string line_raw = this.file.readln();
                 if (line_raw is null) { // EOF

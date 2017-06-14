@@ -110,3 +110,12 @@
 (foldl (flip %%-) '(1 2 3) 1)
 => -5
 
+;; --- improper list literals 
+
+'(1 2 . 3)
+=> (1 2 . 3)
+(cons 'a 'b)
+=> (a . b)
+(cons 1 (cons 2 3))
+=> (1 2 . 3)
+

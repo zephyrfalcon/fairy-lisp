@@ -204,6 +204,17 @@ abstract class LispList : LispObject {
         }
         return head;
     }
+
+    static LispList MakeImproperList(LispObject[] elems, LispObject tail) {
+        LispList head = NIL();
+        for (size_t i=0; i < elems.length; i++) {
+            LispObject o = elems[$-1-i];
+            LispPair new_pair = new LispPair(o, head);
+            if (i == 0) new_pair.tail = tail;
+            head = new_pair;
+        }
+        return head;
+    }
 }
 
 class LispEmptyList : LispList {
