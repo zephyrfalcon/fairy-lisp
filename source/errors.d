@@ -16,15 +16,15 @@ template GenException(string name, string parent="Exception") {
 }
 */
 
-//mixin(GenException!("ParserException"));
-//mixin(GenException!("NoInputException", "ParserException"));
-//mixin(GenException!("UnbalancedParenException", "ParserException"));
-//mixin(GenException!("IncompleteExpressionException", "ParserException"));
+//mixin(GenException!("ParserError"));
+//mixin(GenException!("NoInputException", "ParserError"));
+//mixin(GenException!("UnbalancedParenException", "ParserError"));
+//mixin(GenException!("IncompleteExpressionException", "ParserError"));
 
-class ParserException: Exception { mixin basicExceptionCtors; }
-class NoInputException: ParserException { mixin basicExceptionCtors; }
-class UnbalancedParenException: ParserException { mixin basicExceptionCtors; }
-class IncompleteExpressionException: ParserException { mixin basicExceptionCtors; }
+class ParserError: Exception { mixin basicExceptionCtors; }
+class NoInputException: ParserError { mixin basicExceptionCtors; }
+class UnbalancedParenException: ParserError { mixin basicExceptionCtors; }
+class IncompleteExpressionException: ParserError { mixin basicExceptionCtors; }
 
 class EnvironmentKeyException: Exception { mixin basicExceptionCtors; }
 

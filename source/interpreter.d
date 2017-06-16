@@ -117,6 +117,8 @@ class Interpreter {
     LispObject EvalAtomic(LispObject expr, LispEnvironment env) {
         // symbols are looked up
         if (auto sym = cast(LispSymbol) expr) {
+            if (sym.value == ".")
+                throw new Exception("invalid use of '.'");
             LispObject value = env.Get(sym.value);
             return value;
         } else {

@@ -23,8 +23,14 @@ ParserResult parse(dstring[] tokens) {
                 throw new UnbalancedParenException("missing closing parenthesis");
             if (tokens[0] == ")") {
                 // matching closing parenthesis reached
-                // FIXME: check if "." is in any other spot; that's an error
                 // check if this is an improper list
+                // check if "." is in any other spot; that's an error
+                foreach (i, x; elems) {
+                    if (i != elems.length-2) {
+                        if (x == LispSymbol.Get("."))
+                            throw new ParserError("incorrect use of '.'");
+                    }
+                }
                 LispList list;
                 if (elems.length > 2 && elems[$-2] == LispSymbol.Get(".")) {
                     list = LispList.MakeImproperList(elems[0..$-2], elems[$-1]);
@@ -59,6 +65,8 @@ ParserResult parse(dstring[] tokens) {
         return ParserResult(expr, pr.rest_tokens);
     } else {
         // this is an atomic object; return it
+        if (tokens[0] == ".")
+            throw new ParserError("invalid use of '.'");
         return ParserResult(CreateFromToken(tokens[0]), tokens[1..$]);
     }
 }
