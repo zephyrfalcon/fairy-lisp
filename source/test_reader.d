@@ -17,7 +17,7 @@ unittest {
         try {
             LispObject expr = sr.Read();
             exprs ~= expr;
-        } catch (errors.NoInputException e) {
+        } catch (errors.NoInputError e) {
             break;
         }
     }
@@ -37,7 +37,7 @@ unittest {
         try {
             LispObject expr = fr.Read();
             exprs ~= expr;
-        } catch (NoInputException e) {
+        } catch (NoInputError e) {
             break;
         }
     }
@@ -55,9 +55,9 @@ unittest {
     while (true) {
         try {
             LispObject expr = fr.Read();
-        } catch (NoInputException e) {
+        } catch (NoInputError e) {
             break;
-        } catch (IncompleteExpressionException e) {
+        } catch (IncompleteExpressionError e) {
             detected = true; break;
         }
     }

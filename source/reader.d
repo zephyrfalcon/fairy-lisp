@@ -55,21 +55,24 @@ class FileReader : Reader {
                 // no error occurred
                 this.tokens_read = pr.rest_tokens;
                 return pr.result;
-            } catch (Exception error) {
+            } catch (RecoverableParserError error) {
                 // FIXME: needs to be more specific, we don't want to catch
                 // ALL exceptions
                 // that didn't work. let's read another line
                 string line_raw = this.file.readln();
                 if (line_raw is null) { // EOF
-                    if (this.tokens_read.length > 0)
-                        throw new IncompleteExpressionException("incomplete expression");
-                    throw new NoInputException("no input");
+                    if (this.tokens_read.length > 0)  // ??
+                        throw new IncompleteExpressionError("incomplete expression");
+                    throw new NoInputError("no input");
                 }
                 // no EOF; let's see what we have
                 dstring line = to!dstring(line_raw);
                 auto tokens = tokenize(line);
                 this.tokens_read ~= tokens;
                 // go for another round
+            } catch (ParserError error) {
+                this.tokens_read = [];  // ignore the whole expression
+                throw error;
             }
         }
     }

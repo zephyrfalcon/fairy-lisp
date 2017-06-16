@@ -282,7 +282,7 @@ LispObject b_eval_string(Interpreter intp, LispEnvironment env, FunctionArgs far
             LispObject expr;
             try {
                 expr = aux.reader.Read();
-            } catch (NoInputException e) {
+            } catch (NoInputError e) {
                 // end of expressions reached
                 if (aux.results.length > 0)
                     return aux.results[$-1];

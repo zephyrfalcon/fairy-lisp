@@ -225,7 +225,7 @@ class Interpreter {
                 expr = this.MacroExpand(expr, env);
                 LispObject result = this.EvalExpr(expr, env);
                 results ~= result;
-            } catch (NoInputException e) {
+            } catch (NoInputError e) {
                 break;
             }
         }

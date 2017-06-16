@@ -28,10 +28,11 @@ class REPL {
 
             try {
                 expr = rd.Read();
-            } catch (NoInputException e) {
+            } catch (NoInputError e) {
                 break;
             } catch (Exception e) {
-                writeln("An error occurred.");  // FIXME
+                writeln("ERROR: ", e.msg);
+                writeln(e);  // includes traceback
                 this.intp.callstack.Clear();
                 continue;
             }

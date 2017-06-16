@@ -22,9 +22,20 @@ template GenException(string name, string parent="Exception") {
 //mixin(GenException!("IncompleteExpressionException", "ParserError"));
 
 class ParserError: Exception { mixin basicExceptionCtors; }
-class NoInputException: ParserError { mixin basicExceptionCtors; }
-class UnbalancedParenException: ParserError { mixin basicExceptionCtors; }
-class IncompleteExpressionException: ParserError { mixin basicExceptionCtors; }
+
+class RecoverableParserError: ParserError { mixin basicExceptionCtors; }
+// the following exceptions are recoverable parser errors; if there is no
+// input, or the input is incomplete (but otherwise correct), we can fix the
+// problem by asking for more input (if possible).
+class IncompleteExpressionError: RecoverableParserError { mixin basicExceptionCtors; }
+class NoInputError: RecoverableParserError { mixin basicExceptionCtors; }
+
+// there are also unrecoverable parser errors:
+// raised when we run into a CLOSING parenthesis that has no match
+class UnbalancedParenError: ParserError { mixin basicExceptionCtors; }
+// reserved for other problems, like '.' in the wrong place
+class SyntaxError: ParserError { mixin basicExceptionCtors; }
+// there is no input left
 
 class EnvironmentKeyException: Exception { mixin basicExceptionCtors; }
 
