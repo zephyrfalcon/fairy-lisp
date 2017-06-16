@@ -50,6 +50,8 @@ ParserResult parse(dstring[] tokens) {
         if (tokens.length <= 1)
             throw new IncompleteExpressionError("incomplete expression");
         ParserResult pr = parse(tokens[1..$]);
+        if (pr.result == LispSymbol.Get("."))
+            throw new ParserError("invalid use of '.'");
         dstring sym = "";
         switch (tokens[0]) {
             case "'": sym = "quote"; break;
@@ -64,8 +66,6 @@ ParserResult parse(dstring[] tokens) {
         return ParserResult(expr, pr.rest_tokens);
     } else {
         // this is an atomic object; return it
-        //if (tokens[0] == ".")
-        //    throw new ParserError("invalid use of '.'");
         return ParserResult(CreateFromToken(tokens[0]), tokens[1..$]);
     }
 }
