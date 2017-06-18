@@ -170,7 +170,7 @@ bool IsImproperList(LispObject x) {
                 here = next;
             }
             else if (here.tail is NIL())
-                return true;  // reached end of list, it's proper
+                return false;  // reached end of list, it's proper
             else {
                 // neither a LispPair nor a LispEmptyList, so this is an
                 // improper list!

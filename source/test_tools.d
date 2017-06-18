@@ -52,3 +52,12 @@ unittest {
     keywords = cast(LispObject[]) FindKeywordLiterals(pr.result);
     AssertEquals(keywords, [new LispKeyword("foo")]);
 }
+
+// test IsImproperList()
+unittest {
+    auto p = new LispPair(new LispInteger(1), new LispInteger(2));
+    AssertEquals(IsImproperList(p), true);
+    auto q = new LispPair(new LispInteger(3), NIL());
+    AssertEquals(IsImproperList(q), false);
+    AssertEquals(IsImproperList(new LispInteger(4)), false);
+}
