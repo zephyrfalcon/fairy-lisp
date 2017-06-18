@@ -131,9 +131,9 @@ class Interpreter {
     void EvalStep() {
         StackFrame top = this.callstack.Top();
         
-        if (!top.IsDone() && IsImproperList(top.original_expr))
-            throw new SyntaxError(format("cannot evaluate improper list: %s",
-                                  top.original_expr.Repr()));
+        //if (!top.IsDone() && IsImproperList(top.original_expr))
+        //    throw new SyntaxError(format("cannot evaluate improper list: %s",
+        //                          top.original_expr.Repr()));
 
         if (top.IsDone()) {
             if (top.is_atomic) {
@@ -241,9 +241,9 @@ class Interpreter {
     }
 
     LispObject MacroExpand(LispObject expr, LispEnvironment env) {
-        if (IsImproperList(expr))
-            throw new SyntaxError(format("cannot evaluate improper list: %s",
-                                  expr.Repr()));
+        //if (IsImproperList(expr))
+        //    throw new SyntaxError(format("cannot evaluate improper list: %s",
+        //                          expr.Repr()));
         LispObject hook = this.builtin_env.Get("*macroexpand-hook*");
         if (auto expander = cast(LispFunction) hook) {
             auto newexpr = new LispPair(LispSymbol.Get("*macroexpand-hook*"), 
