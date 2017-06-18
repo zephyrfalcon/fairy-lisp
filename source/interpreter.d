@@ -211,6 +211,7 @@ class Interpreter {
     // evaluate an expression by putting it on the call stack and calling
     // Eval().
     LispObject EvalExpr(LispObject expr, LispEnvironment env) {
+        // FIXME: if expr is an improper list, raise an error
         this.callstack.Push(new StackFrame(expr, env));
         LispObject result = this.Eval();
         this.callstack.Clear();

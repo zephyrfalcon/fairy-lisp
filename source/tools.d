@@ -162,3 +162,21 @@ LispKeyword[] FindKeywordLiterals(LispObject expr) {
         return [];
 }
 
+bool IsImproperList(LispObject x) {
+    if (auto list = cast(LispPair) x) {
+        LispPair here = list;
+        while (true) {
+            if (auto next = cast(LispPair) here.tail) {
+                here = next;
+            }
+            else if (here.tail is NIL())
+                return true;  // reached end of list, it's proper
+            else {
+                // neither a LispPair nor a LispEmptyList, so this is an
+                // improper list!
+                return true;
+            }
+        }
+    }
+    else return false;  // it's not a list at all
+}
