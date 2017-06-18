@@ -131,9 +131,9 @@ class Interpreter {
     void EvalStep() {
         StackFrame top = this.callstack.Top();
         
-        //if (IsImproperList(top.original_expr))
-        //    throw new SyntaxError(format("cannot evaluate improper list: %s",
-        //                          top.original_expr.Repr()));
+        if (!top.IsDone() && IsImproperList(top.original_expr))
+            throw new SyntaxError(format("cannot evaluate improper list: %s",
+                                  top.original_expr.Repr()));
 
         if (top.IsDone()) {
             if (top.is_atomic) {
