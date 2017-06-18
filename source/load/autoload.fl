@@ -31,9 +31,9 @@
 ;; return a list (new-expr true) if expansion succeeded, (old-expr false)
 ;; otherwise.
 (define (macroexpand-1 expr env)
-  (if (improper-list? expr)
-      (error "cannot evaluate improper list")
-      (if (pair? expr)
+  (if (pair? expr)
+      (if (improper-list? expr)
+          (error "cannot evaluate improper list")
           (if (symbol? (car expr))
               (if (module-accessor-form? (car expr))
                   (_me-handle-module-accessor expr env)
@@ -43,8 +43,8 @@
                             (list (apply m (cdr expr)) true)  ;; TODO: allow kwargs?
                             (list expr false))
                         (list expr false))))
-              (list expr false))
-          (list expr false))))
+              (list expr false)))
+      (list expr false)))
 
 ;; like MACROEXPAND-1, but expand the macro expression as many times as possible.
 ;; return the resulting expression.
