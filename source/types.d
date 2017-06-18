@@ -215,6 +215,8 @@ abstract class LispList : LispObject {
         }
         return head;
     }
+
+    bool IsImproperList() { return false; }
 }
 
 class LispEmptyList : LispList {
@@ -311,6 +313,23 @@ class LispPair : LispList {
                 throw new ImproperListError("cannot take length of improper list");
         }
         return length;
+    }
+
+    // will loop endlessly on cyclic lists... so don't do that then :)
+    override bool IsImproperList() {
+        LispPair here = this;
+        while (true) {
+            if (auto next = cast(LispPair) here.tail) {
+                here = next;
+            }
+            else if (here.tail is NIL())
+                return true;  // reached end of list, it's proper
+            else {
+                // neither a LispPair nor a LispEmptyList, so this is an
+                // improper list!
+                return true;
+            }
+        }
     }
 }
 
