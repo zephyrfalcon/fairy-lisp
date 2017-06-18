@@ -119,3 +119,12 @@
 (cons 1 (cons 2 3))
 => (1 2 . 3)
 
+(improper-list? 3)
+=> false
+(improper-list? ())
+=> false
+(improper-list? '(1 2 3))
+=> false
+(improper-list? '(1 2 . 3))
+=> true
+

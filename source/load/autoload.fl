@@ -176,6 +176,16 @@
 (define (vector*)
   (list->vector %rest))
 
+(define (improper-list? x)
+  (if (pair? x)
+      (_improper-list?-aux x)
+      false))
+(define (_improper-list?-aux x)
+  (let (tail (cdr x))
+    (cond ((nil? tail) false)
+          ((pair? tail) (_improper-list?-aux tail))
+          (else true))))
+
 ;; --- higher-order functions like MAP, FILTER, etc ---
 
 (define (_map-aux f lst acc)
