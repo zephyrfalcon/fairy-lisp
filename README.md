@@ -1,3 +1,7 @@
+**NOTE: This project is no longer under active development.**
+
+---
+
 This is Fairy Lisp, an interpreter for an experimental Lisp dialect.
 
 I wanted to explore various ideas, like modules, first-class macros (and making
